@@ -1,0 +1,17 @@
+{
+  "name": "@forge/cron-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cron Expression Builder & Visualizer",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3003 -c-1 -o"
+  },
+  "keywords": [
+    "cron",
+    "cron-expression",
+    "scheduler"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

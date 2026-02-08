@@ -1,0 +1,17 @@
+{
+  "name": "@forge/screenshot-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Screenshot & Image Editing Tool",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3015 -c-1 -o"
+  },
+  "keywords": [
+    "screenshot",
+    "image-editor",
+    "capture"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

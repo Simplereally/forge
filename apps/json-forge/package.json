@@ -1,0 +1,17 @@
+{
+  "name": "@forge/json-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JSON Formatter, Validator & Editor",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3008 -c-1 -o"
+  },
+  "keywords": [
+    "json",
+    "json-formatter",
+    "json-validator"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

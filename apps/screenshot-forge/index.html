@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScreenshotForge — Free Website Screenshot Tool | Capture Any Website</title>
+    <meta name="description" content="Free website screenshot tool. Capture websites in Desktop, Tablet & Mobile views. Add device mockups, download PNG/JPG. No signup required!">
+    <meta name="keywords" content="website screenshot, screenshot tool, webpage capture, website mockup, device frame, screenshot generator, free screenshot">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/screenshot-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/screenshot-forge/">
+    <meta property="og:title" content="ScreenshotForge — Free Website Screenshot Tool">
+    <meta property="og:description" content="Capture website screenshots in Desktop, Tablet & Mobile views. Add device mockups, download PNG/JPG. Free, no signup required!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/screenshot-forge/">
+    <meta name="twitter:title" content="ScreenshotForge — Free Website Screenshot Tool">
+    <meta name="twitter:description" content="Capture website screenshots in Desktop, Tablet & Mobile views. Add device mockups, download PNG/JPG. Free, no signup required!">
+    
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "ScreenshotForge",
+        "description": "Free website screenshot tool with multiple viewport sizes and device mockups",
+        "url": "https://simplereally.github.io/screenshot-forge/",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- html2canvas for screenshot capture -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-info: #3b82f6;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN LAYOUT ═══════════════ */
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ FORM ELEMENTS ═══════════════ */
+        
+        label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        input::placeholder, textarea::placeholder { color: var(--forge-iron); }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        /* ═══════════════ OPTIONS GRID ═══════════════ */
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin: var(--space-lg) 0;
+        }
+        
+        .option-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .option-group select {
+            margin-top: var(--space-xs);
+        }
+        
+        /* ═══════════════ VIEWPORT SELECTOR ═══════════════ */
+        
+        .viewport-selector {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .viewport-btn {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-silver);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .viewport-btn:hover {
+            border-color: var(--forge-iron);
+            color: var(--forge-white);
+        }
+        
+        .viewport-btn.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        .viewport-btn .icon { font-size: 1.2rem; }
+        
+        /* ═══════════════ TOGGLES ═══════════════ */
+        
+        .toggle-row {
+            display: flex;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: 26px;
+            transition: var(--transition-fast);
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--forge-silver);
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background-color: var(--forge-void);
+        }
+        
+        .toggle-label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-chrome);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn-primary {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            color: var(--forge-white);
+        }
+        
+        .btn-row {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        /* ═══════════════ PREVIEW AREA ═══════════════ */
+        
+        .preview-container {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: var(--space-lg);
+        }
+        
+        .preview-placeholder {
+            text-align: center;
+            color: var(--forge-iron);
+        }
+        
+        .preview-placeholder .icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+        
+        .preview-placeholder p {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* ═══════════════ DEVICE FRAMES ═══════════════ */
+        
+        .device-frame {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .frame-macbook {
+            background: #1a1a1a;
+            border-radius: 20px 20px 0 0;
+            padding: 15px 15px 0 15px;
+            position: relative;
+        }
+        
+        .frame-macbook::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #333;
+            border-radius: 50%;
+        }
+        
+        .frame-macbook-base {
+            background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+            height: 15px;
+            width: calc(100% + 60px);
+            border-radius: 0 0 4px 4px;
+            margin-top: 0;
+        }
+        
+        .frame-iphone {
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 15px;
+            position: relative;
+        }
+        
+        .frame-iphone::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 25px;
+            background: #0a0a0a;
+            border-radius: 15px;
+        }
+        
+        .frame-ipad {
+            background: #1a1a1a;
+            border-radius: 25px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .frame-ipad::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background: #333;
+            border-radius: 50%;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            border-radius: var(--radius-sm);
+            display: block;
+        }
+        
+        /* ═══════════════ BULK MODE ═══════════════ */
+        
+        .bulk-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-lg);
+        }
+        
+        .bulk-item {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+        
+        .bulk-item img {
+            width: 100%;
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .bulk-item .url {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            word-break: break-all;
+        }
+        
+        /* ═══════════════ LOADING ═══════════════ */
+        
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--forge-steel);
+            border-top-color: var(--forge-ember);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .pro-feature {
+            opacity: 0.6;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .pro-feature::after {
+            content: 'PRO';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            font-family: var(--font-display);
+            font-size: 0.55rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+        }
+        
+        .forge-footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .forge-footer-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition-fast);
+        }
+        
+        .forge-footer-links a:hover { color: var(--forge-ember); }
+        
+        .forge-footer p {
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        /* ═══════════════ MODAL ═══════════════ */
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            padding: var(--space-xl);
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: none;
+            border: none;
+            color: var(--forge-silver);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .modal-close:hover { color: var(--forge-white); }
+        
+        .modal h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .modal p {
+            color: var(--forge-silver);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .pro-features-list {
+            list-style: none;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .pro-features-list li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            font-size: 0.95rem;
+        }
+        
+        .pro-features-list li::before {
+            content: '🔥';
+            font-size: 1rem;
+        }
+        
+        .price-tag {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .price-tag span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+        }
+        
+        /* ═══════════════ DEMO NOTICE ═══════════════ */
+        
+        .demo-notice {
+            background: var(--forge-glow);
+            border: 1px solid var(--forge-ember);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+        
+        .demo-notice .icon {
+            font-size: 1.5rem;
+        }
+        
+        .demo-notice p {
+            font-size: 0.9rem;
+            color: var(--forge-chrome);
+        }
+        
+        .demo-notice strong {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a { font-size: 0.6rem; padding: var(--space-xs); }
+            .options-grid { grid-template-columns: 1fr; }
+            .viewport-selector { justify-content: center; }
+            .btn-row { flex-direction: column; }
+            .btn-row button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/screenshot-forge/" class="forge-logo">
+                <span class="icon">📸</span>
+                <span>SCREENSHOT<span style="color: var(--forge-ember)">FORGE</span></span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/screenshot-forge/" class="active">Screenshot</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/diff-forge/">Diff</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Header -->
+    <header class="forge-header">
+        <h1>SCREENSHOT<span class="accent">FORGE</span></h1>
+        <p>Capture website screenshots in multiple viewports • Add device mockups • Download PNG/JPG</p>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <div class="forge-card">
+            <div class="demo-notice">
+                <span class="icon">⚡</span>
+                <p><strong>Demo Mode:</strong> Due to browser security (CORS), this tool simulates screenshots using placeholder images. For real screenshots, use our <a href="#" style="color: var(--forge-ember);">Pro API</a> or a backend service.</p>
+            </div>
+            
+            <!-- URL Input -->
+            <div class="option-group">
+                <label for="url-input">Website URL</label>
+                <input type="url" id="url-input" placeholder="https://example.com" value="https://github.com">
+            </div>
+            
+            <!-- Viewport Selector -->
+            <label>Viewport Size</label>
+            <div class="viewport-selector">
+                <button class="viewport-btn active" data-width="1920" data-height="1080">
+                    <span class="icon">🖥️</span>
+                    <span>Desktop (1920×1080)</span>
+                </button>
+                <button class="viewport-btn" data-width="768" data-height="1024">
+                    <span class="icon">📱</span>
+                    <span>Tablet (768×1024)</span>
+                </button>
+                <button class="viewport-btn" data-width="375" data-height="812">
+                    <span class="icon">📲</span>
+                    <span>Mobile (375×812)</span>
+                </button>
+            </div>
+            
+            <!-- Options Row -->
+            <div class="toggle-row">
+                <div class="toggle-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="fullpage-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Full Page</span>
+                </div>
+                <div class="toggle-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="frame-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Device Frame</span>
+                </div>
+                <div class="toggle-item pro-feature" onclick="showProModal()">
+                    <label class="toggle-switch">
+                        <input type="checkbox" disabled>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">High Resolution</span>
+                </div>
+            </div>
+            
+            <!-- Device Frame Selector -->
+            <div id="frame-options" style="display: none; margin-bottom: var(--space-lg);">
+                <label>Device Frame</label>
+                <div class="viewport-selector">
+                    <button class="frame-btn active" data-frame="macbook">🖥️ MacBook</button>
+                    <button class="frame-btn" data-frame="iphone">📱 iPhone</button>
+                    <button class="frame-btn" data-frame="ipad">📲 iPad</button>
+                </div>
+            </div>
+            
+            <!-- Options -->
+            <div class="options-grid">
+                <div class="option-group">
+                    <label for="format-select">Download Format</label>
+                    <select id="format-select">
+                        <option value="png">PNG (High Quality)</option>
+                        <option value="jpg">JPG (Smaller Size)</option>
+                    </select>
+                </div>
+                <div class="option-group">
+                    <label for="quality-select">Quality</label>
+                    <select id="quality-select">
+                        <option value="1">Standard (1x)</option>
+                        <option value="2" class="pro-option" disabled>High (2x) — PRO</option>
+                        <option value="3" class="pro-option" disabled>Ultra (3x) — PRO</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="btn-row">
+                <button class="btn-primary" onclick="captureScreenshot()">📸 Capture Screenshot</button>
+                <button class="btn-secondary" onclick="toggleBulkMode()">📋 Bulk Mode</button>
+                <button class="btn-secondary" onclick="downloadScreenshot()" id="download-btn" disabled>⬇️ Download</button>
+            </div>
+            
+            <!-- Bulk Mode -->
+            <div id="bulk-mode" style="display: none; margin-top: var(--space-lg);">
+                <label for="bulk-urls">Bulk URLs (one per line)</label>
+                <textarea id="bulk-urls" placeholder="https://example1.com&#10;https://example2.com&#10;https://example3.com"></textarea>
+                <button class="btn-primary" onclick="captureBulk()" style="margin-top: var(--space-md);">📸 Capture All</button>
+            </div>
+            
+            <!-- Preview Area -->
+            <div class="preview-container" id="preview-container">
+                <div class="preview-placeholder" id="preview-placeholder">
+                    <div class="icon">📸</div>
+                    <p>Screenshot preview will appear here</p>
+                </div>
+            </div>
+            
+            <!-- Bulk Results -->
+            <div class="bulk-results" id="bulk-results"></div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="forge-card">
+            <h2 style="font-family: var(--font-display); color: var(--forge-white); margin-bottom: var(--space-lg);">✨ Features</h2>
+            <div class="options-grid">
+                <div>
+                    <h3 style="font-family: var(--font-display); color: var(--forge-ember); font-size: 0.9rem; margin-bottom: var(--space-sm);">FREE</h3>
+                    <ul style="list-style: none; color: var(--forge-chrome);">
+                        <li>✓ Multiple viewport sizes</li>
+                        <li>✓ Device frame mockups</li>
+                        <li>✓ PNG & JPG download</li>
+                        <li>✓ Full page capture</li>
+                        <li>✓ Bulk screenshot mode</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="font-family: var(--font-display); color: var(--forge-ember); font-size: 0.9rem; margin-bottom: var(--space-sm);">PRO <span class="pro-badge">🔥 PRO</span></h3>
+                    <ul style="list-style: none; color: var(--forge-chrome);">
+                        <li>✓ 2x & 3x resolution</li>
+                        <li>✓ No watermark</li>
+                        <li>✓ API access</li>
+                        <li>✓ Scheduled captures</li>
+                        <li>✓ Custom viewports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="forge-footer">
+        <div class="forge-footer-links">
+            <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+            <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+            <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+            <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+            <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+            <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+            <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+            <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+            <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+            <a href="https://simplereally.github.io/api-forge/">APIForge</a>
+            <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+            <a href="https://simplereally.github.io/screenshot-forge/">ScreenshotForge</a>
+            <a href="https://simplereally.github.io/email-forge/">EmailForge</a>
+            <a href="https://simplereally.github.io/diff-forge/">DiffForge</a>
+        </div>
+        <p>Made with 🔥 by <a href="https://github.com/Simplereally" style="color: var(--forge-ember); text-decoration: none;">Simplereally</a></p>
+    </footer>
+    
+    <!-- Pro Modal -->
+    <div class="modal-overlay" id="pro-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="hideProModal()">×</button>
+            <h2>🔥 Upgrade to Pro</h2>
+            <p>Unlock the full power of ScreenshotForge</p>
+            <ul class="pro-features-list">
+                <li>2x & 3x high resolution captures</li>
+                <li>No watermark on exports</li>
+                <li>API access for automation</li>
+                <li>Scheduled screenshot captures</li>
+                <li>Custom viewport sizes</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="price-tag">$9 <span>/ month</span></div>
+            <button class="btn-primary" style="width: 100%;" onclick="alert('Stripe integration coming soon!')">⚡ Upgrade Now</button>
+        </div>
+    </div>
+    
+    <script>
+        // State
+        let currentViewport = { width: 1920, height: 1080 };
+        let currentFrame = 'macbook';
+        let capturedImageData = null;
+        let bulkMode = false;
+        
+        // Viewport buttons
+        document.querySelectorAll('.viewport-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.viewport-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentViewport = {
+                    width: parseInt(btn.dataset.width),
+                    height: parseInt(btn.dataset.height)
+                };
+            });
+        });
+        
+        // Frame buttons
+        document.querySelectorAll('.frame-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.frame-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFrame = btn.dataset.frame;
+                if (capturedImageData) {
+                    renderPreview(capturedImageData);
+                }
+            });
+        });
+        
+        // Frame toggle
+        document.getElementById('frame-toggle').addEventListener('change', function() {
+            document.getElementById('frame-options').style.display = this.checked ? 'block' : 'none';
+            if (capturedImageData) {
+                renderPreview(capturedImageData);
+            }
+        });
+        
+        // Capture screenshot (demo simulation)
+        async function captureScreenshot() {
+            const url = document.getElementById('url-input').value;
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            const container = document.getElementById('preview-container');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Capturing screenshot...</div>
+                </div>
+            `;
+            
+            // Simulate capture delay
+            await new Promise(r => setTimeout(r, 1500));
+            
+            // Generate placeholder screenshot
+            capturedImageData = await generateDemoScreenshot(url);
+            renderPreview(capturedImageData);
+            document.getElementById('download-btn').disabled = false;
+        }
+        
+        // Generate demo screenshot
+        async function generateDemoScreenshot(url) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = currentViewport.width;
+            canvas.height = currentViewport.height;
+            
+            // Background
+            ctx.fillStyle = '#1a1a2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Browser chrome
+            ctx.fillStyle = '#2d2d44';
+            ctx.fillRect(0, 0, canvas.width, 60);
+            
+            // URL bar
+            ctx.fillStyle = '#1a1a2e';
+            ctx.roundRect(100, 15, canvas.width - 200, 30, 5);
+            ctx.fill();
+            
+            // URL text
+            ctx.fillStyle = '#888';
+            ctx.font = '14px monospace';
+            ctx.fillText(url, 115, 35);
+            
+            // Traffic lights
+            const colors = ['#ff5f56', '#ffbd2e', '#27ca40'];
+            colors.forEach((color, i) => {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(20 + i * 20, 30, 6, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            // Content placeholder
+            ctx.fillStyle = '#2d2d44';
+            ctx.fillRect(40, 100, canvas.width - 80, 200);
+            
+            // Logo placeholder
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = 'bold 48px sans-serif';
+            ctx.fillText('🔥 ScreenshotForge', 80, 220);
+            
+            ctx.fillStyle = '#666';
+            ctx.font = '24px sans-serif';
+            ctx.fillText(`Simulated capture of: ${url}`, 80, 270);
+            ctx.fillText(`Viewport: ${currentViewport.width}×${currentViewport.height}`, 80, 310);
+            
+            // Grid pattern
+            ctx.strokeStyle = '#333';
+            for (let y = 350; y < canvas.height; y += 100) {
+                for (let x = 40; x < canvas.width - 40; x += 200) {
+                    ctx.strokeRect(x, y, 180, 80);
+                }
+            }
+            
+            return canvas.toDataURL('image/png');
+        }
+        
+        // Render preview with optional frame
+        function renderPreview(imageData) {
+            const container = document.getElementById('preview-container');
+            const useFrame = document.getElementById('frame-toggle').checked;
+            
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.className = 'preview-image';
+            img.style.maxWidth = '100%';
+            
+            // Scale based on viewport
+            const scale = Math.min(1, 800 / currentViewport.width);
+            img.style.width = (currentViewport.width * scale) + 'px';
+            
+            if (useFrame) {
+                const frameDiv = document.createElement('div');
+                frameDiv.className = 'device-frame';
+                
+                if (currentFrame === 'macbook') {
+                    const screen = document.createElement('div');
+                    screen.className = 'frame-macbook';
+                    screen.appendChild(img);
+                    frameDiv.appendChild(screen);
+                    
+                    const base = document.createElement('div');
+                    base.className = 'frame-macbook-base';
+                    frameDiv.appendChild(base);
+                } else if (currentFrame === 'iphone') {
+                    const phone = document.createElement('div');
+                    phone.className = 'frame-iphone';
+                    img.style.borderRadius = '20px';
+                    phone.appendChild(img);
+                    frameDiv.appendChild(phone);
+                } else if (currentFrame === 'ipad') {
+                    const tablet = document.createElement('div');
+                    tablet.className = 'frame-ipad';
+                    img.style.borderRadius = '10px';
+                    tablet.appendChild(img);
+                    frameDiv.appendChild(tablet);
+                }
+                
+                container.innerHTML = '';
+                container.appendChild(frameDiv);
+            } else {
+                container.innerHTML = '';
+                container.appendChild(img);
+            }
+        }
+        
+        // Download screenshot
+        function downloadScreenshot() {
+            if (!capturedImageData) return;
+            
+            const format = document.getElementById('format-select').value;
+            const link = document.createElement('a');
+            
+            if (format === 'jpg') {
+                // Convert to JPG
+                const canvas = document.createElement('canvas');
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    link.href = canvas.toDataURL('image/jpeg', 0.9);
+                    link.download = `screenshot-${Date.now()}.jpg`;
+                    link.click();
+                };
+                img.src = capturedImageData;
+            } else {
+                link.href = capturedImageData;
+                link.download = `screenshot-${Date.now()}.png`;
+                link.click();
+            }
+        }
+        
+        // Toggle bulk mode
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            document.getElementById('bulk-mode').style.display = bulkMode ? 'block' : 'none';
+        }
+        
+        // Capture bulk screenshots
+        async function captureBulk() {
+            const urls = document.getElementById('bulk-urls').value
+                .split('\n')
+                .map(u => u.trim())
+                .filter(u => u);
+            
+            if (urls.length === 0) {
+                alert('Please enter at least one URL');
+                return;
+            }
+            
+            const resultsDiv = document.getElementById('bulk-results');
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-text">Processing...</div></div>';
+            
+            const results = [];
+            for (const url of urls) {
+                await new Promise(r => setTimeout(r, 500));
+                const imageData = await generateDemoScreenshot(url);
+                results.push({ url, imageData });
+            }
+            
+            resultsDiv.innerHTML = results.map(r => `
+                <div class="bulk-item">
+                    <img src="${r.imageData}" alt="Screenshot">
+                    <div class="url">${r.url}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Pro modal
+        function showProModal() {
+            document.getElementById('pro-modal').classList.add('active');
+        }
+        
+        function hideProModal() {
+            document.getElementById('pro-modal').classList.remove('active');
+        }
+        
+        // Close modal on overlay click
+        document.getElementById('pro-modal').addEventListener('click', function(e) {
+            if (e.target === this) hideProModal();
+        });
+    </script>
+</body>
+</html>

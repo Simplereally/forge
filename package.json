@@ -1,0 +1,62 @@
+{
+  "name": "forge-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Collection of developer micro-tools - API testing, color palettes, QR codes, invoices, and more",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npx concurrently \"npm run dev:static\" \"npm run dev:readme-forge\"",
+    "dev:static": "npx http-server apps -p 3000 -c-1 --cors",
+    "dev:readme-forge": "npm run dev --workspace=@forge/readme-forge --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "serve:api-forge": "npx http-server apps/api-forge -p 3001 -c-1 -o",
+    "serve:color-forge": "npx http-server apps/color-forge -p 3002 -c-1 -o",
+    "serve:cron-forge": "npx http-server apps/cron-forge -p 3003 -c-1 -o",
+    "serve:diff-forge": "npx http-server apps/diff-forge -p 3004 -c-1 -o",
+    "serve:email-forge": "npx http-server apps/email-forge -p 3005 -c-1 -o",
+    "serve:font-forge": "npx http-server apps/font-forge -p 3006 -c-1 -o",
+    "serve:invoice-forge": "npx http-server apps/invoice-forge -p 3007 -c-1 -o",
+    "serve:json-forge": "npx http-server apps/json-forge -p 3008 -c-1 -o",
+    "serve:md-forge": "npx http-server apps/md-forge -p 3009 -c-1 -o",
+    "serve:meta-forge": "npx http-server apps/meta-forge -p 3010 -c-1 -o",
+    "serve:pass-forge": "npx http-server apps/pass-forge -p 3011 -c-1 -o",
+    "serve:qr-forge": "npx http-server apps/qr-forge -p 3012 -c-1 -o",
+    "serve:readme-forge": "npx http-server apps/readme-forge -p 3013 -c-1 -o",
+    "serve:regex-forge": "npx http-server apps/regex-forge -p 3014 -c-1 -o",
+    "serve:screenshot-forge": "npx http-server apps/screenshot-forge -p 3015 -c-1 -o",
+    "serve:screenshot-forge-api": "npx http-server apps/screenshot-forge-api -p 3016 -c-1 -o",
+    "readme-forge": "node apps/readme-forge/bin/readme-forge.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "forge",
+    "developer-tools",
+    "monorepo",
+    "api-testing",
+    "color-palette",
+    "qr-code",
+    "invoice-generator",
+    "json-formatter",
+    "markdown-editor",
+    "password-generator",
+    "regex-tester",
+    "screenshot-tool"
+  ],
+  "author": "Simplereally",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simplereally/forge-monorepo.git"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@forge/diff-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Text & Code Diff Viewer - Compare files side by side",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3004 -c-1 -o"
+  },
+  "keywords": [
+    "diff",
+    "compare",
+    "text-diff"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

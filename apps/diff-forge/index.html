@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiffForge — Free Online Text & Code Diff Tool | Compare Files</title>
+    <meta name="description" content="Free online diff tool. Compare text, code, and files side-by-side. Syntax highlighting for 20+ languages, character-level diffs, unified patch output. No signup!">
+    <meta name="keywords" content="diff tool, text compare, code diff, file comparison, online diff, side by side diff, unified diff, patch generator">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/diff-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/diff-forge/">
+    <meta property="og:title" content="DiffForge — Free Online Text & Code Diff Tool">
+    <meta property="og:description" content="Compare text and code side-by-side. Syntax highlighting, character-level diffs, unified patch output. Free, no signup required!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/diff-forge/">
+    <meta name="twitter:title" content="DiffForge — Free Online Text & Code Diff Tool">
+    <meta name="twitter:description" content="Compare text and code side-by-side. Syntax highlighting, character-level diffs, unified patch output. Free, no signup required!">
+    
+    <!-- Schema.org -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "DiffForge",
+        "description": "Free online diff tool for comparing text and code with syntax highlighting",
+        "url": "https://simplereally.github.io/diff-forge/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- diff-match-patch library -->
+    <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.5/index.min.js"></script>
+    
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    
+    <style>
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-info: #3b82f6;
+            
+            --diff-added-bg: rgba(34, 197, 94, 0.15);
+            --diff-added-text: #22c55e;
+            --diff-removed-bg: rgba(239, 68, 68, 0.15);
+            --diff-removed-text: #ef4444;
+            --diff-changed-bg: rgba(59, 130, 246, 0.15);
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN LAYOUT ═══════════════ */
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ TOOLBAR ═══════════════ */
+        
+        .toolbar {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+        }
+        
+        .toolbar-group label {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: var(--space-sm);
+        }
+        
+        .view-btn {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-silver);
+        }
+        
+        .view-btn:hover {
+            border-color: var(--forge-iron);
+            color: var(--forge-white);
+        }
+        
+        .view-btn.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        select {
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        /* ═══════════════ TOGGLE ═══════════════ */
+        
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 22px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: 22px;
+            transition: var(--transition-fast);
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--forge-silver);
+            border-radius: 50%;
+            transition: var(--transition-fast);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+        }
+        
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(18px);
+            background-color: var(--forge-void);
+        }
+        
+        .toggle-label {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            color: var(--forge-chrome);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ═══════════════ EDITORS ═══════════════ */
+        
+        .editors-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+        
+        @media (max-width: 900px) {
+            .editors-container { grid-template-columns: 1fr; }
+        }
+        
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .editor-title {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .editor-title .color-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .editor-title .color-dot.removed { background: var(--diff-removed-text); }
+        .editor-title .color-dot.added { background: var(--diff-added-text); }
+        
+        .file-upload {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            color: var(--forge-silver);
+            cursor: pointer;
+            padding: var(--space-xs) var(--space-sm);
+            border: 1px dashed var(--forge-steel);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+        
+        .file-upload:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        .file-upload input { display: none; }
+        
+        .editor-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            resize: vertical;
+            outline: none;
+            transition: var(--transition-fast);
+        }
+        
+        .editor-textarea:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        .editor-textarea::placeholder { color: var(--forge-iron); }
+        
+        /* ═══════════════ STATS ═══════════════ */
+        
+        .stats-bar {
+            display: flex;
+            gap: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-item span {
+            color: var(--forge-white);
+            font-weight: 600;
+            margin-left: var(--space-xs);
+        }
+        
+        .stat-item.added span { color: var(--diff-added-text); }
+        .stat-item.removed span { color: var(--diff-removed-text); }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn-row {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            color: var(--forge-white);
+        }
+        
+        /* ═══════════════ DIFF OUTPUT ═══════════════ */
+        
+        .diff-container {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .diff-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-steel);
+            border-bottom: 1px solid var(--forge-iron);
+        }
+        
+        .diff-header-title {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .diff-output {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        /* Side by side view */
+        .diff-side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .diff-side {
+            overflow-x: auto;
+        }
+        
+        .diff-side:first-child {
+            border-right: 1px solid var(--forge-steel);
+        }
+        
+        .diff-line {
+            display: flex;
+            min-height: 24px;
+        }
+        
+        .diff-line-number {
+            width: 50px;
+            min-width: 50px;
+            padding: 0 var(--space-sm);
+            text-align: right;
+            color: var(--forge-iron);
+            background: var(--forge-charcoal);
+            border-right: 1px solid var(--forge-steel);
+            user-select: none;
+        }
+        
+        .diff-line-content {
+            flex: 1;
+            padding: 0 var(--space-md);
+            white-space: pre;
+        }
+        
+        .diff-line.added {
+            background: var(--diff-added-bg);
+        }
+        
+        .diff-line.added .diff-line-content {
+            color: var(--diff-added-text);
+        }
+        
+        .diff-line.removed {
+            background: var(--diff-removed-bg);
+        }
+        
+        .diff-line.removed .diff-line-content {
+            color: var(--diff-removed-text);
+        }
+        
+        .diff-line.empty {
+            background: var(--forge-charcoal);
+        }
+        
+        /* Inline/unified view */
+        .diff-unified .diff-line-prefix {
+            width: 20px;
+            min-width: 20px;
+            text-align: center;
+            color: var(--forge-iron);
+        }
+        
+        .diff-unified .diff-line.added .diff-line-prefix {
+            color: var(--diff-added-text);
+        }
+        
+        .diff-unified .diff-line.removed .diff-line-prefix {
+            color: var(--diff-removed-text);
+        }
+        
+        /* Character-level highlighting */
+        .char-added {
+            background: rgba(34, 197, 94, 0.4);
+            border-radius: 2px;
+        }
+        
+        .char-removed {
+            background: rgba(239, 68, 68, 0.4);
+            border-radius: 2px;
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            font-family: var(--font-display);
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .forge-footer-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: var(--transition-fast);
+        }
+        
+        .forge-footer-links a:hover { color: var(--forge-ember); }
+        
+        .forge-footer p {
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        /* ═══════════════ MODAL ═══════════════ */
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+        }
+        
+        .modal-overlay.active { display: flex; }
+        
+        .modal {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            max-width: 500px;
+            width: 100%;
+            padding: var(--space-xl);
+            position: relative;
+            animation: modalIn 0.3s ease;
+        }
+        
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: var(--space-md);
+            right: var(--space-md);
+            background: none;
+            border: none;
+            color: var(--forge-silver);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .modal-close:hover { color: var(--forge-white); }
+        
+        .modal h2 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .modal p {
+            color: var(--forge-silver);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .pro-features-list {
+            list-style: none;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .pro-features-list li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            font-size: 0.95rem;
+        }
+        
+        .pro-features-list li::before {
+            content: '🔥';
+            font-size: 1rem;
+        }
+        
+        .price-tag {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .price-tag span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+        }
+        
+        /* ═══════════════ TOAST ═══════════════ */
+        
+        .toast {
+            position: fixed;
+            bottom: var(--space-xl);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--forge-success);
+            color: var(--forge-void);
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 300;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a { font-size: 0.6rem; padding: var(--space-xs); }
+            .diff-side-by-side { grid-template-columns: 1fr; }
+            .diff-side:first-child { border-right: none; border-bottom: 1px solid var(--forge-steel); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/diff-forge/" class="forge-logo">
+                <span class="icon">⚖️</span>
+                <span>DIFF<span style="color: var(--forge-ember)">FORGE</span></span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/screenshot-forge/">Screenshot</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/diff-forge/" class="active">Diff</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Header -->
+    <header class="forge-header">
+        <h1>DIFF<span class="accent">FORGE</span></h1>
+        <p>Compare text & code • Side-by-side or unified view • Syntax highlighting • Export patches</p>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <div class="forge-card">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="toolbar-group">
+                    <label>View:</label>
+                    <button class="view-btn active" data-view="side" onclick="setView('side')">Side by Side</button>
+                    <button class="view-btn" data-view="unified" onclick="setView('unified')">Unified</button>
+                </div>
+                
+                <div class="toolbar-group">
+                    <label>Language:</label>
+                    <select id="language-select" onchange="updateDiff()">
+                        <option value="plaintext">Plain Text</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="typescript">TypeScript</option>
+                        <option value="python">Python</option>
+                        <option value="java">Java</option>
+                        <option value="csharp">C#</option>
+                        <option value="cpp">C++</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="php">PHP</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="swift">Swift</option>
+                        <option value="kotlin">Kotlin</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="scss">SCSS</option>
+                        <option value="json">JSON</option>
+                        <option value="xml">XML</option>
+                        <option value="yaml">YAML</option>
+                        <option value="markdown">Markdown</option>
+                        <option value="sql">SQL</option>
+                        <option value="bash">Bash</option>
+                    </select>
+                </div>
+                
+                <div class="toggle-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ignore-whitespace" onchange="updateDiff()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Ignore Whitespace</span>
+                </div>
+                
+                <div class="toggle-item">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="char-diff" checked onchange="updateDiff()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Char-Level Diff</span>
+                </div>
+            </div>
+            
+            <!-- Editors -->
+            <div class="editors-container">
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <span class="color-dot removed"></span>
+                            Original Text
+                        </div>
+                        <label class="file-upload">
+                            📁 Upload File
+                            <input type="file" id="file-original" onchange="loadFile(this, 'original')">
+                        </label>
+                    </div>
+                    <textarea class="editor-textarea" id="text-original" placeholder="Paste original text here..." oninput="updateDiff()">function hello() {
+    console.log("Hello World");
+    return true;
+}</textarea>
+                </div>
+                
+                <div class="editor-panel">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <span class="color-dot added"></span>
+                            Modified Text
+                        </div>
+                        <label class="file-upload">
+                            📁 Upload File
+                            <input type="file" id="file-modified" onchange="loadFile(this, 'modified')">
+                        </label>
+                    </div>
+                    <textarea class="editor-textarea" id="text-modified" placeholder="Paste modified text here..." oninput="updateDiff()">function hello(name) {
+    console.log("Hello " + name);
+    return name !== undefined;
+}</textarea>
+                </div>
+            </div>
+            
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">Original: <span id="stat-original-lines">0</span> lines, <span id="stat-original-words">0</span> words</div>
+                <div class="stat-item">Modified: <span id="stat-modified-lines">0</span> lines, <span id="stat-modified-words">0</span> words</div>
+                <div class="stat-item added">Added: <span id="stat-added">0</span></div>
+                <div class="stat-item removed">Removed: <span id="stat-removed">0</span></div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="btn-row">
+                <button class="btn-primary" onclick="updateDiff()">🔄 Compare</button>
+                <button class="btn-secondary" onclick="copyUnifiedDiff()">📋 Copy Patch</button>
+                <button class="btn-secondary" onclick="swapTexts()">⇄ Swap</button>
+                <button class="btn-secondary" onclick="clearAll()">🗑️ Clear</button>
+                <button class="btn-secondary" onclick="showProModal()">🔗 Share <span class="pro-badge">PRO</span></button>
+            </div>
+            
+            <!-- Diff Output -->
+            <div class="diff-container">
+                <div class="diff-header">
+                    <div class="diff-header-title">📊 Diff Output</div>
+                </div>
+                <div class="diff-output" id="diff-output">
+                    <!-- Diff will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="forge-footer">
+        <div class="forge-footer-links">
+            <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+            <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+            <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+            <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+            <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+            <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+            <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+            <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+            <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+            <a href="https://simplereally.github.io/api-forge/">APIForge</a>
+            <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+            <a href="https://simplereally.github.io/screenshot-forge/">ScreenshotForge</a>
+            <a href="https://simplereally.github.io/email-forge/">EmailForge</a>
+            <a href="https://simplereally.github.io/diff-forge/">DiffForge</a>
+        </div>
+        <p>Made with 🔥 by <a href="https://github.com/Simplereally" style="color: var(--forge-ember); text-decoration: none;">Simplereally</a></p>
+    </footer>
+    
+    <!-- Pro Modal -->
+    <div class="modal-overlay" id="pro-modal">
+        <div class="modal">
+            <button class="modal-close" onclick="hideProModal()">×</button>
+            <h2>🔥 Upgrade to Pro</h2>
+            <p>Unlock the full power of DiffForge</p>
+            <ul class="pro-features-list">
+                <li>Save & share diffs via URL</li>
+                <li>Diff history & versioning</li>
+                <li>GitHub/GitLab integration</li>
+                <li>Team collaboration</li>
+                <li>API access</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="price-tag">$7 <span>/ month</span></div>
+            <button class="btn-primary" style="width: 100%;" onclick="alert('Stripe integration coming soon!')">⚡ Upgrade Now</button>
+        </div>
+    </div>
+    
+    <!-- Toast -->
+    <div class="toast" id="toast">Copied to clipboard!</div>
+    
+    <script>
+        // State
+        let currentView = 'side';
+        const dmp = new diff_match_patch();
+        
+        // Set view mode
+        function setView(view) {
+            currentView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.view === view);
+            });
+            updateDiff();
+        }
+        
+        // Load file
+        function loadFile(input, target) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById(`text-${target}`).value = e.target.result;
+                updateDiff();
+            };
+            reader.readAsText(file);
+        }
+        
+        // Swap texts
+        function swapTexts() {
+            const original = document.getElementById('text-original');
+            const modified = document.getElementById('text-modified');
+            const temp = original.value;
+            original.value = modified.value;
+            modified.value = temp;
+            updateDiff();
+        }
+        
+        // Clear all
+        function clearAll() {
+            document.getElementById('text-original').value = '';
+            document.getElementById('text-modified').value = '';
+            updateDiff();
+        }
+        
+        // Count words
+        function countWords(text) {
+            return text.trim() ? text.trim().split(/\s+/).length : 0;
+        }
+        
+        // Update statistics
+        function updateStats(original, modified, addedCount, removedCount) {
+            document.getElementById('stat-original-lines').textContent = original.split('\n').length;
+            document.getElementById('stat-original-words').textContent = countWords(original);
+            document.getElementById('stat-modified-lines').textContent = modified.split('\n').length;
+            document.getElementById('stat-modified-words').textContent = countWords(modified);
+            document.getElementById('stat-added').textContent = addedCount;
+            document.getElementById('stat-removed').textContent = removedCount;
+        }
+        
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Generate character-level diff for a line
+        function charDiff(oldText, newText) {
+            const diffs = dmp.diff_main(oldText, newText);
+            dmp.diff_cleanupSemantic(diffs);
+            
+            let oldHtml = '';
+            let newHtml = '';
+            
+            diffs.forEach(([op, text]) => {
+                const escaped = escapeHtml(text);
+                if (op === 0) {
+                    oldHtml += escaped;
+                    newHtml += escaped;
+                } else if (op === -1) {
+                    oldHtml += `<span class="char-removed">${escaped}</span>`;
+                } else if (op === 1) {
+                    newHtml += `<span class="char-added">${escaped}</span>`;
+                }
+            });
+            
+            return { oldHtml, newHtml };
+        }
+        
+        // Update diff
+        function updateDiff() {
+            let original = document.getElementById('text-original').value;
+            let modified = document.getElementById('text-modified').value;
+            const ignoreWhitespace = document.getElementById('ignore-whitespace').checked;
+            const charLevel = document.getElementById('char-diff').checked;
+            
+            // Normalize if ignoring whitespace
+            if (ignoreWhitespace) {
+                original = original.replace(/[ \t]+/g, ' ').replace(/^ | $/gm, '');
+                modified = modified.replace(/[ \t]+/g, ' ').replace(/^ | $/gm, '');
+            }
+            
+            const originalLines = original.split('\n');
+            const modifiedLines = modified.split('\n');
+            
+            // Compute line-level diff
+            const diffs = dmp.diff_main(original, modified);
+            dmp.diff_cleanupSemantic(diffs);
+            
+            // Convert to line-based diff
+            const lineDiffs = computeLineDiff(originalLines, modifiedLines);
+            
+            // Count changes
+            let addedCount = 0;
+            let removedCount = 0;
+            lineDiffs.forEach(d => {
+                if (d.type === 'added') addedCount++;
+                if (d.type === 'removed') removedCount++;
+            });
+            
+            updateStats(original, modified, addedCount, removedCount);
+            
+            // Render
+            const output = document.getElementById('diff-output');
+            if (currentView === 'side') {
+                output.innerHTML = renderSideBySide(lineDiffs, charLevel);
+            } else {
+                output.innerHTML = renderUnified(lineDiffs, charLevel);
+            }
+        }
+        
+        // Compute line diff using LCS-like approach
+        function computeLineDiff(oldLines, newLines) {
+            const result = [];
+            let oldIdx = 0;
+            let newIdx = 0;
+            
+            // Simple diff algorithm
+            while (oldIdx < oldLines.length || newIdx < newLines.length) {
+                if (oldIdx >= oldLines.length) {
+                    result.push({ type: 'added', newLine: newLines[newIdx], newNum: newIdx + 1 });
+                    newIdx++;
+                } else if (newIdx >= newLines.length) {
+                    result.push({ type: 'removed', oldLine: oldLines[oldIdx], oldNum: oldIdx + 1 });
+                    oldIdx++;
+                } else if (oldLines[oldIdx] === newLines[newIdx]) {
+                    result.push({ type: 'same', oldLine: oldLines[oldIdx], newLine: newLines[newIdx], oldNum: oldIdx + 1, newNum: newIdx + 1 });
+                    oldIdx++;
+                    newIdx++;
+                } else {
+                    // Look ahead for matches
+                    let foundOld = -1;
+                    let foundNew = -1;
+                    
+                    for (let i = newIdx; i < Math.min(newIdx + 5, newLines.length); i++) {
+                        if (oldLines[oldIdx] === newLines[i]) {
+                            foundNew = i;
+                            break;
+                        }
+                    }
+                    
+                    for (let i = oldIdx; i < Math.min(oldIdx + 5, oldLines.length); i++) {
+                        if (oldLines[i] === newLines[newIdx]) {
+                            foundOld = i;
+                            break;
+                        }
+                    }
+                    
+                    if (foundNew !== -1 && (foundOld === -1 || foundNew - newIdx <= foundOld - oldIdx)) {
+                        // Add new lines
+                        while (newIdx < foundNew) {
+                            result.push({ type: 'added', newLine: newLines[newIdx], newNum: newIdx + 1 });
+                            newIdx++;
+                        }
+                    } else if (foundOld !== -1) {
+                        // Remove old lines
+                        while (oldIdx < foundOld) {
+                            result.push({ type: 'removed', oldLine: oldLines[oldIdx], oldNum: oldIdx + 1 });
+                            oldIdx++;
+                        }
+                    } else {
+                        // Modified line
+                        result.push({ type: 'modified', oldLine: oldLines[oldIdx], newLine: newLines[newIdx], oldNum: oldIdx + 1, newNum: newIdx + 1 });
+                        oldIdx++;
+                        newIdx++;
+                    }
+                }
+            }
+            
+            return result;
+        }
+        
+        // Render side by side
+        function renderSideBySide(diffs, charLevel) {
+            let leftHtml = '';
+            let rightHtml = '';
+            
+            diffs.forEach(d => {
+                if (d.type === 'same') {
+                    leftHtml += `<div class="diff-line"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                    rightHtml += `<div class="diff-line"><span class="diff-line-number">${d.newNum}</span><span class="diff-line-content">${escapeHtml(d.newLine)}</span></div>`;
+                } else if (d.type === 'removed') {
+                    leftHtml += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                    rightHtml += `<div class="diff-line empty"><span class="diff-line-number"></span><span class="diff-line-content"></span></div>`;
+                } else if (d.type === 'added') {
+                    leftHtml += `<div class="diff-line empty"><span class="diff-line-number"></span><span class="diff-line-content"></span></div>`;
+                    rightHtml += `<div class="diff-line added"><span class="diff-line-number">${d.newNum}</span><span class="diff-line-content">${escapeHtml(d.newLine)}</span></div>`;
+                } else if (d.type === 'modified') {
+                    if (charLevel) {
+                        const { oldHtml, newHtml } = charDiff(d.oldLine, d.newLine);
+                        leftHtml += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-content">${oldHtml}</span></div>`;
+                        rightHtml += `<div class="diff-line added"><span class="diff-line-number">${d.newNum}</span><span class="diff-line-content">${newHtml}</span></div>`;
+                    } else {
+                        leftHtml += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                        rightHtml += `<div class="diff-line added"><span class="diff-line-number">${d.newNum}</span><span class="diff-line-content">${escapeHtml(d.newLine)}</span></div>`;
+                    }
+                }
+            });
+            
+            return `<div class="diff-side-by-side"><div class="diff-side">${leftHtml}</div><div class="diff-side">${rightHtml}</div></div>`;
+        }
+        
+        // Render unified
+        function renderUnified(diffs, charLevel) {
+            let html = '<div class="diff-unified">';
+            
+            diffs.forEach(d => {
+                if (d.type === 'same') {
+                    html += `<div class="diff-line"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-number">${d.newNum}</span><span class="diff-line-prefix"> </span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                } else if (d.type === 'removed') {
+                    html += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-number"></span><span class="diff-line-prefix">-</span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                } else if (d.type === 'added') {
+                    html += `<div class="diff-line added"><span class="diff-line-number"></span><span class="diff-line-number">${d.newNum}</span><span class="diff-line-prefix">+</span><span class="diff-line-content">${escapeHtml(d.newLine)}</span></div>`;
+                } else if (d.type === 'modified') {
+                    if (charLevel) {
+                        const { oldHtml, newHtml } = charDiff(d.oldLine, d.newLine);
+                        html += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-number"></span><span class="diff-line-prefix">-</span><span class="diff-line-content">${oldHtml}</span></div>`;
+                        html += `<div class="diff-line added"><span class="diff-line-number"></span><span class="diff-line-number">${d.newNum}</span><span class="diff-line-prefix">+</span><span class="diff-line-content">${newHtml}</span></div>`;
+                    } else {
+                        html += `<div class="diff-line removed"><span class="diff-line-number">${d.oldNum}</span><span class="diff-line-number"></span><span class="diff-line-prefix">-</span><span class="diff-line-content">${escapeHtml(d.oldLine)}</span></div>`;
+                        html += `<div class="diff-line added"><span class="diff-line-number"></span><span class="diff-line-number">${d.newNum}</span><span class="diff-line-prefix">+</span><span class="diff-line-content">${escapeHtml(d.newLine)}</span></div>`;
+                    }
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+        
+        // Generate unified patch format
+        function generateUnifiedPatch() {
+            const original = document.getElementById('text-original').value;
+            const modified = document.getElementById('text-modified').value;
+            
+            const patches = dmp.patch_make(original, modified);
+            return dmp.patch_toText(patches);
+        }
+        
+        // Copy unified diff
+        function copyUnifiedDiff() {
+            const patch = generateUnifiedPatch();
+            navigator.clipboard.writeText(patch).then(() => {
+                showToast('Patch copied to clipboard!');
+            });
+        }
+        
+        // Toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        
+        // Pro modal
+        function showProModal() {
+            document.getElementById('pro-modal').classList.add('active');
+        }
+        
+        function hideProModal() {
+            document.getElementById('pro-modal').classList.remove('active');
+        }
+        
+        document.getElementById('pro-modal').addEventListener('click', function(e) {
+            if (e.target === this) hideProModal();
+        });
+        
+        // Initialize
+        updateDiff();
+    </script>
+</body>
+</html>

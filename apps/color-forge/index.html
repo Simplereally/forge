@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Color Palette Generator - Create Beautiful Color Schemes | ColorForge</title>
+    <meta name="description" content="Generate stunning color palettes instantly. Extract colors from images, explore harmonies. Export CSS, SCSS, Tailwind. Free tool for designers. Try now!">
+    <meta name="keywords" content="color palette generator, color scheme generator, color picker tool, extract colors from image, css color palette, design colors">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/color-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/color-forge/">
+    <meta property="og:title" content="Free Color Palette Generator - Create Beautiful Color Schemes | ColorForge">
+    <meta property="og:description" content="Generate stunning color palettes instantly. Extract colors from images, explore harmonies. Export CSS, SCSS, Tailwind. Free tool for designers. Try now!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/color-forge/">
+    <meta name="twitter:title" content="Free Color Palette Generator - Create Beautiful Color Schemes | ColorForge">
+    <meta name="twitter:description" content="Generate stunning color palettes instantly. Extract colors from images, explore harmonies. Export CSS, SCSS, Tailwind. Free tool for designers. Try now!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "ColorForge",
+    "description": "Free color palette generator for designers. Generate beautiful color schemes, extract colors from images, and export to CSS, SCSS, or Tailwind.",
+    "url": "https://simplereally.github.io/color-forge/",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Can I extract colors from an image?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Upload any image and ColorForge will automatically extract the dominant colors."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What export formats are available?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Export palettes as CSS variables, SCSS variables, Tailwind config, or JSON."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What color harmonies are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "ColorForge supports random, analogous, complementary, triadic, and monochromatic harmonies."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I save my palettes?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, you can save up to 10 palettes locally in your browser."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Is ColorForge free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The core features are free. Pro version ($2.99) adds ASE/Sketch export and accessibility checking."
+            }
+        }
+    ]
+}
+    </script>
+    
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        .forge-header .hint {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+            margin-top: var(--space-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .forge-header .hint kbd {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        /* ═══════════════ MAIN ═══════════════ */
+        
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ HARMONY TABS ═══════════════ */
+        
+        .harmony-tabs {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .harmony-tabs button {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-silver);
+        }
+        
+        .harmony-tabs button:hover {
+            border-color: var(--forge-iron);
+            color: var(--forge-white);
+        }
+        
+        .harmony-tabs button.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ PALETTE DISPLAY ═══════════════ */
+        
+        .palette-display {
+            display: flex;
+            gap: 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            min-height: 220px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .color-swatch {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+        
+        .color-swatch:hover {
+            transform: scaleY(1.03);
+            z-index: 10;
+        }
+        
+        .lock-btn {
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            width: 32px;
+            height: 32px;
+            background: rgba(0, 0, 0, 0.4);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            backdrop-filter: blur(4px);
+        }
+        
+        .lock-btn:hover {
+            background: rgba(0, 0, 0, 0.6);
+            transform: scale(1.1);
+        }
+        
+        .lock-btn.locked {
+            background: rgba(255, 107, 53, 0.8);
+        }
+        
+        .color-info {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a1a;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        
+        .color-info.light {
+            background: rgba(0, 0, 0, 0.7);
+            color: #f0f0f0;
+        }
+        
+        @media (max-width: 600px) {
+            .palette-display {
+                flex-direction: column;
+                min-height: 400px;
+            }
+            
+            .color-swatch {
+                min-height: 80px;
+            }
+            
+            .color-swatch:hover {
+                transform: scaleX(1.02);
+            }
+        }
+        
+        /* ═══════════════ CONTROLS ═══════════════ */
+        
+        .controls {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: var(--space-lg);
+        }
+        
+        .btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            border-color: var(--forge-iron);
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: var(--space-xs);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pro-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* ═══════════════ DETAILS/SUMMARY ═══════════════ */
+        
+        details {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-md);
+        }
+        
+        summary {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        summary:hover { color: var(--forge-ember); }
+        
+        details[open] summary {
+            border-bottom: 1px solid var(--forge-steel);
+        }
+        
+        details > div {
+            padding: var(--space-md);
+        }
+        
+        .image-upload {
+            text-align: center;
+            padding: var(--space-lg);
+            border: 2px dashed var(--forge-steel);
+            border-radius: var(--radius-md);
+            transition: var(--transition-fast);
+        }
+        
+        .image-upload:hover {
+            border-color: var(--forge-ember);
+        }
+        
+        .image-upload input[type="file"] {
+            display: block;
+            margin: 0 auto var(--space-md);
+        }
+        
+        .image-upload p {
+            color: var(--forge-silver);
+            font-size: 0.9rem;
+        }
+        
+        #image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            margin-top: var(--space-md);
+            border-radius: var(--radius-sm);
+        }
+        
+        /* ═══════════════ PRO FEATURES SECTION ═══════════════ */
+        
+        .pro-features-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .pro-features-section h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .pro-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .pro-feature-card {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .pro-feature-card:hover {
+            border-color: var(--forge-ember);
+            transform: translateY(-2px);
+        }
+        
+        .pro-feature-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .pro-feature-card h4 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .pro-feature-card p {
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+        }
+        
+        .pro-cta-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border-radius: var(--radius-md);
+        }
+        
+        .pro-price {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+        }
+        
+        .pro-price span {
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .pro-cta-bar .btn-primary {
+            text-decoration: none;
+        }
+        
+        /* ═══════════════ EXPORT SECTION ═══════════════ */
+        
+        .export-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .export-section h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+        
+        .export-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-sm);
+        }
+        
+        #export-output {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--forge-chrome);
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        /* ═══════════════ SAVED PALETTES ═══════════════ */
+        
+        .saved-palettes {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .saved-palettes h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+        }
+        
+        .saved-palette {
+            display: flex;
+            gap: 2px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: var(--space-sm);
+            height: 45px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 2px solid transparent;
+        }
+        
+        .saved-palette:hover {
+            border-color: var(--forge-ember);
+            transform: scale(1.01);
+        }
+        
+        .saved-swatch { flex: 1; }
+        
+        /* ═══════════════ MODAL ═══════════════ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 11, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--forge-white);
+            margin: 0 0 var(--space-md);
+        }
+        
+        .modal-price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+            margin: var(--space-md) 0;
+        }
+        
+        .modal-price span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .modal-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-md) 0;
+        }
+        
+        .modal-features li {
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .modal-features li::before {
+            content: '✓';
+            color: var(--forge-success);
+            font-weight: bold;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover { color: var(--forge-ember); }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover { text-decoration: underline; }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a {
+                font-size: 0.7rem;
+                padding: var(--space-xs);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/" class="active">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Color<span class="accent">Forge</span></h1>
+        <p>Generate beautiful color palettes instantly</p>
+        <div class="hint">Press <kbd>Space</kbd> for new colors</div>
+    </header>
+    
+    <main class="container">
+        <div class="forge-card">
+            <div class="harmony-tabs">
+                <button class="active" data-harmony="random">Random</button>
+                <button data-harmony="analogous">Analogous</button>
+                <button data-harmony="complementary">Complementary</button>
+                <button data-harmony="triadic">Triadic</button>
+                <button data-harmony="monochromatic">Monochromatic</button>
+            </div>
+            
+            <div class="palette-display" id="palette"></div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="generatePalette()">🔄 Generate</button>
+                <button class="btn btn-secondary" onclick="savePalette()">💾 Save</button>
+                <button class="btn btn-secondary" onclick="copyAllColors()">📋 Copy All</button>
+            </div>
+        </div>
+        
+        <div class="forge-card">
+            <details>
+                <summary>🖼️ Extract from Image</summary>
+                <div class="image-upload">
+                    <input type="file" id="image-input" accept="image/*" onchange="extractFromImage(event)">
+                    <p>Upload an image to extract its color palette</p>
+                    <img id="image-preview" style="display: none;">
+                </div>
+            </details>
+            
+            <div class="export-section">
+                <h3>Export Palette</h3>
+                <div class="export-grid">
+                    <button class="btn btn-secondary" onclick="exportAs('css')">CSS</button>
+                    <button class="btn btn-secondary" onclick="exportAs('scss')">SCSS</button>
+                    <button class="btn btn-secondary" onclick="exportAs('tailwind')">Tailwind</button>
+                    <button class="btn btn-secondary" onclick="exportAs('json')">JSON</button>
+                </div>
+                <pre id="export-output" style="display: none;"></pre>
+            </div>
+            
+            <!-- Pro Features Section -->
+            <div class="pro-features-section">
+                <h3>Pro Features <span class="pro-badge" onclick="showProModal()">✨ PRO</span></h3>
+                <div class="pro-features-grid">
+                    <div class="pro-feature-card" onclick="showProModal()">
+                        <div class="icon">📤</div>
+                        <h4>Export Formats</h4>
+                        <p>ASE, Sketch, Figma</p>
+                    </div>
+                    <div class="pro-feature-card" onclick="showProModal()">
+                        <div class="icon">♿</div>
+                        <h4>Accessibility</h4>
+                        <p>WCAG contrast check</p>
+                    </div>
+                    <div class="pro-feature-card" onclick="showProModal()">
+                        <div class="icon">🌈</div>
+                        <h4>Gradients</h4>
+                        <p>CSS gradient gen</p>
+                    </div>
+                    <div class="pro-feature-card" onclick="showProModal()">
+                        <div class="icon">📊</div>
+                        <h4>Unlimited</h4>
+                        <p>Saved palettes</p>
+                    </div>
+                </div>
+                <div class="pro-cta-bar">
+                    <div class="pro-price">$2.99 <span>one-time</span></div>
+                    <a href="https://buy.stripe.com/5kQ8wIdxLdfp1Yl3131gs03" class="btn btn-primary" target="_blank">Unlock Pro</a>
+                </div>
+            </div>
+            
+            <div class="saved-palettes" id="saved-palettes" style="display: none;">
+                <h3>Saved Palettes</h3>
+                <div id="saved-list"></div>
+                <button class="btn btn-secondary" onclick="clearSaved()" style="margin-top: var(--space-sm); font-size: 0.75rem;">Clear All</button>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Pro Modal -->
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <h3>🎨 ColorForge Pro</h3>
+            <div class="modal-price">$2.99 <span>one-time</span></div>
+            <ul class="modal-features">
+                <li>Export to ASE, Sketch, Figma</li>
+                <li>Accessibility/WCAG contrast checker</li>
+                <li>CSS gradient generator</li>
+                <li>Unlimited saved palettes</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
+                <a href="https://buy.stripe.com/5kQ8wIdxLdfp1Yl3131gs03" class="btn btn-primary" style="text-decoration:none;text-align:center;" target="_blank">Upgrade — $2.99</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+            <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/color-palette-generators-for-designers.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: Best Color Palette Generators for Designers</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        let colors = [];
+        let locked = [false, false, false, false, false];
+        let harmony = 'random';
+        let savedPalettes = JSON.parse(localStorage.getItem('colorforge_palettes') || '[]');
+        
+        document.querySelectorAll('.harmony-tabs button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.harmony-tabs button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                harmony = btn.dataset.harmony;
+                generatePalette();
+            });
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+                generatePalette();
+            }
+        });
+        
+        function hslToHex(h, s, l) {
+            s /= 100; l /= 100;
+            const a = s * Math.min(l, 1 - l);
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+        
+        function hexToHsl(hex) {
+            let r = parseInt(hex.slice(1, 3), 16) / 255;
+            let g = parseInt(hex.slice(3, 5), 16) / 255;
+            let b = parseInt(hex.slice(5, 7), 16) / 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) { h = s = 0; }
+            else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+            return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+        }
+        
+        function generateColor() {
+            const h = Math.random() * 360;
+            const s = 50 + Math.random() * 40;
+            const l = 30 + Math.random() * 40;
+            return hslToHex(h, s, l);
+        }
+        
+        function generatePalette() {
+            const baseHue = Math.random() * 360;
+            const baseSat = 50 + Math.random() * 30;
+            const baseLit = 40 + Math.random() * 20;
+            
+            for (let i = 0; i < 5; i++) {
+                if (locked[i]) continue;
+                
+                let h, s, l;
+                switch (harmony) {
+                    case 'analogous':
+                        h = (baseHue + (i - 2) * 30) % 360;
+                        s = baseSat + (Math.random() - 0.5) * 20;
+                        l = baseLit + (i - 2) * 8;
+                        break;
+                    case 'complementary':
+                        h = i < 3 ? baseHue : (baseHue + 180) % 360;
+                        s = baseSat + (Math.random() - 0.5) * 20;
+                        l = baseLit + (Math.random() - 0.5) * 30;
+                        break;
+                    case 'triadic':
+                        h = (baseHue + (i % 3) * 120) % 360;
+                        s = baseSat + (Math.random() - 0.5) * 20;
+                        l = baseLit + (Math.random() - 0.5) * 30;
+                        break;
+                    case 'monochromatic':
+                        h = baseHue;
+                        s = baseSat + (Math.random() - 0.5) * 15;
+                        l = 20 + i * 15;
+                        break;
+                    default:
+                        h = Math.random() * 360;
+                        s = 50 + Math.random() * 40;
+                        l = 30 + Math.random() * 40;
+                }
+                colors[i] = hslToHex(Math.abs(h) % 360, Math.max(20, Math.min(100, s)), Math.max(15, Math.min(85, l)));
+            }
+            renderPalette();
+        }
+        
+        function renderPalette() {
+            const palette = document.getElementById('palette');
+            palette.innerHTML = colors.map((color, i) => {
+                const [h, s, l] = hexToHsl(color);
+                const isLight = l > 50;
+                return `
+                    <div class="color-swatch" style="background: ${color};" onclick="copyColor('${color}', event)">
+                        <button class="lock-btn ${locked[i] ? 'locked' : ''}" onclick="event.stopPropagation(); toggleLock(${i})">
+                            ${locked[i] ? '🔒' : '🔓'}
+                        </button>
+                        <div class="color-info ${isLight ? 'light' : ''}">${color.toUpperCase()}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function toggleLock(i) {
+            locked[i] = !locked[i];
+            renderPalette();
+        }
+        
+        function copyColor(color, event) {
+            navigator.clipboard.writeText(color);
+            const info = event.target.closest('.color-swatch').querySelector('.color-info');
+            const original = info.textContent;
+            info.textContent = 'Copied!';
+            setTimeout(() => info.textContent = original, 1000);
+        }
+        
+        function copyAllColors() {
+            navigator.clipboard.writeText(colors.join(', '));
+            alert('All colors copied to clipboard!');
+        }
+        
+        function savePalette() {
+            savedPalettes.unshift([...colors]);
+            if (savedPalettes.length > 10) savedPalettes.pop();
+            localStorage.setItem('colorforge_palettes', JSON.stringify(savedPalettes));
+            renderSaved();
+        }
+        
+        function loadPalette(palette) {
+            colors = [...palette];
+            locked = [false, false, false, false, false];
+            renderPalette();
+        }
+        
+        function renderSaved() {
+            if (savedPalettes.length === 0) {
+                document.getElementById('saved-palettes').style.display = 'none';
+                return;
+            }
+            document.getElementById('saved-palettes').style.display = 'block';
+            document.getElementById('saved-list').innerHTML = savedPalettes.map((p, i) => `
+                <div class="saved-palette" onclick="loadPalette(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+                    ${p.map(c => `<div class="saved-swatch" style="background: ${c};"></div>`).join('')}
+                </div>
+            `).join('');
+        }
+        
+        function clearSaved() {
+            savedPalettes = [];
+            localStorage.removeItem('colorforge_palettes');
+            renderSaved();
+        }
+        
+        function exportAs(format) {
+            const output = document.getElementById('export-output');
+            let text = '';
+            switch (format) {
+                case 'css':
+                    text = `:root {\n${colors.map((c, i) => `  --color-${i + 1}: ${c};`).join('\n')}\n}`;
+                    break;
+                case 'scss':
+                    text = colors.map((c, i) => `$color-${i + 1}: ${c};`).join('\n');
+                    break;
+                case 'tailwind':
+                    text = `module.exports = {\n  theme: {\n    extend: {\n      colors: {\n${colors.map((c, i) => `        'brand-${i + 1}': '${c}',`).join('\n')}\n      }\n    }\n  }\n}`;
+                    break;
+                case 'json':
+                    text = JSON.stringify({ colors: colors.map((c, i) => ({ name: `color-${i + 1}`, hex: c })) }, null, 2);
+                    break;
+            }
+            output.textContent = text;
+            output.style.display = 'block';
+            navigator.clipboard.writeText(text);
+        }
+        
+        function extractFromImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('image-preview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+                
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const image = new Image();
+                image.onload = function() {
+                    canvas.width = 50;
+                    canvas.height = 50;
+                    ctx.drawImage(image, 0, 0, 50, 50);
+                    const data = ctx.getImageData(0, 0, 50, 50).data;
+                    
+                    const colorCounts = {};
+                    for (let i = 0; i < data.length; i += 4) {
+                        const r = Math.round(data[i] / 32) * 32;
+                        const g = Math.round(data[i + 1] / 32) * 32;
+                        const b = Math.round(data[i + 2] / 32) * 32;
+                        const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                        colorCounts[hex] = (colorCounts[hex] || 0) + 1;
+                    }
+                    
+                    const sorted = Object.entries(colorCounts).sort((a, b) => b[1] - a[1]);
+                    colors = sorted.slice(0, 5).map(([hex]) => hex);
+                    while (colors.length < 5) colors.push(generateColor());
+                    locked = [false, false, false, false, false];
+                    renderPalette();
+                };
+                image.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function showProModal() {
+            document.getElementById('proModal').classList.add('active');
+        }
+        
+        function closeProModal() {
+            document.getElementById('proModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('proModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('proModal')) {
+                closeProModal();
+            }
+        });
+        
+        // Initialize
+        for (let i = 0; i < 5; i++) colors.push(generateColor());
+        renderPalette();
+        renderSaved();
+    </script>
+</body>
+</html>

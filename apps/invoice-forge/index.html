@@ -1,0 +1,2076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Invoice Generator Online - Create PDF Invoices | InvoiceForge</title>
+    <meta name="description" content="Create professional invoices for free in seconds. Download as PDF, no signup required. Perfect for freelancers, contractors & small businesses. Try now!">
+    <meta name="keywords" content="free invoice generator, online invoice maker, invoice template PDF, freelancer invoice, create invoice online free, PDF invoice generator">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/invoice-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/invoice-forge/">
+    <meta property="og:title" content="Free Invoice Generator Online - Create PDF Invoices | InvoiceForge">
+    <meta property="og:description" content="Create professional invoices for free in seconds. Download as PDF, no signup required. Perfect for freelancers, contractors & small businesses. Try now!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/invoice-forge/">
+    <meta name="twitter:title" content="Free Invoice Generator Online - Create PDF Invoices | InvoiceForge">
+    <meta name="twitter:description" content="Create professional invoices for free in seconds. Download as PDF, no signup required. Perfect for freelancers, contractors & small businesses. Try now!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "InvoiceForge",
+    "description": "Free online invoice generator for freelancers and small businesses. Create professional PDF invoices with customizable templates.",
+    "url": "https://simplereally.github.io/invoice-forge/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Is InvoiceForge really free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, InvoiceForge is 100% free for basic use. You can create up to 3 invoices per day at no cost. For unlimited invoices and premium features, upgrade to Pro for a one-time payment of $4.99."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I download invoices as PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Absolutely! All invoices can be downloaded as professional PDF files that you can email to clients or print."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Do I need to create an account?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No signup required. InvoiceForge works entirely in your browser - your data never leaves your device."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What currencies are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "InvoiceForge supports 10+ currencies including USD, EUR, GBP, CAD, AUD, JPY, INR, CHF, CNY, and BRL."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I save invoice templates?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! You can save unlimited templates locally and load them for future invoices."
+            }
+        }
+    ]
+}
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            /* Forge Palette - Core */
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            /* Molten Accents */
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            
+            /* Typography */
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Borders */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        /* Light mode overrides */
+        body.light-mode {
+            --forge-void: #f5f5f7;
+            --forge-charcoal: #ffffff;
+            --forge-gunmetal: #f0f0f2;
+            --forge-steel: #e0e0e5;
+            --forge-iron: #a0a0aa;
+            --forge-silver: #6b6b77;
+            --forge-chrome: #3a3a44;
+            --forge-white: #0a0a0b;
+            --forge-glow: rgba(255, 107, 53, 0.15);
+        }
+        
+        body.light-mode::before {
+            opacity: 0.015;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover {
+            color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .forge-nav-links a.active {
+            color: var(--forge-ember);
+        }
+        
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-xs) var(--space-sm);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition-fast);
+            margin-left: var(--space-sm);
+        }
+        
+        .dark-mode-toggle:hover {
+            border-color: var(--forge-ember);
+        }
+        
+        /* Pro Nav Button */
+        .nav-pro-btn {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-xs) var(--space-md);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-left: var(--space-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-pro-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .nav-pro-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent {
+            color: var(--forge-ember);
+        }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN CONTAINER ═══════════════ */
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        /* ═══════════════ CARDS ═══════════════ */
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        /* ═══════════════ SECTION TITLES ═══════════════ */
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 1px solid var(--forge-steel);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        /* ═══════════════ TEMPLATE SELECTOR ═══════════════ */
+        
+        .template-selector {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .template-option {
+            flex: 1;
+            min-width: 140px;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 2px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            text-align: center;
+        }
+        
+        .template-option:hover {
+            border-color: var(--forge-iron);
+        }
+        
+        .template-option.active {
+            border-color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .template-option h4 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .template-option p {
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+        }
+        
+        .template-preview {
+            width: 100%;
+            height: 60px;
+            margin-bottom: var(--space-sm);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .template-preview.modern {
+            background: linear-gradient(135deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .template-preview.classic {
+            background: var(--forge-charcoal);
+            border: 2px solid var(--forge-steel);
+        }
+        
+        .template-preview.minimal {
+            background: var(--forge-white);
+        }
+        
+        body.light-mode .template-preview.minimal {
+            background: var(--forge-void);
+        }
+        
+        /* ═══════════════ FORM ELEMENTS ═══════════════ */
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-md);
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: var(--space-md);
+        }
+        
+        @media (max-width: 700px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+            margin-bottom: var(--space-md);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: var(--forge-iron);
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8b99' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--space-md) center;
+            padding-right: var(--space-xl);
+        }
+        
+        /* ═══════════════ LOGO UPLOAD ═══════════════ */
+        
+        .logo-upload {
+            border: 2px dashed var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            margin-bottom: var(--space-md);
+            position: relative;
+        }
+        
+        .logo-upload:hover {
+            border-color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .logo-upload.has-logo {
+            padding: var(--space-sm);
+        }
+        
+        .logo-upload img {
+            max-width: 150px;
+            max-height: 80px;
+            object-fit: contain;
+        }
+        
+        .logo-upload input {
+            display: none;
+        }
+        
+        .logo-upload-text {
+            color: var(--forge-silver);
+            font-size: 0.85rem;
+        }
+        
+        .logo-upload-text span {
+            color: var(--forge-ember);
+            font-weight: 600;
+        }
+        
+        .remove-logo {
+            position: absolute;
+            top: var(--space-xs);
+            right: var(--space-xs);
+            background: var(--forge-heat);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+        }
+        
+        /* ═══════════════ USAGE COUNTER ═══════════════ */
+        
+        .usage-counter {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+            margin-bottom: var(--space-lg);
+            font-size: 0.9rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .usage-counter .count {
+            font-family: var(--font-display);
+            color: var(--forge-ember);
+            font-weight: 600;
+        }
+        
+        .usage-counter.warning {
+            border-color: var(--forge-heat);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        .usage-counter.warning .count {
+            color: var(--forge-heat);
+        }
+        
+        /* ═══════════════ CURRENCY & DUE DATE ═══════════════ */
+        
+        .currency-due-row {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-end;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .currency-due-row > div {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .currency-due-row label {
+            margin-bottom: var(--space-xs);
+        }
+        
+        .currency-due-row select,
+        .currency-due-row input {
+            margin-bottom: 0;
+        }
+        
+        .due-date-presets {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-xs);
+        }
+        
+        .due-preset {
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            color: var(--forge-silver);
+        }
+        
+        .due-preset:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ LINE ITEMS TABLE ═══════════════ */
+        
+        .line-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: var(--space-md);
+        }
+        
+        .line-items-table th {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: left;
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+        }
+        
+        .line-items-table td {
+            padding: var(--space-sm);
+            border-bottom: 1px solid var(--forge-steel);
+            vertical-align: middle;
+        }
+        
+        .line-items-table input {
+            margin-bottom: 0;
+        }
+        
+        .line-items-table .qty-col,
+        .line-items-table .price-col {
+            width: 100px;
+        }
+        
+        .line-items-table .amount-col {
+            width: 120px;
+            text-align: right;
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--forge-white);
+        }
+        
+        .line-items-table .actions-col {
+            width: 50px;
+            text-align: center;
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            border-color: var(--forge-iron);
+        }
+        
+        .btn-remove {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--forge-heat);
+            border: 1px solid transparent;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 1.2rem;
+        }
+        
+        .btn-remove:hover {
+            background: var(--forge-heat);
+            color: var(--forge-white);
+        }
+        
+        .btn-add {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--forge-success);
+            border: 1px solid transparent;
+        }
+        
+        .btn-add:hover {
+            background: var(--forge-success);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ TOTALS ═══════════════ */
+        
+        .totals {
+            margin-left: auto;
+            width: 280px;
+            margin-top: var(--space-lg);
+        }
+        
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--forge-steel);
+            font-size: 0.95rem;
+        }
+        
+        .totals-row.total {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--forge-white);
+            border-bottom: none;
+            border-top: 2px solid var(--forge-ember);
+            padding-top: var(--space-md);
+            margin-top: var(--space-sm);
+        }
+        
+        .tax-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .tax-row input {
+            width: 60px;
+            margin: 0;
+            padding: var(--space-xs) var(--space-sm);
+            text-align: center;
+        }
+        
+        /* ═══════════════ ACTIONS BAR ═══════════════ */
+        
+        .actions-bar {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-top: var(--space-xl);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .actions-bar .btn-primary {
+            flex: 1;
+            min-width: 150px;
+            padding: var(--space-md) var(--space-lg);
+        }
+        
+        /* ═══════════════ TEMPLATES ═══════════════ */
+        
+        .templates-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .templates-section strong {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .template-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+        
+        .template-chip {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xs) var(--space-md);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            transition: var(--transition-fast);
+        }
+        
+        .template-chip:hover {
+            border-color: var(--forge-ember);
+        }
+        
+        .template-chip .delete {
+            color: var(--forge-heat);
+            font-weight: bold;
+        }
+        
+        /* ═══════════════ SAVED DETAILS BANNER ═══════════════ */
+        
+        .saved-details-banner {
+            background: var(--forge-glow);
+            border: 1px solid var(--forge-ember);
+            border-radius: var(--radius-md);
+            padding: var(--space-sm) var(--space-md);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+        }
+        
+        .saved-details-banner p {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .saved-details-banner .btn {
+            font-size: 0.75rem;
+            padding: var(--space-xs) var(--space-sm);
+        }
+        
+        /* ═══════════════ PRO BANNER (Bottom) ═══════════════ */
+        
+        .pro-banner {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-xl);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+        
+        .pro-banner h4 {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .pro-banner p {
+            font-size: 0.9rem;
+            margin: var(--space-xs) 0 0;
+            opacity: 0.85;
+        }
+        
+        .pro-banner .btn-upgrade {
+            background: var(--forge-void);
+            color: var(--forge-ember);
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition-fast);
+        }
+        
+        .pro-banner .btn-upgrade:hover {
+            background: var(--forge-charcoal);
+        }
+        
+        /* ═══════════════ MODAL ═══════════════ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 11, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--forge-white);
+            margin: 0 0 var(--space-md);
+        }
+        
+        .modal-content p {
+            margin-bottom: var(--space-md);
+        }
+        
+        .modal-content ul {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-md) 0;
+        }
+        
+        .modal-content ul li {
+            padding: var(--space-sm) 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        /* Pro Modal Specific */
+        .pro-price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+            margin: var(--space-md) 0;
+        }
+        
+        .pro-price span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .pro-features li {
+            color: var(--forge-chrome);
+        }
+        
+        .pro-features li::before {
+            content: '✓';
+            color: var(--forge-success);
+            font-weight: bold;
+            margin-right: var(--space-sm);
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover {
+            color: var(--forge-ember);
+        }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a {
+                font-size: 0.7rem;
+                padding: var(--space-xs);
+            }
+            
+            .nav-pro-btn {
+                font-size: 0.65rem;
+                padding: var(--space-xs) var(--space-sm);
+            }
+            
+            .line-items-table {
+                font-size: 0.85rem;
+            }
+            
+            .line-items-table th,
+            .line-items-table td {
+                padding: var(--space-xs);
+            }
+            
+            .line-items-table .qty-col,
+            .line-items-table .price-col {
+                width: 70px;
+            }
+            
+            .totals {
+                width: 100%;
+            }
+            
+            .actions-bar {
+                flex-direction: column;
+            }
+            
+            .actions-bar .btn {
+                width: 100%;
+            }
+            
+            .template-selector {
+                flex-direction: column;
+            }
+        }
+        
+        /* ═══════════════ ANIMATIONS ═══════════════ */
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .forge-card {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.2); }
+            50% { box-shadow: 0 0 30px rgba(255, 107, 53, 0.35); }
+        }
+        
+        .btn-primary:focus {
+            animation: glow 1.5s ease infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/" class="active">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+                <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark/light mode">🌙</button>
+                <button class="nav-pro-btn" onclick="showProModal()">⚡ Go Pro</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Header -->
+    <header class="forge-header">
+        <h1>Invoice<span class="accent">Forge</span></h1>
+        <p>Create professional invoices in seconds — free!</p>
+    </header>
+    
+    <main class="container">
+        <div class="forge-card">
+            <div id="usageCounter" class="usage-counter">
+                <span>📊</span>
+                <span id="usageText"><span class="count">3</span> free invoices remaining today</span>
+            </div>
+            
+            <!-- Saved Details Banner -->
+            <div id="savedDetailsBanner" class="saved-details-banner" style="display: none;">
+                <p>💾 <span id="savedBusinessName">Your Business</span> details saved</p>
+                <div>
+                    <button class="btn btn-secondary" onclick="loadSavedDetails()">Load</button>
+                    <button class="btn btn-secondary" onclick="clearSavedDetails()">Clear</button>
+                </div>
+            </div>
+            
+            <!-- Template Selector -->
+            <h3 class="section-title"><span>🎨</span> Invoice Style</h3>
+            <div class="template-selector">
+                <div class="template-option active" data-template="modern" onclick="selectTemplate('modern')">
+                    <div class="template-preview modern"></div>
+                    <h4>Modern</h4>
+                    <p>Bold colors, clean lines</p>
+                </div>
+                <div class="template-option" data-template="classic" onclick="selectTemplate('classic')">
+                    <div class="template-preview classic"></div>
+                    <h4>Classic</h4>
+                    <p>Traditional professional</p>
+                </div>
+                <div class="template-option" data-template="minimal" onclick="selectTemplate('minimal')">
+                    <div class="template-preview minimal"></div>
+                    <h4>Minimal</h4>
+                    <p>Simple & elegant</p>
+                </div>
+            </div>
+            
+            <!-- Currency & Due Date Row -->
+            <div class="currency-due-row">
+                <div>
+                    <label for="currency">Currency</label>
+                    <select id="currency">
+                        <option value="USD">$ USD - US Dollar</option>
+                        <option value="EUR">€ EUR - Euro</option>
+                        <option value="GBP">£ GBP - British Pound</option>
+                        <option value="CAD">$ CAD - Canadian Dollar</option>
+                        <option value="AUD">$ AUD - Australian Dollar</option>
+                        <option value="JPY">¥ JPY - Japanese Yen</option>
+                        <option value="INR">₹ INR - Indian Rupee</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">¥ CNY - Chinese Yuan</option>
+                        <option value="BRL">R$ BRL - Brazilian Real</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="invoiceDate">Invoice Date</label>
+                    <input type="date" id="invoiceDate">
+                </div>
+                <div>
+                    <label for="dueDate">Due Date</label>
+                    <input type="date" id="dueDate">
+                    <div class="due-date-presets">
+                        <button type="button" class="due-preset" onclick="setDueDate(15)">Net 15</button>
+                        <button type="button" class="due-preset" onclick="setDueDate(30)">Net 30</button>
+                        <button type="button" class="due-preset" onclick="setDueDate(60)">Net 60</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <section>
+                    <h3 class="section-title"><span>📋</span> Your Business</h3>
+                    <div class="logo-upload" id="logoUpload" onclick="document.getElementById('logoInput').click()">
+                        <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
+                        <div id="logoPreview">
+                            <p class="logo-upload-text">📷 <span>Drop logo here</span> or click to upload</p>
+                        </div>
+                    </div>
+                    <input type="text" id="businessName" placeholder="Business Name">
+                    <input type="text" id="businessEmail" placeholder="Email">
+                    <input type="text" id="businessPhone" placeholder="Phone">
+                    <textarea id="businessAddress" placeholder="Address" rows="2"></textarea>
+                </section>
+                
+                <section>
+                    <h3 class="section-title"><span>👤</span> Bill To</h3>
+                    <input type="text" id="clientName" placeholder="Client Name">
+                    <input type="text" id="clientEmail" placeholder="Client Email">
+                    <textarea id="clientAddress" placeholder="Client Address" rows="2"></textarea>
+                    
+                    <div style="margin-top: var(--space-md);">
+                        <label>Invoice Number</label>
+                        <input type="text" id="invoiceNumber" placeholder="INV-001">
+                    </div>
+                </section>
+            </div>
+            
+            <section style="margin-top: var(--space-lg);">
+                <h3 class="section-title"><span>📦</span> Line Items</h3>
+                <div style="overflow-x: auto;">
+                    <table class="line-items-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="qty-col">Qty</th>
+                                <th class="price-col">Price</th>
+                                <th class="amount-col">Amount</th>
+                                <th class="actions-col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lineItems">
+                            <!-- Line items inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-add" onclick="addLineItem()">+ Add Item</button>
+                
+                <div class="totals">
+                    <div class="totals-row">
+                        <span>Subtotal</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="totals-row tax-row">
+                        <span>Tax</span>
+                        <input type="number" id="taxRate" value="0" min="0" max="100" onchange="calculateTotals()">
+                        <span>%</span>
+                        <span id="taxAmount">$0.00</span>
+                    </div>
+                    <div class="totals-row total">
+                        <span>Total</span>
+                        <span id="total">$0.00</span>
+                    </div>
+                </div>
+            </section>
+            
+            <section style="margin-top: var(--space-lg);">
+                <h3 class="section-title"><span>📝</span> Notes</h3>
+                <textarea id="notes" placeholder="Payment terms, thank you message, etc." rows="3"></textarea>
+            </section>
+            
+            <div class="actions-bar">
+                <button class="btn btn-primary" onclick="generatePDF()">📄 Generate PDF</button>
+                <button class="btn btn-secondary" onclick="saveBusinessDetails()">💾 Save My Details</button>
+                <button class="btn btn-secondary" onclick="saveTemplate()">📁 Save Template</button>
+                <button class="btn btn-secondary" onclick="clearForm()">🗑️ Clear</button>
+            </div>
+            
+            <div class="templates-section">
+                <strong>📁 Saved Templates</strong>
+                <div class="template-list" id="templateList">
+                    <!-- Templates inserted here -->
+                </div>
+            </div>
+            
+            <div class="pro-banner">
+                <div>
+                    <h4>🚀 Go Pro — Unlimited Invoices</h4>
+                    <p>Remove watermark, premium templates & PDF export</p>
+                </div>
+                <a href="https://buy.stripe.com/cNicMY8dra3dbyV9pr1gs00" class="btn-upgrade" target="_blank">$4.99 →</a>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+                <p>Free to use • No signup required</p>
+                <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/invoice-generator-tools-comparison.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: Best Invoice Generator Tools Compared 2026</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Save Template Modal -->
+    <div class="modal" id="saveModal">
+        <div class="modal-content">
+            <h3>💾 Save Template</h3>
+            <input type="text" id="templateName" placeholder="Template name (e.g., 'Standard Invoice')">
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeSaveModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmSaveTemplate()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pro Modal -->
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <h3>⚡ InvoiceForge Pro</h3>
+            <div class="pro-price">$4.99 <span>one-time</span></div>
+            <ul class="pro-features">
+                <li>Unlimited invoices forever</li>
+                <li>No watermark on PDFs</li>
+                <li>Premium invoice templates</li>
+                <li>Priority support</li>
+                <li>Custom logo upload (coming soon)</li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
+                <a href="https://buy.stripe.com/cNicMY8dra3dbyV9pr1gs00" class="btn btn-primary" style="text-decoration:none;text-align:center;" target="_blank">Upgrade — $4.99</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const { jsPDF } = window.jspdf;
+        
+        // Currency symbols
+        const currencySymbols = {
+            USD: '$', EUR: '€', GBP: '£', CAD: '$', AUD: '$',
+            JPY: '¥', INR: '₹', CHF: 'CHF ', CNY: '¥', BRL: 'R$'
+        };
+        
+        // Storage keys
+        const DAILY_LIMIT = 3;
+        const STORAGE_KEY = 'invoiceforge_usage';
+        const TEMPLATES_KEY = 'invoiceforge_templates';
+        const BUSINESS_KEY = 'invoiceforge_business';
+        const DARK_MODE_KEY = 'invoiceforge_darkmode';
+        
+        // Current template
+        let currentTemplate = 'modern';
+        let uploadedLogo = null;
+        
+        // Dark mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            localStorage.setItem(DARK_MODE_KEY, isLight ? 'light' : 'dark');
+            document.querySelector('.dark-mode-toggle').textContent = isLight ? '☀️' : '🌙';
+        }
+        
+        function loadDarkMode() {
+            const mode = localStorage.getItem(DARK_MODE_KEY);
+            if (mode === 'light') {
+                document.body.classList.add('light-mode');
+                document.querySelector('.dark-mode-toggle').textContent = '☀️';
+            }
+        }
+        
+        // Template selection
+        function selectTemplate(template) {
+            currentTemplate = template;
+            document.querySelectorAll('.template-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.template === template);
+            });
+        }
+        
+        // Due date presets
+        function setDueDate(days) {
+            const invoiceDate = document.getElementById('invoiceDate').value;
+            const baseDate = invoiceDate ? new Date(invoiceDate) : new Date();
+            baseDate.setDate(baseDate.getDate() + days);
+            document.getElementById('dueDate').value = baseDate.toISOString().split('T')[0];
+        }
+        
+        // Logo upload
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedLogo = e.target.result;
+                    const preview = document.getElementById('logoPreview');
+                    preview.innerHTML = `<img src="${uploadedLogo}" alt="Logo"><button class="remove-logo" onclick="removeLogo(event)">×</button>`;
+                    document.getElementById('logoUpload').classList.add('has-logo');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function removeLogo(event) {
+            event.stopPropagation();
+            uploadedLogo = null;
+            document.getElementById('logoPreview').innerHTML = '<p class="logo-upload-text">📷 <span>Drop logo here</span> or click to upload</p>';
+            document.getElementById('logoUpload').classList.remove('has-logo');
+            document.getElementById('logoInput').value = '';
+        }
+        
+        // Drag and drop for logo
+        const logoUpload = document.getElementById('logoUpload');
+        logoUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            logoUpload.style.borderColor = 'var(--forge-ember)';
+        });
+        logoUpload.addEventListener('dragleave', () => {
+            logoUpload.style.borderColor = '';
+        });
+        logoUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            logoUpload.style.borderColor = '';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                document.getElementById('logoInput').files = e.dataTransfer.files;
+                handleLogoUpload({ target: { files: [file] } });
+            }
+        });
+        
+        // Business details save/load
+        function saveBusinessDetails() {
+            const details = {
+                name: document.getElementById('businessName').value,
+                email: document.getElementById('businessEmail').value,
+                phone: document.getElementById('businessPhone').value,
+                address: document.getElementById('businessAddress').value,
+                logo: uploadedLogo
+            };
+            localStorage.setItem(BUSINESS_KEY, JSON.stringify(details));
+            checkSavedDetails();
+            alert('Business details saved! They will auto-fill next time.');
+        }
+        
+        function loadSavedDetails() {
+            const details = JSON.parse(localStorage.getItem(BUSINESS_KEY) || '{}');
+            if (details.name) document.getElementById('businessName').value = details.name;
+            if (details.email) document.getElementById('businessEmail').value = details.email;
+            if (details.phone) document.getElementById('businessPhone').value = details.phone;
+            if (details.address) document.getElementById('businessAddress').value = details.address;
+            if (details.logo) {
+                uploadedLogo = details.logo;
+                document.getElementById('logoPreview').innerHTML = `<img src="${uploadedLogo}" alt="Logo"><button class="remove-logo" onclick="removeLogo(event)">×</button>`;
+                document.getElementById('logoUpload').classList.add('has-logo');
+            }
+        }
+        
+        function clearSavedDetails() {
+            if (confirm('Clear saved business details?')) {
+                localStorage.removeItem(BUSINESS_KEY);
+                checkSavedDetails();
+            }
+        }
+        
+        function checkSavedDetails() {
+            const details = JSON.parse(localStorage.getItem(BUSINESS_KEY) || '{}');
+            const banner = document.getElementById('savedDetailsBanner');
+            if (details.name) {
+                document.getElementById('savedBusinessName').textContent = details.name;
+                banner.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+        
+        // Usage tracking
+        function getUsage() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            const today = new Date().toDateString();
+            if (data.date !== today) {
+                return { date: today, count: 0 };
+            }
+            return data;
+        }
+        
+        function saveUsage(usage) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(usage));
+        }
+        
+        function updateUsageDisplay() {
+            const usage = getUsage();
+            const remaining = Math.max(0, DAILY_LIMIT - usage.count);
+            const counter = document.getElementById('usageCounter');
+            const text = document.getElementById('usageText');
+            
+            if (remaining === 0) {
+                text.innerHTML = 'Daily limit reached — <span class="count">upgrade to Pro</span> for unlimited!';
+                counter.classList.add('warning');
+            } else {
+                text.innerHTML = `<span class="count">${remaining}</span> free invoice${remaining !== 1 ? 's' : ''} remaining today`;
+                counter.classList.remove('warning');
+            }
+        }
+        
+        function canGenerateInvoice() {
+            const usage = getUsage();
+            return usage.count < DAILY_LIMIT;
+        }
+        
+        function incrementUsage() {
+            const usage = getUsage();
+            usage.count++;
+            saveUsage(usage);
+            updateUsageDisplay();
+        }
+        
+        // Line items
+        let lineItemCounter = 0;
+        
+        function addLineItem(description = '', qty = 1, price = 0) {
+            const tbody = document.getElementById('lineItems');
+            const id = lineItemCounter++;
+            const row = document.createElement('tr');
+            row.id = `item-${id}`;
+            row.innerHTML = `
+                <td><input type="text" class="item-desc" placeholder="Item description" value="${description}"></td>
+                <td class="qty-col"><input type="number" class="item-qty" value="${qty}" min="1" onchange="calculateTotals()"></td>
+                <td class="price-col"><input type="number" class="item-price" value="${price}" min="0" step="0.01" onchange="calculateTotals()"></td>
+                <td class="amount-col item-amount">$0.00</td>
+                <td class="actions-col"><button class="btn btn-remove" onclick="removeLineItem(${id})">×</button></td>
+            `;
+            tbody.appendChild(row);
+            calculateTotals();
+        }
+        
+        function removeLineItem(id) {
+            const row = document.getElementById(`item-${id}`);
+            if (row) {
+                row.remove();
+                calculateTotals();
+            }
+        }
+        
+        function getSymbol() {
+            const currency = document.getElementById('currency').value;
+            return currencySymbols[currency] || '$';
+        }
+        
+        function formatCurrency(amount) {
+            const symbol = getSymbol();
+            return symbol + amount.toFixed(2);
+        }
+        
+        function calculateTotals() {
+            const rows = document.querySelectorAll('#lineItems tr');
+            let subtotal = 0;
+            
+            rows.forEach(row => {
+                const qty = parseFloat(row.querySelector('.item-qty')?.value) || 0;
+                const price = parseFloat(row.querySelector('.item-price')?.value) || 0;
+                const amount = qty * price;
+                subtotal += amount;
+                
+                const amountCell = row.querySelector('.item-amount');
+                if (amountCell) {
+                    amountCell.textContent = formatCurrency(amount);
+                }
+            });
+            
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const taxAmount = subtotal * (taxRate / 100);
+            const total = subtotal + taxAmount;
+            
+            document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+            document.getElementById('taxAmount').textContent = formatCurrency(taxAmount);
+            document.getElementById('total').textContent = formatCurrency(total);
+        }
+        
+        // Update amounts when currency changes
+        document.getElementById('currency').addEventListener('change', calculateTotals);
+        
+        // Form data
+        function getFormData() {
+            return {
+                businessName: document.getElementById('businessName').value,
+                businessEmail: document.getElementById('businessEmail').value,
+                businessPhone: document.getElementById('businessPhone').value,
+                businessAddress: document.getElementById('businessAddress').value,
+                clientName: document.getElementById('clientName').value,
+                clientEmail: document.getElementById('clientEmail').value,
+                clientAddress: document.getElementById('clientAddress').value,
+                invoiceNumber: document.getElementById('invoiceNumber').value,
+                invoiceDate: document.getElementById('invoiceDate').value,
+                dueDate: document.getElementById('dueDate').value,
+                currency: document.getElementById('currency').value,
+                taxRate: document.getElementById('taxRate').value,
+                notes: document.getElementById('notes').value,
+                template: currentTemplate,
+                logo: uploadedLogo,
+                lineItems: Array.from(document.querySelectorAll('#lineItems tr')).map(row => ({
+                    description: row.querySelector('.item-desc')?.value || '',
+                    qty: row.querySelector('.item-qty')?.value || 0,
+                    price: row.querySelector('.item-price')?.value || 0
+                }))
+            };
+        }
+        
+        function setFormData(data) {
+            document.getElementById('businessName').value = data.businessName || '';
+            document.getElementById('businessEmail').value = data.businessEmail || '';
+            document.getElementById('businessPhone').value = data.businessPhone || '';
+            document.getElementById('businessAddress').value = data.businessAddress || '';
+            document.getElementById('clientName').value = data.clientName || '';
+            document.getElementById('clientEmail').value = data.clientEmail || '';
+            document.getElementById('clientAddress').value = data.clientAddress || '';
+            document.getElementById('invoiceNumber').value = data.invoiceNumber || '';
+            document.getElementById('invoiceDate').value = data.invoiceDate || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.getElementById('currency').value = data.currency || 'USD';
+            document.getElementById('taxRate').value = data.taxRate || 0;
+            document.getElementById('notes').value = data.notes || '';
+            
+            if (data.template) selectTemplate(data.template);
+            if (data.logo) {
+                uploadedLogo = data.logo;
+                document.getElementById('logoPreview').innerHTML = `<img src="${uploadedLogo}" alt="Logo"><button class="remove-logo" onclick="removeLogo(event)">×</button>`;
+                document.getElementById('logoUpload').classList.add('has-logo');
+            }
+            
+            // Clear and reload line items
+            document.getElementById('lineItems').innerHTML = '';
+            lineItemCounter = 0;
+            if (data.lineItems && data.lineItems.length > 0) {
+                data.lineItems.forEach(item => {
+                    addLineItem(item.description, item.qty, item.price);
+                });
+            } else {
+                addLineItem();
+            }
+        }
+        
+        function clearForm() {
+            if (confirm('Clear all fields?')) {
+                setFormData({});
+                uploadedLogo = null;
+                document.getElementById('logoPreview').innerHTML = '<p class="logo-upload-text">📷 <span>Drop logo here</span> or click to upload</p>';
+                document.getElementById('logoUpload').classList.remove('has-logo');
+            }
+        }
+        
+        // Templates
+        function getTemplates() {
+            return JSON.parse(localStorage.getItem(TEMPLATES_KEY) || '{}');
+        }
+        
+        function saveTemplates(templates) {
+            localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+        }
+        
+        function renderTemplates() {
+            const templates = getTemplates();
+            const list = document.getElementById('templateList');
+            list.innerHTML = '';
+            
+            Object.keys(templates).forEach(name => {
+                const chip = document.createElement('span');
+                chip.className = 'template-chip';
+                chip.innerHTML = `<span onclick="loadTemplate('${name}')">${name}</span> <span class="delete" onclick="deleteTemplate('${name}')">×</span>`;
+                list.appendChild(chip);
+            });
+            
+            if (Object.keys(templates).length === 0) {
+                list.innerHTML = '<em style="color:var(--forge-iron);font-size:0.875rem;">No saved templates</em>';
+            }
+        }
+        
+        function saveTemplate() {
+            document.getElementById('saveModal').classList.add('active');
+            document.getElementById('templateName').focus();
+        }
+        
+        function closeSaveModal() {
+            document.getElementById('saveModal').classList.remove('active');
+        }
+        
+        function confirmSaveTemplate() {
+            const name = document.getElementById('templateName').value.trim();
+            if (!name) {
+                alert('Please enter a template name');
+                return;
+            }
+            
+            const templates = getTemplates();
+            templates[name] = getFormData();
+            saveTemplates(templates);
+            renderTemplates();
+            closeSaveModal();
+            document.getElementById('templateName').value = '';
+        }
+        
+        function loadTemplate(name) {
+            const templates = getTemplates();
+            if (templates[name]) {
+                setFormData(templates[name]);
+            }
+        }
+        
+        function deleteTemplate(name) {
+            if (confirm(`Delete template "${name}"?`)) {
+                const templates = getTemplates();
+                delete templates[name];
+                saveTemplates(templates);
+                renderTemplates();
+            }
+        }
+        
+        // Pro modal
+        function showProModal() {
+            document.getElementById('proModal').classList.add('active');
+        }
+        
+        function closeProModal() {
+            document.getElementById('proModal').classList.remove('active');
+        }
+        
+        // PDF Generation with templates
+        function generatePDF() {
+            if (!canGenerateInvoice()) {
+                showProModal();
+                return;
+            }
+            
+            const data = getFormData();
+            const symbol = currencySymbols[data.currency] || '$';
+            
+            // Calculate totals
+            let subtotal = 0;
+            data.lineItems.forEach(item => {
+                subtotal += (parseFloat(item.qty) || 0) * (parseFloat(item.price) || 0);
+            });
+            const taxRate = parseFloat(data.taxRate) || 0;
+            const taxAmount = subtotal * (taxRate / 100);
+            const total = subtotal + taxAmount;
+            
+            const doc = new jsPDF();
+            const pageWidth = doc.internal.pageSize.width;
+            let y = 20;
+            
+            // Template-specific styling
+            const templates = {
+                modern: {
+                    headerBg: [255, 107, 53],
+                    headerText: [255, 255, 255],
+                    accentColor: [255, 107, 53]
+                },
+                classic: {
+                    headerBg: [50, 50, 60],
+                    headerText: [255, 255, 255],
+                    accentColor: [50, 50, 60]
+                },
+                minimal: {
+                    headerBg: [255, 255, 255],
+                    headerText: [30, 30, 30],
+                    accentColor: [100, 100, 100]
+                }
+            };
+            
+            const style = templates[currentTemplate] || templates.modern;
+            
+            // Header background for modern/classic
+            if (currentTemplate !== 'minimal') {
+                doc.setFillColor(...style.headerBg);
+                doc.rect(0, 0, pageWidth, 45, 'F');
+            }
+            
+            // Logo
+            if (uploadedLogo) {
+                try {
+                    doc.addImage(uploadedLogo, 'PNG', 15, 8, 30, 30);
+                } catch (e) {
+                    console.log('Logo could not be added');
+                }
+            }
+            
+            // Header text
+            doc.setTextColor(...style.headerText);
+            doc.setFontSize(28);
+            doc.setFont('helvetica', 'bold');
+            const titleX = uploadedLogo ? 50 : 15;
+            doc.text('INVOICE', titleX, currentTemplate === 'minimal' ? 25 : 28);
+            
+            if (currentTemplate !== 'minimal') {
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'normal');
+                doc.text(`#${data.invoiceNumber || 'N/A'}`, titleX, 36);
+            }
+            
+            y = currentTemplate === 'minimal' ? 40 : 55;
+            
+            // Reset text color
+            doc.setTextColor(50, 50, 50);
+            
+            // Invoice details (right side)
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            if (currentTemplate === 'minimal') {
+                doc.text(`Invoice #: ${data.invoiceNumber || 'N/A'}`, pageWidth - 15, 15, { align: 'right' });
+            }
+            doc.text(`Date: ${data.invoiceDate || 'N/A'}`, pageWidth - 15, y - 10, { align: 'right' });
+            doc.text(`Due: ${data.dueDate || 'N/A'}`, pageWidth - 15, y - 5, { align: 'right' });
+            
+            // From / To sections
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(...style.accentColor);
+            doc.text('FROM', 15, y);
+            doc.text('BILL TO', 110, y);
+            y += 6;
+            
+            doc.setTextColor(50, 50, 50);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            
+            // From details
+            const fromLines = [
+                data.businessName,
+                data.businessEmail,
+                data.businessPhone,
+                ...(data.businessAddress || '').split('\n')
+            ].filter(Boolean);
+            
+            fromLines.forEach(line => {
+                doc.text(line, 15, y);
+                y += 5;
+            });
+            
+            // To details (reset y for parallel column)
+            let yTo = y - (fromLines.length * 5);
+            const toLines = [
+                data.clientName,
+                data.clientEmail,
+                ...(data.clientAddress || '').split('\n')
+            ].filter(Boolean);
+            
+            toLines.forEach(line => {
+                doc.text(line, 110, yTo);
+                yTo += 5;
+            });
+            
+            y = Math.max(y, yTo) + 15;
+            
+            // Line items table header
+            doc.setFillColor(240, 240, 245);
+            doc.rect(15, y - 5, pageWidth - 30, 10, 'F');
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(9);
+            doc.text('DESCRIPTION', 17, y + 1);
+            doc.text('QTY', 115, y + 1);
+            doc.text('PRICE', 135, y + 1);
+            doc.text('AMOUNT', pageWidth - 17, y + 1, { align: 'right' });
+            y += 10;
+            
+            // Line items
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            data.lineItems.forEach(item => {
+                if (item.description) {
+                    const qty = parseFloat(item.qty) || 0;
+                    const price = parseFloat(item.price) || 0;
+                    const amount = qty * price;
+                    
+                    doc.text(item.description.substring(0, 45), 17, y);
+                    doc.text(qty.toString(), 115, y);
+                    doc.text(symbol + price.toFixed(2), 135, y);
+                    doc.text(symbol + amount.toFixed(2), pageWidth - 17, y, { align: 'right' });
+                    
+                    // Light line
+                    doc.setDrawColor(230, 230, 235);
+                    doc.line(15, y + 3, pageWidth - 15, y + 3);
+                    y += 8;
+                }
+            });
+            
+            // Totals
+            y += 10;
+            const totalsX = 130;
+            
+            doc.setFontSize(10);
+            doc.text('Subtotal:', totalsX, y);
+            doc.text(symbol + subtotal.toFixed(2), pageWidth - 17, y, { align: 'right' });
+            y += 7;
+            
+            if (taxRate > 0) {
+                doc.text(`Tax (${taxRate}%):`, totalsX, y);
+                doc.text(symbol + taxAmount.toFixed(2), pageWidth - 17, y, { align: 'right' });
+                y += 7;
+            }
+            
+            // Total with accent
+            doc.setDrawColor(...style.accentColor);
+            doc.setLineWidth(0.5);
+            doc.line(totalsX - 5, y - 2, pageWidth - 15, y - 2);
+            
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(...style.accentColor);
+            doc.text('TOTAL:', totalsX, y + 5);
+            doc.text(symbol + total.toFixed(2), pageWidth - 17, y + 5, { align: 'right' });
+            y += 20;
+            
+            // Notes
+            if (data.notes) {
+                doc.setTextColor(50, 50, 50);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(10);
+                doc.text('Notes:', 15, y);
+                y += 6;
+                doc.setFont('helvetica', 'normal');
+                const noteLines = doc.splitTextToSize(data.notes, pageWidth - 30);
+                doc.text(noteLines, 15, y);
+            }
+            
+            // Watermark (free tier)
+            doc.setFontSize(8);
+            doc.setTextColor(180, 180, 180);
+            doc.text('Generated by InvoiceForge — simplereally.github.io/invoice-forge', pageWidth / 2, 287, { align: 'center' });
+            
+            // Download
+            const filename = `invoice-${data.invoiceNumber || 'draft'}.pdf`;
+            doc.save(filename);
+            
+            incrementUsage();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDarkMode();
+            
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('invoiceDate').value = today;
+            
+            // Set due date to 30 days from now
+            setDueDate(30);
+            
+            // Add initial line item
+            addLineItem();
+            
+            // Render templates
+            renderTemplates();
+            
+            // Update usage display
+            updateUsageDisplay();
+            
+            // Check for saved business details
+            checkSavedDetails();
+            
+            // Auto-load saved details if they exist
+            const savedDetails = localStorage.getItem(BUSINESS_KEY);
+            if (savedDetails) {
+                loadSavedDetails();
+            }
+        });
+        
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

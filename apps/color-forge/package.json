@@ -1,0 +1,17 @@
+{
+  "name": "@forge/color-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Color Palette Generator - Generate beautiful color schemes instantly",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3002 -c-1 -o"
+  },
+  "keywords": [
+    "color-palette",
+    "color-generator",
+    "design-tools"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

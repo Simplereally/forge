@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Password Generator - Create Strong Secure Passwords | PassForge</title>
+    <meta name="description" content="Generate strong, secure passwords instantly. Passphrases, strength meter, time-to-crack estimates. Free password generator with no signup. Protect your accounts now!">
+    <meta name="keywords" content="password generator, secure password generator, strong password creator, random password generator free, password strength checker, passphrase generator">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/pass-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/pass-forge/">
+    <meta property="og:title" content="Free Password Generator - Create Strong Secure Passwords | PassForge">
+    <meta property="og:description" content="Generate strong, secure passwords instantly. Customize length & characters, check strength. Free password generator with no signup. Protect your accounts now!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/pass-forge/">
+    <meta name="twitter:title" content="Free Password Generator - Create Strong Secure Passwords | PassForge">
+    <meta name="twitter:description" content="Generate strong, secure passwords instantly. Customize length & characters, check strength. Free password generator with no signup. Protect your accounts now!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PassForge",
+    "description": "Free secure password generator with strength analysis. Create cryptographically random passwords with customizable length, characters, and complexity.",
+    "url": "https://simplereally.github.io/pass-forge/",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- zxcvbn for real strength analysis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN ═══════════════ */
+        
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ MODE TOGGLE ═══════════════ */
+        
+        .mode-toggle {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+            background: var(--forge-gunmetal);
+            padding: var(--space-xs);
+            border-radius: var(--radius-md);
+        }
+        
+        .mode-toggle button {
+            flex: 1;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            background: transparent;
+            color: var(--forge-silver);
+        }
+        
+        .mode-toggle button:hover {
+            color: var(--forge-white);
+        }
+        
+        .mode-toggle button.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ PASSWORD DISPLAY ═══════════════ */
+        
+        .password-display {
+            font-family: var(--font-mono);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            word-break: break-all;
+            margin-bottom: var(--space-md);
+            position: relative;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .password-display .password-text {
+            flex: 1;
+            padding-right: 80px;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: var(--space-md);
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-steel);
+            color: var(--forge-chrome);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .copy-btn:hover {
+            background: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        .copy-btn.copied {
+            background: var(--forge-success);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ STRENGTH SECTION ═══════════════ */
+        
+        .strength-section {
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border-radius: var(--radius-md);
+        }
+        
+        .strength-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .strength-label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--forge-silver);
+        }
+        
+        .strength-value {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        
+        .strength-meter {
+            height: 10px;
+            background: var(--forge-charcoal);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: var(--space-md);
+        }
+        
+        .strength-meter-fill {
+            height: 100%;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-0 { background: var(--forge-heat); width: 10%; }
+        .strength-1 { background: var(--forge-heat); width: 25%; }
+        .strength-2 { background: var(--forge-spark); width: 50%; }
+        .strength-3 { background: var(--forge-flame); width: 75%; }
+        .strength-4 { background: var(--forge-success); width: 100%; }
+        
+        .crack-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        
+        .crack-time .label {
+            color: var(--forge-silver);
+        }
+        
+        .crack-time .value {
+            font-family: var(--font-mono);
+            color: var(--forge-ember);
+            font-weight: 500;
+        }
+        
+        /* ═══════════════ SLIDER ═══════════════ */
+        
+        .slider-container {
+            margin-bottom: var(--space-lg);
+        }
+        
+        .slider-label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--forge-silver);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .slider-label .value {
+            color: var(--forge-ember);
+            font-weight: 700;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: var(--forge-gunmetal);
+            border-radius: 4px;
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.4);
+            transition: var(--transition-fast);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.4);
+        }
+        
+        /* ═══════════════ CHECKBOXES ═══════════════ */
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        @media (max-width: 500px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+        }
+        
+        .checkbox-group label:hover {
+            background: var(--forge-gunmetal);
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--forge-ember);
+            cursor: pointer;
+        }
+        
+        /* ═══════════════ PASSPHRASE OPTIONS ═══════════════ */
+        
+        .passphrase-options {
+            display: none;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .passphrase-options.active {
+            display: block;
+        }
+        
+        .separator-options {
+            display: flex;
+            gap: var(--space-xs);
+            margin-top: var(--space-sm);
+        }
+        
+        .separator-btn {
+            padding: var(--space-xs) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-chrome);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .separator-btn:hover {
+            border-color: var(--forge-ember);
+        }
+        
+        .separator-btn.active {
+            background: var(--forge-ember);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ DETAILS/SUMMARY ═══════════════ */
+        
+        details {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        summary {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        summary:hover { color: var(--forge-ember); }
+        
+        details[open] summary {
+            border-bottom: 1px solid var(--forge-steel);
+        }
+        
+        details > div {
+            padding: var(--space-md);
+        }
+        
+        details input[type="text"] {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--forge-white);
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+            margin-top: var(--space-sm);
+        }
+        
+        details input:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        details label {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            width: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+            font-size: 0.8rem;
+            padding: var(--space-sm) var(--space-md);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+        }
+        
+        /* ═══════════════ BULK GENERATION ═══════════════ */
+        
+        .bulk-section {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .bulk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+        
+        .bulk-header h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        
+        .bulk-count {
+            display: flex;
+            gap: var(--space-xs);
+        }
+        
+        .bulk-count button {
+            width: 32px;
+            height: 32px;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-silver);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .bulk-count button:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        .bulk-count button.active {
+            background: var(--forge-ember);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        .bulk-passwords {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .bulk-passwords li {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-gunmetal);
+            margin-bottom: var(--space-xs);
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .bulk-passwords li:hover {
+            border-color: var(--forge-iron);
+        }
+        
+        .bulk-passwords li button {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-steel);
+            color: var(--forge-chrome);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .bulk-passwords li button:hover {
+            background: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ HISTORY ═══════════════ */
+        
+        .history {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .history h3 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-list {
+            list-style: none;
+        }
+        
+        .history-list li {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-gunmetal);
+            margin-bottom: var(--space-xs);
+            border-radius: var(--radius-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .history-list li .pass-text {
+            word-break: break-all;
+            flex: 1;
+            margin-right: var(--space-sm);
+        }
+        
+        .history-list li button {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-steel);
+            color: var(--forge-chrome);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+        
+        .history-list li button:hover {
+            background: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ TIPS ═══════════════ */
+        
+        .tips {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+        
+        .tips h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .tips ul {
+            list-style: none;
+        }
+        
+        .tips li {
+            padding: var(--space-sm) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+            color: var(--forge-silver);
+            font-size: 0.9rem;
+        }
+        
+        .tips li::before {
+            content: '🔒';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+        }
+        
+        .tips li strong {
+            color: var(--forge-chrome);
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: var(--space-xs);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pro-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* ═══════════════ MODAL ═══════════════ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 11, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--forge-white);
+            margin: 0 0 var(--space-md);
+        }
+        
+        .modal-price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+            margin: var(--space-md) 0;
+        }
+        
+        .modal-price span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .modal-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-md) 0;
+        }
+        
+        .modal-features li {
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .modal-features li::before {
+            content: '✓';
+            color: var(--forge-success);
+            font-weight: bold;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover { color: var(--forge-ember); }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover { text-decoration: underline; }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a {
+                font-size: 0.7rem;
+                padding: var(--space-xs);
+            }
+            
+            .password-display {
+                font-size: 1rem;
+            }
+            
+            .mode-toggle {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/" class="active">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Pass<span class="accent">Forge</span></h1>
+        <p>Generate strong, secure passwords instantly</p>
+    </header>
+    
+    <main class="container">
+        <div class="forge-card">
+            <!-- Mode Toggle -->
+            <div class="mode-toggle">
+                <button class="active" data-mode="password" onclick="setMode('password')">🔐 Password</button>
+                <button data-mode="passphrase" onclick="setMode('passphrase')">📝 Passphrase</button>
+                <button data-mode="pronounceable" onclick="setMode('pronounceable')">🗣️ Pronounceable</button>
+            </div>
+            
+            <div class="password-display" id="password">
+                <span class="password-text">Click Generate to create a password</span>
+                <button class="copy-btn" onclick="copyPassword()">📋 Copy</button>
+            </div>
+            
+            <!-- Strength Section with zxcvbn -->
+            <div class="strength-section">
+                <div class="strength-header">
+                    <span class="strength-label">Strength Analysis</span>
+                    <span class="strength-value" id="strength-text">—</span>
+                </div>
+                <div class="strength-meter">
+                    <div class="strength-meter-fill" id="strength-meter"></div>
+                </div>
+                <div class="crack-time">
+                    <span class="label">⏱️ Time to crack:</span>
+                    <span class="value" id="crack-time">—</span>
+                </div>
+            </div>
+            
+            <!-- Password Mode Options -->
+            <div id="password-options">
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Length</span>
+                        <span class="value" id="length-value">16</span>
+                    </div>
+                    <input type="range" id="length" min="8" max="64" value="16">
+                </div>
+                
+                <div class="options-grid">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="uppercase" checked> Uppercase (A-Z)</label>
+                        <label><input type="checkbox" id="lowercase" checked> Lowercase (a-z)</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="numbers" checked> Numbers (0-9)</label>
+                        <label><input type="checkbox" id="symbols" checked> Symbols (!@#$...)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Passphrase Mode Options -->
+            <div class="passphrase-options" id="passphrase-options">
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Word Count</span>
+                        <span class="value" id="word-count-value">4</span>
+                    </div>
+                    <input type="range" id="word-count" min="3" max="8" value="4">
+                </div>
+                
+                <label style="display: block; margin-bottom: var(--space-sm); font-family: var(--font-display); font-size: 0.75rem; color: var(--forge-silver); text-transform: uppercase;">Word Separator</label>
+                <div class="separator-options">
+                    <button class="separator-btn active" data-sep="-" onclick="setSeparator('-')">-</button>
+                    <button class="separator-btn" data-sep="_" onclick="setSeparator('_')">_</button>
+                    <button class="separator-btn" data-sep="." onclick="setSeparator('.')">.</button>
+                    <button class="separator-btn" data-sep=" " onclick="setSeparator(' ')">space</button>
+                    <button class="separator-btn" data-sep="" onclick="setSeparator('')">none</button>
+                </div>
+                
+                <div class="options-grid" style="margin-top: var(--space-md);">
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="capitalize-words" checked> Capitalize Words</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="add-number"> Add Number</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pronounceable Mode Options -->
+            <div class="passphrase-options" id="pronounceable-options">
+                <div class="slider-container">
+                    <div class="slider-label">
+                        <span>Length</span>
+                        <span class="value" id="pronounce-length-value">12</span>
+                    </div>
+                    <input type="range" id="pronounce-length" min="8" max="24" value="12">
+                </div>
+                <p style="font-size: 0.85rem; color: var(--forge-silver); margin-bottom: var(--space-md);">
+                    Generates passwords using alternating consonants and vowels for easier memorization.
+                </p>
+            </div>
+            
+            <details>
+                <summary>Advanced Options</summary>
+                <div>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" id="exclude-ambiguous"> Exclude ambiguous (l, 1, I, O, 0)</label>
+                        <label><input type="checkbox" id="exclude-similar"> Exclude similar (i, l, 1, L, o, 0, O)</label>
+                    </div>
+                    <label style="margin-top: var(--space-md);">Custom symbols
+                        <input type="text" id="custom-symbols" value="!@#$%^&*()_+-=[]{}|;:,.<>?">
+                    </label>
+                </div>
+            </details>
+            
+            <button class="btn btn-primary" onclick="generatePassword()">🔄 Generate New Password</button>
+            
+            <!-- Bulk Generation -->
+            <div class="bulk-section">
+                <div class="bulk-header">
+                    <h3>📦 Bulk Generate</h3>
+                    <div class="bulk-count">
+                        <button data-count="3" onclick="setBulkCount(3)">3</button>
+                        <button class="active" data-count="5" onclick="setBulkCount(5)">5</button>
+                        <button data-count="10" onclick="setBulkCount(10)">10</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="generateBulk()" style="width: 100%; margin-bottom: var(--space-md);">Generate Multiple</button>
+                <ul class="bulk-passwords" id="bulk-list"></ul>
+            </div>
+            
+            <!-- History -->
+            <div class="history" id="history-section" style="display: none;">
+                <h3>
+                    📜 Recent Passwords (session only)
+                    <button class="btn btn-secondary" onclick="clearHistory()" style="width: auto;">Clear</button>
+                </h3>
+                <ul class="history-list" id="history-list"></ul>
+            </div>
+        </div>
+        
+        <div class="tips">
+            <h3>🛡️ Password Security Tips</h3>
+            <ul>
+                <li><strong>Never reuse passwords</strong> — each account should have a unique password</li>
+                <li><strong>Use a password manager</strong> — don't try to memorize complex passwords</li>
+                <li><strong>Passphrases are strong AND memorable</strong> — "correct-horse-battery-staple" is very secure</li>
+                <li><strong>Enable 2FA</strong> — two-factor authentication adds an extra layer of security</li>
+                <li><strong>16+ characters</strong> — longer passwords are exponentially harder to crack</li>
+                <li><strong>Check for breaches</strong> — use haveibeenpwned.com to check if your email was leaked</li>
+            </ul>
+        </div>
+    </main>
+    
+    <!-- Pro Modal -->
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <h3>🔐 PassForge Pro</h3>
+            <div class="modal-price">$1.99 <span>one-time</span></div>
+            <ul class="modal-features">
+                <li>All password modes unlocked</li>
+                <li>Breach checking (haveibeenpwned)</li>
+                <li>Export password history</li>
+                <li>Bulk generation (up to 100)</li>
+                <li>Custom word lists for passphrases</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
+                <a href="https://buy.stripe.com/00w5kw0KZcbl9qN9pr1gs02" class="btn btn-primary" style="text-decoration:none;text-align:center;" target="_blank">Upgrade — $1.99</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+                <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/password-security-best-practices-2026.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: Password Security Best Practices 2026</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Word list for passphrases (EFF short wordlist subset)
+        const WORD_LIST = [
+            'able', 'acid', 'aged', 'also', 'area', 'army', 'away', 'baby', 'back', 'ball',
+            'band', 'bank', 'base', 'bath', 'bear', 'beat', 'been', 'beer', 'bell', 'belt',
+            'best', 'bill', 'bird', 'bite', 'blow', 'blue', 'boat', 'body', 'bomb', 'bond',
+            'bone', 'book', 'boom', 'born', 'boss', 'both', 'bowl', 'bulk', 'burn', 'bush',
+            'busy', 'call', 'calm', 'came', 'camp', 'card', 'care', 'case', 'cash', 'cast',
+            'cave', 'cell', 'chat', 'chip', 'city', 'club', 'coal', 'coat', 'code', 'cold',
+            'come', 'cook', 'cool', 'cope', 'copy', 'core', 'cost', 'crew', 'crop', 'dark',
+            'data', 'date', 'dawn', 'days', 'dead', 'deal', 'dean', 'dear', 'debt', 'deep',
+            'deny', 'desk', 'dial', 'diet', 'dirt', 'disc', 'disk', 'does', 'done', 'door',
+            'dose', 'down', 'draw', 'drew', 'drop', 'drug', 'dual', 'duke', 'dust', 'duty',
+            'each', 'earn', 'ease', 'east', 'easy', 'edge', 'edit', 'else', 'even', 'ever',
+            'evil', 'exam', 'exit', 'face', 'fact', 'fail', 'fair', 'fall', 'fame', 'farm',
+            'fast', 'fate', 'fear', 'feed', 'feel', 'feet', 'fell', 'felt', 'file', 'fill',
+            'film', 'find', 'fine', 'fire', 'firm', 'fish', 'five', 'flag', 'flat', 'flew',
+            'flow', 'folk', 'food', 'foot', 'ford', 'form', 'fort', 'four', 'free', 'from',
+            'fuel', 'full', 'fund', 'gain', 'game', 'gang', 'gate', 'gave', 'gear', 'gene',
+            'gift', 'girl', 'give', 'glad', 'goal', 'goes', 'gold', 'golf', 'gone', 'good',
+            'gray', 'grew', 'grey', 'grow', 'gulf', 'hair', 'half', 'hall', 'hand', 'hang',
+            'hard', 'harm', 'hate', 'have', 'head', 'hear', 'heat', 'held', 'hell', 'help',
+            'here', 'hero', 'hide', 'high', 'hill', 'hint', 'hire', 'hold', 'hole', 'holy',
+            'home', 'hope', 'host', 'hour', 'huge', 'hung', 'hunt', 'hurt', 'idea', 'inch',
+            'iron', 'item', 'jack', 'jane', 'jean', 'jobs', 'john', 'join', 'joke', 'jump',
+            'jury', 'just', 'keen', 'keep', 'kent', 'kept', 'kick', 'kill', 'kind', 'king',
+            'knee', 'knew', 'know', 'lack', 'lady', 'laid', 'lake', 'land', 'lane', 'last',
+            'late', 'lead', 'left', 'less', 'life', 'lift', 'like', 'line', 'link', 'list',
+            'live', 'load', 'loan', 'lock', 'logo', 'long', 'look', 'lord', 'lose', 'loss',
+            'lost', 'love', 'luck', 'made', 'mail', 'main', 'make', 'male', 'many', 'mark',
+            'mass', 'mate', 'meal', 'mean', 'meat', 'meet', 'menu', 'mere', 'mike', 'mile',
+            'milk', 'mill', 'mind', 'mine', 'miss', 'mode', 'mood', 'moon', 'more', 'most',
+            'move', 'much', 'must', 'myth', 'name', 'navy', 'near', 'neck', 'need', 'news',
+            'next', 'nice', 'nick', 'nine', 'node', 'none', 'nose', 'note', 'okay', 'once',
+            'only', 'onto', 'open', 'oral', 'over', 'pace', 'pack', 'page', 'paid', 'pain',
+            'pair', 'palm', 'park', 'part', 'pass', 'past', 'path', 'peak', 'pick', 'pink',
+            'pipe', 'pitch', 'place', 'plain', 'plan', 'plant', 'plate', 'play', 'plot', 'plus',
+            'poem', 'poet', 'point', 'pole', 'poll', 'pool', 'poor', 'port', 'post', 'pound',
+            'power', 'press', 'price', 'pride', 'prime', 'print', 'prior', 'prize', 'proof', 'pull',
+            'pure', 'push', 'race', 'radio', 'rain', 'raise', 'range', 'rank', 'rapid', 'rare',
+            'rate', 'ratio', 'reach', 'read', 'ready', 'real', 'realm', 'rebel', 'refer', 'reform',
+            'regime', 'region', 'reign', 'reject', 'relate', 'release', 'relief', 'rely', 'remain', 'remote',
+            'remove', 'rent', 'reply', 'report', 'rescue', 'resist', 'resort', 'rest', 'result', 'retain',
+            'retire', 'return', 'reveal', 'review', 'reward', 'rhythm', 'rich', 'ride', 'rifle', 'right',
+            'ring', 'riot', 'rise', 'risk', 'river', 'road', 'robot', 'rock', 'role', 'roll',
+            'roof', 'room', 'root', 'rope', 'rose', 'rough', 'round', 'route', 'royal', 'rural',
+            'rush', 'safe', 'sail', 'sake', 'sale', 'salt', 'same', 'sand', 'save', 'scale',
+            'scene', 'scope', 'score', 'sea', 'search', 'season', 'seat', 'second', 'secret', 'sector',
+            'secure', 'seek', 'seem', 'seize', 'select', 'sell', 'senate', 'send', 'senior', 'sense',
+            'sentence', 'separate', 'sequence', 'series', 'serious', 'serve', 'service', 'session', 'settle', 'seven',
+            'shade', 'shadow', 'shake', 'shall', 'shape', 'share', 'sharp', 'shed', 'sheet', 'shelf',
+            'shell', 'shift', 'shine', 'ship', 'shock', 'shoe', 'shoot', 'shop', 'shore', 'short',
+            'shot', 'shoulder', 'shout', 'show', 'shower', 'shut', 'sick', 'side', 'sight', 'sign',
+            'signal', 'silence', 'silk', 'silly', 'silver', 'similar', 'simple', 'since', 'sing', 'single',
+            'sink', 'sister', 'site', 'size', 'skill', 'skin', 'sky', 'slave', 'sleep', 'slice',
+            'slide', 'slight', 'slip', 'slow', 'small', 'smart', 'smell', 'smile', 'smoke', 'smooth',
+            'snap', 'snow', 'soft', 'soil', 'solar', 'soldier', 'solid', 'solution', 'solve', 'some',
+            'son', 'song', 'soon', 'sorry', 'sort', 'soul', 'sound', 'source', 'south', 'space',
+            'spare', 'speak', 'special', 'specific', 'spectrum', 'speech', 'speed', 'spend', 'sphere', 'spirit',
+            'split', 'spoke', 'sport', 'spot', 'spread', 'spring', 'square', 'stable', 'staff', 'stage',
+            'stake', 'stand', 'star', 'start', 'state', 'status', 'stay', 'steady', 'steel', 'steep',
+            'stem', 'step', 'stick', 'still', 'stock', 'stone', 'stood', 'stop', 'store', 'storm',
+            'story', 'straight', 'strange', 'strategic', 'stream', 'street', 'strength', 'stress', 'stretch', 'strike',
+            'string', 'strip', 'stroke', 'strong', 'structure', 'struggle', 'student', 'studio', 'study', 'stuff',
+            'style', 'subject', 'submit', 'subsequent', 'substance', 'succeed', 'success', 'such', 'sudden', 'suffer',
+            'sugar', 'suggest', 'suit', 'summer', 'summit', 'sun', 'super', 'supply', 'support', 'suppose',
+            'supreme', 'sure', 'surface', 'surgery', 'surprise', 'surround', 'survey', 'survive', 'suspect', 'sustain',
+            'sweet', 'swim', 'swing', 'switch', 'symbol', 'system', 'table', 'tackle', 'tail', 'take',
+            'tale', 'talk', 'tall', 'tank', 'tape', 'target', 'task', 'taste', 'tax', 'teach',
+            'team', 'tear', 'technical', 'technique', 'technology', 'telephone', 'television', 'tell', 'temperature', 'temporary',
+            'ten', 'tend', 'tennis', 'tension', 'tent', 'term', 'terrible', 'territory', 'terror', 'test',
+            'text', 'than', 'thank', 'that', 'theme', 'then', 'theory', 'there', 'thick', 'thin',
+            'thing', 'think', 'third', 'this', 'those', 'thought', 'thousand', 'threat', 'three', 'throat',
+            'through', 'throw', 'thus', 'ticket', 'tie', 'tight', 'time', 'tiny', 'tip', 'tire',
+            'title', 'today', 'toe', 'together', 'tomorrow', 'tone', 'tongue', 'tonight', 'tool', 'tooth',
+            'top', 'topic', 'total', 'touch', 'tough', 'tour', 'tournament', 'toward', 'tower', 'town',
+            'track', 'trade', 'tradition', 'traffic', 'trail', 'train', 'transfer', 'transform', 'transition', 'translate',
+            'transport', 'travel', 'treat', 'treatment', 'treaty', 'tree', 'tremendous', 'trend', 'trial', 'tribe',
+            'trick', 'trigger', 'trip', 'triumph', 'troop', 'tropical', 'trouble', 'truck', 'true', 'truly',
+            'trust', 'truth', 'tube', 'tune', 'tunnel', 'turn', 'twice', 'twin', 'type', 'typical',
+            'ugly', 'uncle', 'under', 'union', 'unique', 'unit', 'unite', 'universe', 'university', 'unknown',
+            'until', 'unusual', 'upon', 'upper', 'urban', 'urge', 'used', 'useful', 'user', 'usual',
+            'valley', 'valuable', 'value', 'variable', 'variety', 'various', 'vary', 'vast', 'vehicle', 'venture',
+            'version', 'very', 'vessel', 'veteran', 'victim', 'victory', 'video', 'view', 'village', 'violate',
+            'violence', 'virtue', 'virus', 'visible', 'vision', 'visit', 'visual', 'vital', 'voice', 'volume',
+            'vote', 'voter', 'wage', 'wait', 'wake', 'walk', 'wall', 'want', 'warm', 'warn',
+            'warning', 'wash', 'waste', 'watch', 'water', 'wave', 'weak', 'wealth', 'weapon', 'wear',
+            'weather', 'wedding', 'week', 'weekend', 'weekly', 'weight', 'welcome', 'welfare', 'well', 'west',
+            'western', 'what', 'whatever', 'wheat', 'wheel', 'when', 'whenever', 'where', 'whereas', 'whether',
+            'which', 'while', 'white', 'whole', 'whom', 'whose', 'wide', 'widely', 'wife', 'wild',
+            'will', 'willing', 'wind', 'window', 'wine', 'wing', 'winner', 'winter', 'wire', 'wise',
+            'wish', 'with', 'withdraw', 'within', 'without', 'witness', 'woman', 'wonder', 'wood', 'wooden',
+            'word', 'work', 'worker', 'working', 'workshop', 'world', 'worried', 'worry', 'worse', 'worst',
+            'worth', 'would', 'wound', 'wrap', 'write', 'writer', 'writing', 'wrong', 'yard', 'yeah',
+            'year', 'yellow', 'young', 'youth', 'zero', 'zone'
+        ];
+        
+        // Consonants and vowels for pronounceable passwords
+        const CONSONANTS = 'bcdfghjklmnpqrstvwxyz';
+        const VOWELS = 'aeiou';
+        
+        let currentMode = 'password';
+        let separator = '-';
+        let bulkCount = 5;
+        let history = []; // Session only - not persisted
+        
+        const passwordEl = document.getElementById('password');
+        const lengthSlider = document.getElementById('length');
+        const lengthValue = document.getElementById('length-value');
+        const wordCountSlider = document.getElementById('word-count');
+        const wordCountValue = document.getElementById('word-count-value');
+        const pronounceLengthSlider = document.getElementById('pronounce-length');
+        const pronounceLengthValue = document.getElementById('pronounce-length-value');
+        const historyList = document.getElementById('history-list');
+        const historySection = document.getElementById('history-section');
+        
+        // Mode switching
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-toggle button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+            
+            document.getElementById('password-options').style.display = mode === 'password' ? 'block' : 'none';
+            document.getElementById('passphrase-options').classList.toggle('active', mode === 'passphrase');
+            document.getElementById('pronounceable-options').classList.toggle('active', mode === 'pronounceable');
+            
+            generatePassword();
+        }
+        
+        // Separator selection
+        function setSeparator(sep) {
+            separator = sep;
+            document.querySelectorAll('.separator-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.sep === sep);
+            });
+            generatePassword();
+        }
+        
+        // Bulk count selection
+        function setBulkCount(count) {
+            bulkCount = count;
+            document.querySelectorAll('.bulk-count button').forEach(btn => {
+                btn.classList.toggle('active', parseInt(btn.dataset.count) === count);
+            });
+        }
+        
+        // Sliders
+        lengthSlider.addEventListener('input', () => {
+            lengthValue.textContent = lengthSlider.value;
+        });
+        
+        wordCountSlider.addEventListener('input', () => {
+            wordCountValue.textContent = wordCountSlider.value;
+        });
+        
+        pronounceLengthSlider.addEventListener('input', () => {
+            pronounceLengthValue.textContent = pronounceLengthSlider.value;
+        });
+        
+        // Auto-regenerate on option change
+        document.querySelectorAll('input').forEach(el => {
+            el.addEventListener('change', generatePassword);
+        });
+        
+        function generatePassword() {
+            let password;
+            
+            switch(currentMode) {
+                case 'passphrase':
+                    password = generatePassphrase();
+                    break;
+                case 'pronounceable':
+                    password = generatePronounceable();
+                    break;
+                default:
+                    password = generateRandomPassword();
+            }
+            
+            passwordEl.querySelector('.password-text').textContent = password;
+            updateStrength(password);
+            addToHistory(password);
+        }
+        
+        function generateRandomPassword() {
+            const length = parseInt(lengthSlider.value);
+            const useUpper = document.getElementById('uppercase').checked;
+            const useLower = document.getElementById('lowercase').checked;
+            const useNumbers = document.getElementById('numbers').checked;
+            const useSymbols = document.getElementById('symbols').checked;
+            const excludeAmbiguous = document.getElementById('exclude-ambiguous').checked;
+            const excludeSimilar = document.getElementById('exclude-similar').checked;
+            const customSymbols = document.getElementById('custom-symbols').value;
+            
+            let chars = '';
+            if (useUpper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (useLower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (useNumbers) chars += '0123456789';
+            if (useSymbols) chars += customSymbols;
+            
+            if (excludeAmbiguous) {
+                chars = chars.replace(/[l1IO0]/g, '');
+            }
+            if (excludeSimilar) {
+                chars = chars.replace(/[il1LIoO0]/g, '');
+            }
+            
+            if (!chars) {
+                return 'Select at least one character type';
+            }
+            
+            let password = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            for (let i = 0; i < length; i++) {
+                password += chars[array[i] % chars.length];
+            }
+            
+            return password;
+        }
+        
+        function generatePassphrase() {
+            const wordCount = parseInt(wordCountSlider.value);
+            const capitalize = document.getElementById('capitalize-words').checked;
+            const addNumber = document.getElementById('add-number').checked;
+            
+            const array = new Uint32Array(wordCount + 1);
+            crypto.getRandomValues(array);
+            
+            let words = [];
+            for (let i = 0; i < wordCount; i++) {
+                let word = WORD_LIST[array[i] % WORD_LIST.length];
+                if (capitalize) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1);
+                }
+                words.push(word);
+            }
+            
+            let passphrase = words.join(separator);
+            
+            if (addNumber) {
+                passphrase += separator + (array[wordCount] % 100);
+            }
+            
+            return passphrase;
+        }
+        
+        function generatePronounceable() {
+            const length = parseInt(pronounceLengthSlider.value);
+            let password = '';
+            const array = new Uint32Array(length);
+            crypto.getRandomValues(array);
+            
+            for (let i = 0; i < length; i++) {
+                if (i % 2 === 0) {
+                    password += CONSONANTS[array[i] % CONSONANTS.length];
+                } else {
+                    password += VOWELS[array[i] % VOWELS.length];
+                }
+            }
+            
+            // Capitalize first letter
+            password = password.charAt(0).toUpperCase() + password.slice(1);
+            
+            return password;
+        }
+        
+        function updateStrength(password) {
+            if (!password || password.includes('Select')) {
+                document.getElementById('strength-text').textContent = '—';
+                document.getElementById('strength-meter').className = 'strength-meter-fill';
+                document.getElementById('crack-time').textContent = '—';
+                return;
+            }
+            
+            // Use zxcvbn for real strength analysis
+            const result = zxcvbn(password);
+            
+            const strengthLabels = ['Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+            const strengthColors = ['#ef4444', '#ef4444', '#ffb366', '#ff8c42', '#22c55e'];
+            
+            const text = document.getElementById('strength-text');
+            const meter = document.getElementById('strength-meter');
+            const crackTime = document.getElementById('crack-time');
+            
+            text.textContent = strengthLabels[result.score];
+            text.style.color = strengthColors[result.score];
+            meter.className = 'strength-meter-fill strength-' + result.score;
+            
+            // Format crack time
+            const display = result.crack_times_display.offline_slow_hashing_1e4_per_second;
+            crackTime.textContent = display;
+        }
+        
+        function copyPassword() {
+            const password = passwordEl.querySelector('.password-text').textContent;
+            if (password && !password.includes('Select') && !password.includes('Click')) {
+                navigator.clipboard.writeText(password);
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 1500);
+            }
+        }
+        
+        function addToHistory(password) {
+            if (!password || password.includes('Select') || password.includes('Click')) return;
+            
+            // Avoid duplicates
+            if (history[0] === password) return;
+            
+            history.unshift(password);
+            if (history.length > 10) history.pop();
+            updateHistoryDisplay();
+        }
+        
+        function updateHistoryDisplay() {
+            if (history.length === 0) {
+                historySection.style.display = 'none';
+                return;
+            }
+            historySection.style.display = 'block';
+            historyList.innerHTML = history.map(p => 
+                `<li>
+                    <span class="pass-text">${escapeHtml(p)}</span>
+                    <button onclick="copyToClipboard('${escapeHtml(p)}', this)">Copy</button>
+                </li>`
+            ).join('');
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML.replace(/'/g, "\\'");
+        }
+        
+        function copyToClipboard(text, btn) {
+            navigator.clipboard.writeText(text);
+            btn.textContent = '✅';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 1000);
+        }
+        
+        function clearHistory() {
+            history = [];
+            updateHistoryDisplay();
+        }
+        
+        function generateBulk() {
+            const bulkList = document.getElementById('bulk-list');
+            bulkList.innerHTML = '';
+            
+            for (let i = 0; i < bulkCount; i++) {
+                let password;
+                switch(currentMode) {
+                    case 'passphrase':
+                        password = generatePassphrase();
+                        break;
+                    case 'pronounceable':
+                        password = generatePronounceable();
+                        break;
+                    default:
+                        password = generateRandomPassword();
+                }
+                
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${escapeHtml(password)}</span>
+                    <button onclick="copyToClipboard('${escapeHtml(password)}', this)">Copy</button>
+                `;
+                bulkList.appendChild(li);
+            }
+        }
+        
+        function showProModal() {
+            document.getElementById('proModal').classList.add('active');
+        }
+        
+        function closeProModal() {
+            document.getElementById('proModal').classList.remove('active');
+        }
+        
+        // Close modal on outside click
+        document.getElementById('proModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('proModal')) {
+                closeProModal();
+            }
+        });
+        
+        // Generate initial password
+        generatePassword();
+    </script>
+</body>
+</html>

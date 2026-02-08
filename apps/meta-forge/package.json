@@ -1,0 +1,17 @@
+{
+  "name": "@forge/meta-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Meta Tags Generator for SEO",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3010 -c-1 -o"
+  },
+  "keywords": [
+    "meta-tags",
+    "seo",
+    "open-graph"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

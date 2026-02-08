@@ -1,0 +1,17 @@
+{
+  "name": "@forge/invoice-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Free Invoice Generator - Create professional invoices in seconds",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3007 -c-1 -o"
+  },
+  "keywords": [
+    "invoice",
+    "invoice-generator",
+    "pdf"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

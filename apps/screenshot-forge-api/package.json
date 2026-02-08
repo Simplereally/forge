@@ -1,0 +1,17 @@
+{
+  "name": "@forge/screenshot-forge-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Screenshot API Service",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3016 -c-1 -o"
+  },
+  "keywords": [
+    "screenshot",
+    "api",
+    "automation"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

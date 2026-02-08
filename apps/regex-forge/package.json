@@ -1,0 +1,17 @@
+{
+  "name": "@forge/regex-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Regex Builder & Tester",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3014 -c-1 -o"
+  },
+  "keywords": [
+    "regex",
+    "regular-expression",
+    "pattern-matching"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

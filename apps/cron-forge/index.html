@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Cron Expression Builder - Visual Cron Generator | CronForge</title>
+    <meta name="description" content="Build cron expressions visually with human-readable descriptions. See next 10 run times with timezone support. Free cron generator tool. Try now!">
+    <meta name="keywords" content="cron expression builder, cron generator, crontab generator, cron schedule maker, visual cron editor, cron syntax helper">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/cron-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/cron-forge/">
+    <meta property="og:title" content="Free Cron Expression Builder - Visual Cron Generator | CronForge">
+    <meta property="og:description" content="Build cron expressions visually with human-readable descriptions. See next 10 run times with timezone support. Free cron generator tool. Try now!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/cron-forge/">
+    <meta name="twitter:title" content="Free Cron Expression Builder - Visual Cron Generator | CronForge">
+    <meta name="twitter:description" content="Build cron expressions visually with human-readable descriptions. See next 10 run times with timezone support. Free cron generator tool. Try now!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "CronForge",
+    "description": "Visual cron expression builder with human-readable descriptions. Build cron schedules easily with preset templates and see upcoming execution times.",
+    "url": "https://simplereally.github.io/cron-forge/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What is a cron expression?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A cron expression is a string of 5 fields (minute, hour, day, month, weekday) that defines when a scheduled task should run."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I read cron syntax?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The format is: minute (0-59) hour (0-23) day (1-31) month (1-12) weekday (0-6, Sunday=0)."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What does * mean in cron?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "An asterisk (*) means 'every' - so * in the minute field means 'every minute'."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I see when my cron will run?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! CronForge shows the next 10 execution times for any cron expression with timezone support."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What's */5 in cron?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "*/5 means 'every 5th'. So */5 in minutes means every 5 minutes (0, 5, 10, 15...)."
+            }
+        }
+    ]
+}
+    </script>
+    
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-warning: #eab308;
+            --forge-error: #ef4444;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover {
+            color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .forge-nav-links a.active {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .forge-header h1 .accent {
+            color: var(--forge-ember);
+        }
+        
+        .forge-header p {
+            color: var(--forge-silver);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ═══════════════ MAIN CONTAINER ═══════════════ */
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        /* ═══════════════ CARDS ═══════════════ */
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: relative;
+            animation: fadeIn 0.6s ease;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: var(--space-lg);
+            right: var(--space-lg);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            border-radius: 2px;
+        }
+        
+        .forge-card h2 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* ═══════════════ CRON DISPLAY ═══════════════ */
+        
+        .cron-display {
+            background: var(--forge-void);
+            border: 2px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .cron-expression {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--forge-ember);
+            letter-spacing: 0.1em;
+            margin-bottom: var(--space-md);
+            word-break: break-all;
+        }
+        
+        .cron-human {
+            font-size: 1.1rem;
+            color: var(--forge-chrome);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .cron-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .forge-btn {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-md) var(--space-xl);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 15px var(--forge-glow);
+        }
+        
+        .forge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--forge-glow);
+        }
+        
+        .forge-btn:active {
+            transform: translateY(0);
+        }
+        
+        .forge-btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            box-shadow: none;
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .forge-btn-secondary:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+            box-shadow: none;
+        }
+        
+        /* ═══════════════ PRESETS ═══════════════ */
+        
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+        
+        .preset-btn {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-chrome);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            text-align: left;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .preset-btn .preset-cron {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-ember);
+            display: block;
+            margin-top: var(--space-xs);
+        }
+        
+        /* ═══════════════ VISUAL BUILDER ═══════════════ */
+        
+        .builder-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+        
+        @media (max-width: 768px) {
+            .builder-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .builder-field {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+        }
+        
+        .builder-field label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .builder-field select,
+        .builder-field input {
+            width: 100%;
+            padding: var(--space-sm);
+            background: var(--forge-void);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-chrome);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .builder-field select:focus,
+        .builder-field input:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        .builder-field .field-value {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            color: var(--forge-ember);
+            text-align: center;
+            margin-top: var(--space-sm);
+        }
+        
+        /* ═══════════════ MANUAL INPUT ═══════════════ */
+        
+        .manual-input {
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-end;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .manual-input .input-group {
+            flex: 1;
+        }
+        
+        .manual-input label {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .manual-input input {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-ember);
+            font-family: var(--font-mono);
+            font-size: 1.1rem;
+        }
+        
+        .manual-input input:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        /* ═══════════════ TIMEZONE ═══════════════ */
+        
+        .timezone-row {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .timezone-row label {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+        }
+        
+        .timezone-row select {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-chrome);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+        }
+        
+        /* ═══════════════ NEXT RUNS ═══════════════ */
+        
+        .next-runs {
+            background: var(--forge-void);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+        }
+        
+        .next-runs h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .run-list {
+            list-style: none;
+        }
+        
+        .run-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--forge-steel);
+        }
+        
+        .run-item:last-child {
+            border-bottom: none;
+        }
+        
+        .run-number {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-iron);
+            width: 20px;
+        }
+        
+        .run-date {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--forge-ember);
+        }
+        
+        .run-relative {
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+            margin-left: auto;
+        }
+        
+        /* ═══════════════ CRON FIELDS REFERENCE ═══════════════ */
+        
+        .field-reference {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            text-align: center;
+        }
+        
+        @media (max-width: 600px) {
+            .field-reference {
+                grid-template-columns: repeat(5, 1fr);
+                font-size: 0.7rem;
+            }
+        }
+        
+        .field-ref-item {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-iron);
+        }
+        
+        /* ═══════════════ TOGGLE ═══════════════ */
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .mode-btn {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-silver);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .mode-btn.active {
+            background: var(--forge-glow);
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            margin-top: var(--space-2xl);
+            padding: var(--space-xl) var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        
+        .forge-footer-tools a:hover {
+            color: var(--forge-ember);
+        }
+        
+        .forge-footer-meta {
+            color: var(--forge-iron);
+            font-size: 0.85rem;
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 768px) {
+            .forge-nav-links {
+                display: none;
+            }
+            
+            .forge-card {
+                padding: var(--space-lg);
+            }
+            
+            .cron-expression {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-ember);
+            color: var(--forge-white);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/cron-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/" class="active">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Cron<span class="accent">Forge</span></h1>
+        <p>Build cron expressions visually, understand them instantly</p>
+    </header>
+    
+    <main class="container">
+        <!-- Cron Display -->
+        <div class="cron-display">
+            <div class="field-reference">
+                <div class="field-ref-item">minute</div>
+                <div class="field-ref-item">hour</div>
+                <div class="field-ref-item">day</div>
+                <div class="field-ref-item">month</div>
+                <div class="field-ref-item">weekday</div>
+            </div>
+            <div class="cron-expression" id="cronExpression">* * * * *</div>
+            <div class="cron-human" id="cronHuman">Every minute</div>
+            <div class="cron-actions">
+                <button class="forge-btn" onclick="copyCron()">📋 Copy Expression</button>
+                <button class="forge-btn forge-btn-secondary" onclick="resetCron()">🔄 Reset</button>
+            </div>
+        </div>
+        
+        <!-- Presets -->
+        <div class="forge-card">
+            <h2>⚡ Quick Presets</h2>
+            <div class="presets-grid">
+                <button class="preset-btn" onclick="applyPreset('*/5 * * * *')">
+                    Every 5 minutes
+                    <span class="preset-cron">*/5 * * * *</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 * * * *')">
+                    Every hour
+                    <span class="preset-cron">0 * * * *</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 0 * * *')">
+                    Daily at midnight
+                    <span class="preset-cron">0 0 * * *</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 9 * * *')">
+                    Daily at 9 AM
+                    <span class="preset-cron">0 9 * * *</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 9 * * 1')">
+                    Monday at 9 AM
+                    <span class="preset-cron">0 9 * * 1</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 9 * * 1-5')">
+                    Weekdays at 9 AM
+                    <span class="preset-cron">0 9 * * 1-5</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 0 1 * *')">
+                    Monthly (1st)
+                    <span class="preset-cron">0 0 1 * *</span>
+                </button>
+                <button class="preset-btn" onclick="applyPreset('0 0 1 1 *')">
+                    Yearly (Jan 1st)
+                    <span class="preset-cron">0 0 1 1 *</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Visual Builder -->
+        <div class="forge-card">
+            <h2>🔧 Visual Builder</h2>
+            
+            <div class="builder-grid">
+                <div class="builder-field">
+                    <label>Minute</label>
+                    <select id="minuteSelect" onchange="updateFromBuilder()">
+                        <option value="*">Every (*)</option>
+                        <option value="*/5">Every 5 (*/5)</option>
+                        <option value="*/10">Every 10 (*/10)</option>
+                        <option value="*/15">Every 15 (*/15)</option>
+                        <option value="*/30">Every 30 (*/30)</option>
+                        <option value="0">:00</option>
+                        <option value="15">:15</option>
+                        <option value="30">:30</option>
+                        <option value="45">:45</option>
+                    </select>
+                    <div class="field-value" id="minuteValue">*</div>
+                </div>
+                
+                <div class="builder-field">
+                    <label>Hour</label>
+                    <select id="hourSelect" onchange="updateFromBuilder()">
+                        <option value="*">Every (*)</option>
+                        <option value="*/2">Every 2h</option>
+                        <option value="*/4">Every 4h</option>
+                        <option value="*/6">Every 6h</option>
+                        <option value="*/12">Every 12h</option>
+                        <option value="0">0 (midnight)</option>
+                        <option value="6">6 AM</option>
+                        <option value="9">9 AM</option>
+                        <option value="12">12 PM</option>
+                        <option value="15">3 PM</option>
+                        <option value="18">6 PM</option>
+                        <option value="21">9 PM</option>
+                    </select>
+                    <div class="field-value" id="hourValue">*</div>
+                </div>
+                
+                <div class="builder-field">
+                    <label>Day</label>
+                    <select id="daySelect" onchange="updateFromBuilder()">
+                        <option value="*">Every (*)</option>
+                        <option value="1">1st</option>
+                        <option value="15">15th</option>
+                        <option value="1,15">1st & 15th</option>
+                        <option value="L">Last day</option>
+                    </select>
+                    <div class="field-value" id="dayValue">*</div>
+                </div>
+                
+                <div class="builder-field">
+                    <label>Month</label>
+                    <select id="monthSelect" onchange="updateFromBuilder()">
+                        <option value="*">Every (*)</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                        <option value="1-6">Jan-Jun</option>
+                        <option value="7-12">Jul-Dec</option>
+                    </select>
+                    <div class="field-value" id="monthValue">*</div>
+                </div>
+                
+                <div class="builder-field">
+                    <label>Weekday</label>
+                    <select id="weekdaySelect" onchange="updateFromBuilder()">
+                        <option value="*">Every (*)</option>
+                        <option value="0">Sunday</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                        <option value="1-5">Mon-Fri</option>
+                        <option value="0,6">Sat-Sun</option>
+                    </select>
+                    <div class="field-value" id="weekdayValue">*</div>
+                </div>
+            </div>
+            
+            <div class="manual-input">
+                <div class="input-group">
+                    <label>Or enter manually</label>
+                    <input type="text" id="manualInput" placeholder="* * * * *" oninput="updateFromManual()">
+                </div>
+                <button class="forge-btn forge-btn-secondary" onclick="parseManual()">Parse</button>
+            </div>
+        </div>
+        
+        <!-- Timezone & Next Runs -->
+        <div class="forge-card">
+            <h2>🕐 Next 10 Runs</h2>
+            
+            <div class="timezone-row">
+                <label>Timezone:</label>
+                <select id="timezoneSelect" onchange="updateNextRuns()">
+                    <option value="local">Local (auto-detect)</option>
+                    <option value="UTC">UTC</option>
+                    <option value="America/New_York">America/New_York (EST/EDT)</option>
+                    <option value="America/Los_Angeles">America/Los_Angeles (PST/PDT)</option>
+                    <option value="America/Chicago">America/Chicago (CST/CDT)</option>
+                    <option value="Europe/London">Europe/London (GMT/BST)</option>
+                    <option value="Europe/Paris">Europe/Paris (CET/CEST)</option>
+                    <option value="Europe/Berlin">Europe/Berlin (CET/CEST)</option>
+                    <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                    <option value="Asia/Shanghai">Asia/Shanghai (CST)</option>
+                    <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+                    <option value="Australia/Sydney">Australia/Sydney (AEST/AEDT)</option>
+                </select>
+            </div>
+            
+            <div class="next-runs">
+                <h3>📅 Upcoming Executions</h3>
+                <ul class="run-list" id="runList">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+                <p>Free to use • No signup required</p>
+            <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/how-to-build-cron-expressions-visual-guide.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: How to Build Cron Expressions: A Visual Guide</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // CRON FORGE — Visual Cron Expression Builder
+        // ═══════════════════════════════════════════════════════════════
+        
+        let currentCron = '* * * * *';
+        
+        const MONTH_NAMES = ['', 'January', 'February', 'March', 'April', 'May', 'June', 
+                            'July', 'August', 'September', 'October', 'November', 'December'];
+        const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        
+        function updateFromBuilder() {
+            const minute = document.getElementById('minuteSelect').value;
+            const hour = document.getElementById('hourSelect').value;
+            const day = document.getElementById('daySelect').value;
+            const month = document.getElementById('monthSelect').value;
+            const weekday = document.getElementById('weekdaySelect').value;
+            
+            // Update field values display
+            document.getElementById('minuteValue').textContent = minute;
+            document.getElementById('hourValue').textContent = hour;
+            document.getElementById('dayValue').textContent = day;
+            document.getElementById('monthValue').textContent = month;
+            document.getElementById('weekdayValue').textContent = weekday;
+            
+            currentCron = `${minute} ${hour} ${day} ${month} ${weekday}`;
+            updateDisplay();
+        }
+        
+        function updateFromManual() {
+            const input = document.getElementById('manualInput').value.trim();
+            if (input) {
+                currentCron = input;
+                updateDisplay();
+            }
+        }
+        
+        function parseManual() {
+            const input = document.getElementById('manualInput').value.trim();
+            const parts = input.split(/\s+/);
+            
+            if (parts.length >= 5) {
+                // Try to set builder values
+                setSelectIfValid('minuteSelect', parts[0]);
+                setSelectIfValid('hourSelect', parts[1]);
+                setSelectIfValid('daySelect', parts[2]);
+                setSelectIfValid('monthSelect', parts[3]);
+                setSelectIfValid('weekdaySelect', parts[4]);
+                
+                currentCron = parts.slice(0, 5).join(' ');
+                updateDisplay();
+                showToast('✅ Parsed successfully!');
+            } else {
+                showToast('❌ Invalid cron format. Need 5 fields.');
+            }
+        }
+        
+        function setSelectIfValid(selectId, value) {
+            const select = document.getElementById(selectId);
+            const options = Array.from(select.options).map(o => o.value);
+            if (options.includes(value)) {
+                select.value = value;
+            }
+            // Update display value
+            const displayId = selectId.replace('Select', 'Value');
+            document.getElementById(displayId).textContent = value;
+        }
+        
+        function applyPreset(cron) {
+            currentCron = cron;
+            document.getElementById('manualInput').value = cron;
+            
+            const parts = cron.split(' ');
+            setSelectIfValid('minuteSelect', parts[0]);
+            setSelectIfValid('hourSelect', parts[1]);
+            setSelectIfValid('daySelect', parts[2]);
+            setSelectIfValid('monthSelect', parts[3]);
+            setSelectIfValid('weekdaySelect', parts[4]);
+            
+            updateDisplay();
+        }
+        
+        function resetCron() {
+            currentCron = '* * * * *';
+            document.getElementById('manualInput').value = '';
+            document.getElementById('minuteSelect').value = '*';
+            document.getElementById('hourSelect').value = '*';
+            document.getElementById('daySelect').value = '*';
+            document.getElementById('monthSelect').value = '*';
+            document.getElementById('weekdaySelect').value = '*';
+            
+            ['minute', 'hour', 'day', 'month', 'weekday'].forEach(f => {
+                document.getElementById(f + 'Value').textContent = '*';
+            });
+            
+            updateDisplay();
+        }
+        
+        function updateDisplay() {
+            document.getElementById('cronExpression').textContent = currentCron;
+            document.getElementById('cronHuman').textContent = cronToHuman(currentCron);
+            updateNextRuns();
+        }
+        
+        function cronToHuman(cron) {
+            const parts = cron.split(' ');
+            if (parts.length < 5) return 'Invalid expression';
+            
+            const [minute, hour, day, month, weekday] = parts;
+            
+            // Common patterns
+            if (cron === '* * * * *') return 'Every minute';
+            if (cron === '0 * * * *') return 'Every hour, on the hour';
+            if (cron === '0 0 * * *') return 'Every day at midnight';
+            if (cron === '0 0 1 * *') return 'On the 1st of every month at midnight';
+            if (cron === '0 0 1 1 *') return 'Every year on January 1st at midnight';
+            
+            let desc = [];
+            
+            // Minute
+            if (minute === '*') {
+                desc.push('Every minute');
+            } else if (minute.startsWith('*/')) {
+                desc.push(`Every ${minute.slice(2)} minutes`);
+            } else {
+                desc.push(`At minute ${minute}`);
+            }
+            
+            // Hour
+            if (hour !== '*') {
+                if (hour.startsWith('*/')) {
+                    desc.push(`every ${hour.slice(2)} hours`);
+                } else {
+                    const h = parseInt(hour);
+                    const ampm = h >= 12 ? 'PM' : 'AM';
+                    const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+                    desc.push(`at ${h12}:${minute === '*' ? '00' : minute.padStart(2, '0')} ${ampm}`);
+                }
+            }
+            
+            // Day of month
+            if (day !== '*') {
+                if (day === 'L') {
+                    desc.push('on the last day');
+                } else if (day.includes(',')) {
+                    desc.push(`on days ${day}`);
+                } else {
+                    desc.push(`on day ${day}`);
+                }
+            }
+            
+            // Month
+            if (month !== '*') {
+                if (month.includes('-')) {
+                    const [start, end] = month.split('-').map(Number);
+                    desc.push(`from ${MONTH_NAMES[start]} to ${MONTH_NAMES[end]}`);
+                } else {
+                    desc.push(`in ${MONTH_NAMES[parseInt(month)]}`);
+                }
+            }
+            
+            // Weekday
+            if (weekday !== '*') {
+                if (weekday === '1-5') {
+                    desc.push('Monday through Friday');
+                } else if (weekday === '0,6') {
+                    desc.push('on weekends');
+                } else if (weekday.includes('-')) {
+                    const [start, end] = weekday.split('-').map(Number);
+                    desc.push(`${DAY_NAMES[start]} through ${DAY_NAMES[end]}`);
+                } else {
+                    desc.push(`on ${DAY_NAMES[parseInt(weekday)]}`);
+                }
+            }
+            
+            return desc.join(' ').replace(/Every minute at/, 'At').replace(/^Every minute /, '');
+        }
+        
+        function updateNextRuns() {
+            const timezone = document.getElementById('timezoneSelect').value;
+            const runs = getNextRuns(currentCron, 10, timezone);
+            
+            const list = document.getElementById('runList');
+            list.innerHTML = runs.map((run, i) => {
+                const relative = getRelativeTime(run);
+                const formatted = formatDate(run, timezone);
+                return `
+                    <li class="run-item">
+                        <span class="run-number">${i + 1}.</span>
+                        <span class="run-date">${formatted}</span>
+                        <span class="run-relative">${relative}</span>
+                    </li>
+                `;
+            }).join('');
+        }
+        
+        function getNextRuns(cron, count, timezone) {
+            const parts = cron.split(' ');
+            if (parts.length < 5) return [];
+            
+            const [minExpr, hourExpr, dayExpr, monthExpr, weekdayExpr] = parts;
+            const runs = [];
+            let date = new Date();
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            
+            // Simple cron parser (handles basic expressions)
+            const parseField = (expr, min, max) => {
+                if (expr === '*') return Array.from({length: max - min + 1}, (_, i) => i + min);
+                if (expr.startsWith('*/')) {
+                    const step = parseInt(expr.slice(2));
+                    return Array.from({length: Math.ceil((max - min + 1) / step)}, (_, i) => min + i * step);
+                }
+                if (expr.includes(',')) {
+                    return expr.split(',').map(Number);
+                }
+                if (expr.includes('-')) {
+                    const [start, end] = expr.split('-').map(Number);
+                    return Array.from({length: end - start + 1}, (_, i) => start + i);
+                }
+                return [parseInt(expr)];
+            };
+            
+            const minutes = parseField(minExpr, 0, 59);
+            const hours = parseField(hourExpr, 0, 23);
+            const days = dayExpr === 'L' ? ['L'] : parseField(dayExpr, 1, 31);
+            const months = parseField(monthExpr, 1, 12);
+            const weekdays = parseField(weekdayExpr, 0, 6);
+            
+            let iterations = 0;
+            const maxIterations = 100000;
+            
+            while (runs.length < count && iterations < maxIterations) {
+                iterations++;
+                date.setMinutes(date.getMinutes() + 1);
+                
+                const min = date.getMinutes();
+                const hour = date.getHours();
+                const dayOfMonth = date.getDate();
+                const month = date.getMonth() + 1;
+                const weekday = date.getDay();
+                
+                // Check if date matches
+                if (!minutes.includes(min)) continue;
+                if (!hours.includes(hour)) continue;
+                if (!months.includes(month)) continue;
+                
+                // Day of month or weekday (if both specified, either matches)
+                const dayMatch = days[0] === 'L' 
+                    ? dayOfMonth === new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+                    : days.includes(dayOfMonth);
+                const weekdayMatch = weekdays.includes(weekday);
+                
+                if (dayExpr !== '*' && weekdayExpr !== '*') {
+                    if (!dayMatch && !weekdayMatch) continue;
+                } else if (dayExpr !== '*') {
+                    if (!dayMatch) continue;
+                } else if (weekdayExpr !== '*') {
+                    if (!weekdayMatch) continue;
+                }
+                
+                runs.push(new Date(date));
+            }
+            
+            return runs;
+        }
+        
+        function formatDate(date, timezone) {
+            const options = {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            };
+            
+            if (timezone !== 'local') {
+                options.timeZone = timezone;
+            }
+            
+            return date.toLocaleString('en-US', options);
+        }
+        
+        function getRelativeTime(date) {
+            const now = new Date();
+            const diff = date - now;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 60) return `in ${minutes} min`;
+            if (hours < 24) return `in ${hours} hour${hours > 1 ? 's' : ''}`;
+            if (days < 7) return `in ${days} day${days > 1 ? 's' : ''}`;
+            return `in ${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''}`;
+        }
+        
+        function copyCron() {
+            navigator.clipboard.writeText(currentCron).then(() => {
+                showToast('✅ Copied to clipboard!');
+            });
+        }
+        
+        function showToast(message) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>

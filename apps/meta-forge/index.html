@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Meta Tag Previewer - Social Media Preview Tool | MetaForge</title>
+    <meta name="description" content="Preview how your links appear on Google, Twitter, Facebook, LinkedIn & Discord. Free Open Graph & Twitter Card previewer. Generate meta tags instantly!">
+    <meta name="keywords" content="meta tag previewer, open graph preview, twitter card preview, social media preview tool, og tag generator, seo meta tags">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/meta-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/meta-forge/">
+    <meta property="og:title" content="Free Meta Tag Previewer - Social Media Preview Tool | MetaForge">
+    <meta property="og:description" content="Preview how your links appear on Google, Twitter, Facebook, LinkedIn & Discord. Free Open Graph & Twitter Card previewer. Generate meta tags instantly!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/meta-forge/">
+    <meta name="twitter:title" content="Free Meta Tag Previewer - Social Media Preview Tool | MetaForge">
+    <meta name="twitter:description" content="Preview how your links appear on Google, Twitter, Facebook, LinkedIn & Discord. Free Open Graph & Twitter Card previewer. Generate meta tags instantly!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MetaForge",
+    "description": "Free meta tag previewer for SEO. See how your links appear on Google, Twitter, Facebook, LinkedIn, Discord, and Slack before publishing.",
+    "url": "https://simplereally.github.io/meta-forge/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "What platforms can I preview?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "MetaForge shows previews for Google Search, Twitter/X, Facebook, LinkedIn, Discord, and Slack."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I fetch meta tags from a URL?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Enter any URL and MetaForge will automatically extract existing meta tags."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What is Open Graph?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open Graph is a protocol that controls how URLs are displayed when shared on social media platforms."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What meta tags are most important?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "og:title, og:description, og:image, and og:url are the essential tags for social sharing."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does MetaForge generate the HTML code?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, it generates copy-paste ready HTML for both Open Graph and Twitter Card tags."
+            }
+        }
+    ]
+}
+    </script>
+    
+    
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-warning: #eab308;
+            --forge-error: #ef4444;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover {
+            color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .forge-nav-links a.active {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .forge-header h1 .accent {
+            color: var(--forge-ember);
+        }
+        
+        .forge-header p {
+            color: var(--forge-silver);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ═══════════════ MAIN CONTAINER ═══════════════ */
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        /* ═══════════════ CARDS ═══════════════ */
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: relative;
+            animation: fadeIn 0.6s ease;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: var(--space-lg);
+            right: var(--space-lg);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            border-radius: 2px;
+        }
+        
+        .forge-card h2 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* ═══════════════ INPUTS ═══════════════ */
+        
+        .input-group {
+            margin-bottom: var(--space-md);
+        }
+        
+        .input-group label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group input,
+        .input-group textarea {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-chrome);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition-fast);
+        }
+        
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .char-count {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-iron);
+            margin-top: var(--space-xs);
+            text-align: right;
+        }
+        
+        .char-count.warning {
+            color: var(--forge-warning);
+        }
+        
+        .char-count.error {
+            color: var(--forge-error);
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .forge-btn {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-md) var(--space-xl);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 15px var(--forge-glow);
+        }
+        
+        .forge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--forge-glow);
+        }
+        
+        .forge-btn:active {
+            transform: translateY(0);
+        }
+        
+        .forge-btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            box-shadow: none;
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .forge-btn-secondary:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+            box-shadow: none;
+        }
+        
+        /* ═══════════════ LAYOUT ═══════════════ */
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: var(--space-xl);
+        }
+        
+        @media (max-width: 900px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ═══════════════ URL FETCH ═══════════════ */
+        
+        .url-input-wrapper {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .url-input-wrapper input {
+            flex: 1;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin: var(--space-lg) 0;
+            color: var(--forge-iron);
+            font-size: 0.85rem;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--forge-steel);
+        }
+        
+        /* ═══════════════ PREVIEW CARDS ═══════════════ */
+        
+        .previews-grid {
+            display: grid;
+            gap: var(--space-lg);
+        }
+        
+        .preview-section {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md);
+            background: var(--forge-charcoal);
+            border-bottom: 1px solid var(--forge-steel);
+        }
+        
+        .preview-header .platform-icon {
+            font-size: 1.25rem;
+        }
+        
+        .preview-header .platform-name {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--forge-white);
+        }
+        
+        .preview-content {
+            padding: var(--space-md);
+        }
+        
+        /* Google Preview */
+        .google-preview {
+            font-family: Arial, sans-serif;
+        }
+        
+        .google-preview .google-title {
+            color: #8ab4f8;
+            font-size: 18px;
+            line-height: 1.3;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .google-preview .google-title:hover {
+            text-decoration: underline;
+        }
+        
+        .google-preview .google-url {
+            color: #bdc1c6;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .google-preview .google-desc {
+            color: #9aa0a6;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        /* Twitter/X Preview */
+        .twitter-preview {
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #2f3336;
+        }
+        
+        .twitter-preview .twitter-image {
+            width: 100%;
+            height: 200px;
+            background: var(--forge-steel);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .twitter-preview .twitter-content {
+            padding: 12px;
+        }
+        
+        .twitter-preview .twitter-domain {
+            color: #71767b;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+        
+        .twitter-preview .twitter-title {
+            color: #e7e9ea;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+        
+        .twitter-preview .twitter-desc {
+            color: #71767b;
+            font-size: 15px;
+            line-height: 1.3;
+        }
+        
+        /* Facebook Preview */
+        .facebook-preview {
+            background: #242526;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #3e4042;
+        }
+        
+        .facebook-preview .fb-image {
+            width: 100%;
+            height: 200px;
+            background: var(--forge-steel);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .facebook-preview .fb-content {
+            padding: 12px;
+        }
+        
+        .facebook-preview .fb-domain {
+            color: #b0b3b8;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        
+        .facebook-preview .fb-title {
+            color: #e4e6eb;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .facebook-preview .fb-desc {
+            color: #b0b3b8;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        /* LinkedIn Preview */
+        .linkedin-preview {
+            background: #1b1f23;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #38434f;
+        }
+        
+        .linkedin-preview .li-image {
+            width: 100%;
+            height: 180px;
+            background: var(--forge-steel);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .linkedin-preview .li-content {
+            padding: 12px;
+        }
+        
+        .linkedin-preview .li-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .linkedin-preview .li-domain {
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+        }
+        
+        /* Discord Preview */
+        .discord-preview {
+            background: #2f3136;
+            border-left: 4px solid #5865f2;
+            border-radius: 4px;
+            padding: 12px;
+            max-width: 400px;
+        }
+        
+        .discord-preview .discord-site {
+            color: #fff;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+        
+        .discord-preview .discord-title {
+            color: #00aff4;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .discord-preview .discord-desc {
+            color: #dcddde;
+            font-size: 14px;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+        
+        .discord-preview .discord-image {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 4px;
+            height: 150px;
+            background: var(--forge-steel);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Slack Preview */
+        .slack-preview {
+            background: #1a1d21;
+            border-left: 4px solid #e01e5a;
+            border-radius: 4px;
+            padding: 12px;
+        }
+        
+        .slack-preview .slack-site {
+            color: #1d9bd1;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .slack-preview .slack-title {
+            color: #1d9bd1;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .slack-preview .slack-desc {
+            color: #d1d2d3;
+            font-size: 15px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+        
+        .slack-preview .slack-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            background: var(--forge-steel);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* ═══════════════ CODE OUTPUT ═══════════════ */
+        
+        .code-output {
+            margin-top: var(--space-lg);
+        }
+        
+        .code-output h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .code-block {
+            background: var(--forge-void);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block pre {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .code-block .copy-btn {
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 0.75rem;
+        }
+        
+        /* ═══════════════ VALIDATION ═══════════════ */
+        
+        .validation-list {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: var(--forge-void);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .validation-list h3 {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .validation-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            font-size: 0.9rem;
+        }
+        
+        .validation-item.pass {
+            color: var(--forge-success);
+        }
+        
+        .validation-item.warn {
+            color: var(--forge-warning);
+        }
+        
+        .validation-item.fail {
+            color: var(--forge-error);
+        }
+        
+        /* ═══════════════ TABS ═══════════════ */
+        
+        .preview-tabs {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .preview-tab {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-silver);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .preview-tab:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        .preview-tab.active {
+            background: var(--forge-glow);
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            margin-top: var(--space-2xl);
+            padding: var(--space-xl) var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        
+        .forge-footer-tools a:hover {
+            color: var(--forge-ember);
+        }
+        
+        .forge-footer-meta {
+            color: var(--forge-iron);
+            font-size: 0.85rem;
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 768px) {
+            .forge-nav-links {
+                display: none;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .url-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .forge-card {
+                padding: var(--space-lg);
+            }
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-ember);
+            color: var(--forge-white);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/meta-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/" class="active">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Meta<span class="accent">Forge</span></h1>
+        <p>Preview how your links appear across social platforms</p>
+    </header>
+    
+    <main class="container">
+        <div class="two-column">
+            <!-- Input Panel -->
+            <div class="forge-card">
+                <h2>🔗 Meta Tags</h2>
+                
+                <div class="url-input-wrapper">
+                    <input type="url" id="urlInput" placeholder="https://example.com">
+                    <button class="forge-btn" onclick="fetchUrl()">Fetch</button>
+                </div>
+                
+                <div class="divider">or enter manually</div>
+                
+                <div class="input-group">
+                    <label>Title (og:title)</label>
+                    <input type="text" id="titleInput" placeholder="Your Page Title" oninput="updatePreviews()">
+                    <div class="char-count" id="titleCount">0 / 60 (Google truncates)</div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Description (og:description)</label>
+                    <textarea id="descInput" placeholder="A compelling description of your page..." oninput="updatePreviews()"></textarea>
+                    <div class="char-count" id="descCount">0 / 155 (Google truncates)</div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Image URL (og:image)</label>
+                    <input type="url" id="imageInput" placeholder="https://example.com/og-image.png" oninput="updatePreviews()">
+                </div>
+                
+                <div class="input-group">
+                    <label>Site Name (og:site_name)</label>
+                    <input type="text" id="siteInput" placeholder="Your Site Name" oninput="updatePreviews()">
+                </div>
+                
+                <div class="input-group">
+                    <label>URL</label>
+                    <input type="url" id="pageUrlInput" placeholder="https://example.com/page" oninput="updatePreviews()">
+                </div>
+                
+                <div class="input-group">
+                    <label>Twitter Handle (@)</label>
+                    <input type="text" id="twitterInput" placeholder="yourhandle" oninput="updatePreviews()">
+                </div>
+                
+                <!-- Validation -->
+                <div class="validation-list" id="validation">
+                    <h3>✅ Validation</h3>
+                    <div id="validationItems"></div>
+                </div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div>
+                <div class="forge-card">
+                    <h2>👁️ Live Previews</h2>
+                    
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showTab('google')">Google</button>
+                        <button class="preview-tab" onclick="showTab('twitter')">Twitter/X</button>
+                        <button class="preview-tab" onclick="showTab('facebook')">Facebook</button>
+                        <button class="preview-tab" onclick="showTab('linkedin')">LinkedIn</button>
+                        <button class="preview-tab" onclick="showTab('discord')">Discord</button>
+                        <button class="preview-tab" onclick="showTab('slack')">Slack</button>
+                    </div>
+                    
+                    <div class="previews-grid">
+                        <!-- Google -->
+                        <div class="preview-section" id="google-section">
+                            <div class="preview-header">
+                                <span class="platform-icon">🔍</span>
+                                <span class="platform-name">Google Search</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="google-preview">
+                                    <a class="google-title" id="google-title">Page Title</a>
+                                    <div class="google-url" id="google-url">https://example.com</div>
+                                    <div class="google-desc" id="google-desc">Page description will appear here...</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Twitter -->
+                        <div class="preview-section" id="twitter-section" style="display: none;">
+                            <div class="preview-header">
+                                <span class="platform-icon">𝕏</span>
+                                <span class="platform-name">Twitter / X</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="twitter-preview">
+                                    <div class="twitter-image" id="twitter-image"></div>
+                                    <div class="twitter-content">
+                                        <div class="twitter-domain" id="twitter-domain">example.com</div>
+                                        <div class="twitter-title" id="twitter-title">Page Title</div>
+                                        <div class="twitter-desc" id="twitter-desc">Page description...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Facebook -->
+                        <div class="preview-section" id="facebook-section" style="display: none;">
+                            <div class="preview-header">
+                                <span class="platform-icon">📘</span>
+                                <span class="platform-name">Facebook</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="facebook-preview">
+                                    <div class="fb-image" id="fb-image"></div>
+                                    <div class="fb-content">
+                                        <div class="fb-domain" id="fb-domain">EXAMPLE.COM</div>
+                                        <div class="fb-title" id="fb-title">Page Title</div>
+                                        <div class="fb-desc" id="fb-desc">Page description...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- LinkedIn -->
+                        <div class="preview-section" id="linkedin-section" style="display: none;">
+                            <div class="preview-header">
+                                <span class="platform-icon">💼</span>
+                                <span class="platform-name">LinkedIn</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="linkedin-preview">
+                                    <div class="li-image" id="li-image"></div>
+                                    <div class="li-content">
+                                        <div class="li-title" id="li-title">Page Title</div>
+                                        <div class="li-domain" id="li-domain">example.com</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Discord -->
+                        <div class="preview-section" id="discord-section" style="display: none;">
+                            <div class="preview-header">
+                                <span class="platform-icon">🎮</span>
+                                <span class="platform-name">Discord</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="discord-preview">
+                                    <div class="discord-site" id="discord-site">Site Name</div>
+                                    <div class="discord-title" id="discord-title">Page Title</div>
+                                    <div class="discord-desc" id="discord-desc">Page description...</div>
+                                    <div class="discord-image" id="discord-image"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Slack -->
+                        <div class="preview-section" id="slack-section" style="display: none;">
+                            <div class="preview-header">
+                                <span class="platform-icon">💬</span>
+                                <span class="platform-name">Slack</span>
+                            </div>
+                            <div class="preview-content">
+                                <div class="slack-preview">
+                                    <div class="slack-site" id="slack-site">Site Name</div>
+                                    <div class="slack-title" id="slack-title">Page Title</div>
+                                    <div class="slack-desc" id="slack-desc">Page description...</div>
+                                    <div class="slack-image" id="slack-image"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Output -->
+                    <div class="code-output">
+                        <h3>📋 Meta Tags HTML</h3>
+                        <div class="code-block">
+                            <button class="forge-btn forge-btn-secondary copy-btn" onclick="copyCode()">Copy</button>
+                            <pre id="codeOutput">&lt;!-- Open Graph / Facebook --&gt;
+&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:title" content=""&gt;
+&lt;meta property="og:description" content=""&gt;
+&lt;meta property="og:image" content=""&gt;
+&lt;meta property="og:url" content=""&gt;
+&lt;meta property="og:site_name" content=""&gt;
+
+&lt;!-- Twitter Card --&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content=""&gt;
+&lt;meta name="twitter:description" content=""&gt;
+&lt;meta name="twitter:image" content=""&gt;</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+                <p>Free to use • No signup required</p>
+            <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/meta-tag-checker-tools-seo.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: Best Meta Tag Checker Tools for SEO</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // META FORGE — Social Media Meta Tag Previewer
+        // ═══════════════════════════════════════════════════════════════
+        
+        const platforms = ['google', 'twitter', 'facebook', 'linkedin', 'discord', 'slack'];
+        
+        function showTab(platform) {
+            // Hide all
+            platforms.forEach(p => {
+                document.getElementById(`${p}-section`).style.display = 'none';
+            });
+            // Show selected
+            document.getElementById(`${platform}-section`).style.display = 'block';
+            
+            // Update tab states
+            document.querySelectorAll('.preview-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        function updatePreviews() {
+            const title = document.getElementById('titleInput').value || 'Page Title';
+            const desc = document.getElementById('descInput').value || 'Page description will appear here...';
+            const image = document.getElementById('imageInput').value;
+            const site = document.getElementById('siteInput').value || 'Site Name';
+            const url = document.getElementById('pageUrlInput').value || 'https://example.com';
+            const twitter = document.getElementById('twitterInput').value;
+            
+            // Extract domain
+            let domain = 'example.com';
+            try {
+                domain = new URL(url).hostname;
+            } catch (e) {}
+            
+            // Update character counts
+            updateCharCount('titleCount', document.getElementById('titleInput').value.length, 60);
+            updateCharCount('descCount', document.getElementById('descInput').value.length, 155);
+            
+            // Google
+            document.getElementById('google-title').textContent = title.substring(0, 60) + (title.length > 60 ? '...' : '');
+            document.getElementById('google-url').textContent = url;
+            document.getElementById('google-desc').textContent = desc.substring(0, 155) + (desc.length > 155 ? '...' : '');
+            
+            // Twitter
+            if (image) {
+                document.getElementById('twitter-image').style.backgroundImage = `url(${image})`;
+            }
+            document.getElementById('twitter-domain').textContent = domain;
+            document.getElementById('twitter-title').textContent = title;
+            document.getElementById('twitter-desc').textContent = desc.substring(0, 200);
+            
+            // Facebook
+            if (image) {
+                document.getElementById('fb-image').style.backgroundImage = `url(${image})`;
+            }
+            document.getElementById('fb-domain').textContent = domain.toUpperCase();
+            document.getElementById('fb-title').textContent = title;
+            document.getElementById('fb-desc').textContent = desc;
+            
+            // LinkedIn
+            if (image) {
+                document.getElementById('li-image').style.backgroundImage = `url(${image})`;
+            }
+            document.getElementById('li-title').textContent = title;
+            document.getElementById('li-domain').textContent = domain;
+            
+            // Discord
+            if (image) {
+                document.getElementById('discord-image').style.backgroundImage = `url(${image})`;
+            }
+            document.getElementById('discord-site').textContent = site;
+            document.getElementById('discord-title').textContent = title;
+            document.getElementById('discord-desc').textContent = desc;
+            
+            // Slack
+            if (image) {
+                document.getElementById('slack-image').style.backgroundImage = `url(${image})`;
+            }
+            document.getElementById('slack-site').textContent = site;
+            document.getElementById('slack-title').textContent = title;
+            document.getElementById('slack-desc').textContent = desc;
+            
+            // Update code output
+            updateCodeOutput(title, desc, image, url, site, twitter);
+            
+            // Validate
+            validate(title, desc, image, url);
+        }
+        
+        function updateCharCount(elementId, current, max) {
+            const el = document.getElementById(elementId);
+            el.textContent = `${current} / ${max}`;
+            el.classList.remove('warning', 'error');
+            if (current > max) {
+                el.classList.add('error');
+            } else if (current > max * 0.9) {
+                el.classList.add('warning');
+            }
+        }
+        
+        function updateCodeOutput(title, desc, image, url, site, twitter) {
+            const code = `<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(desc)}">
+<meta property="og:image" content="${escapeHtml(image)}">
+<meta property="og:url" content="${escapeHtml(url)}">
+<meta property="og:site_name" content="${escapeHtml(site)}">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(title)}">
+<meta name="twitter:description" content="${escapeHtml(desc)}">
+<meta name="twitter:image" content="${escapeHtml(image)}">${twitter ? `
+<meta name="twitter:site" content="@${escapeHtml(twitter)}">` : ''}`;
+            
+            document.getElementById('codeOutput').textContent = code;
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;')
+                      .replace(/</g, '&lt;')
+                      .replace(/>/g, '&gt;')
+                      .replace(/"/g, '&quot;');
+        }
+        
+        function validate(title, desc, image, url) {
+            const items = [];
+            
+            // Title checks
+            if (!document.getElementById('titleInput').value) {
+                items.push({ status: 'fail', text: 'Missing og:title — Required for all platforms' });
+            } else if (title.length > 60) {
+                items.push({ status: 'warn', text: `Title too long (${title.length}/60) — Will be truncated on Google` });
+            } else {
+                items.push({ status: 'pass', text: 'Title length OK' });
+            }
+            
+            // Description checks
+            if (!document.getElementById('descInput').value) {
+                items.push({ status: 'fail', text: 'Missing og:description — Important for SEO and social' });
+            } else if (desc.length > 155) {
+                items.push({ status: 'warn', text: `Description too long (${desc.length}/155) — Will be truncated on Google` });
+            } else {
+                items.push({ status: 'pass', text: 'Description length OK' });
+            }
+            
+            // Image checks
+            if (!image) {
+                items.push({ status: 'warn', text: 'No og:image — Social previews will lack visual appeal' });
+            } else {
+                items.push({ status: 'pass', text: 'og:image provided' });
+            }
+            
+            // URL checks
+            if (!document.getElementById('pageUrlInput').value) {
+                items.push({ status: 'warn', text: 'Missing og:url — Recommended for canonical URL' });
+            } else {
+                items.push({ status: 'pass', text: 'og:url provided' });
+            }
+            
+            // Render validation
+            const container = document.getElementById('validationItems');
+            container.innerHTML = items.map(item => 
+                `<div class="validation-item ${item.status}">
+                    ${item.status === 'pass' ? '✅' : item.status === 'warn' ? '⚠️' : '❌'} ${item.text}
+                </div>`
+            ).join('');
+        }
+        
+        async function fetchUrl() {
+            const url = document.getElementById('urlInput').value;
+            if (!url) {
+                showToast('Please enter a URL');
+                return;
+            }
+            
+            // Use a CORS proxy
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+            
+            try {
+                showToast('Fetching meta tags...');
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                
+                if (data.contents) {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data.contents, 'text/html');
+                    
+                    // Extract meta tags
+                    const ogTitle = doc.querySelector('meta[property="og:title"]')?.content || 
+                                   doc.querySelector('title')?.textContent || '';
+                    const ogDesc = doc.querySelector('meta[property="og:description"]')?.content || 
+                                  doc.querySelector('meta[name="description"]')?.content || '';
+                    const ogImage = doc.querySelector('meta[property="og:image"]')?.content || '';
+                    const ogSite = doc.querySelector('meta[property="og:site_name"]')?.content || '';
+                    const twitterSite = doc.querySelector('meta[name="twitter:site"]')?.content || '';
+                    
+                    // Populate fields
+                    document.getElementById('titleInput').value = ogTitle;
+                    document.getElementById('descInput').value = ogDesc;
+                    document.getElementById('imageInput').value = ogImage;
+                    document.getElementById('siteInput').value = ogSite;
+                    document.getElementById('pageUrlInput').value = url;
+                    document.getElementById('twitterInput').value = twitterSite.replace('@', '');
+                    
+                    updatePreviews();
+                    showToast('✅ Meta tags fetched!');
+                }
+            } catch (error) {
+                showToast('❌ Could not fetch URL. Try entering tags manually.');
+                console.error(error);
+            }
+        }
+        
+        function copyCode() {
+            const code = document.getElementById('codeOutput').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('✅ Copied to clipboard!');
+            });
+        }
+        
+        function showToast(message) {
+            // Remove existing toast
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Initialize
+        updatePreviews();
+    </script>
+</body>
+</html>

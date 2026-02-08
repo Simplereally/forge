@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RegexForge — Visual Regex Tester & Explainer</title>
+    <meta name="description" content="Free regex tester with visual match highlighting, plain English explanations, and common pattern library. Test regular expressions for JavaScript, Python, and Go. No signup required.">
+    <meta name="keywords" content="regex tester, regular expression tester, regex explainer, regex visualizer, regex patterns, regex cheatsheet">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="RegexForge — Visual Regex Tester & Explainer">
+    <meta property="og:description" content="Test and understand regular expressions with visual highlighting and plain English explanations. Free, no signup.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/regex-forge/">
+    
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "RegexForge",
+        "description": "Free online regex tester with visual match highlighting and plain English explanations",
+        "url": "https://simplereally.github.io/regex-forge/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            
+            /* Capture group colors */
+            --group-1: #ff6b6b;
+            --group-2: #4ecdc4;
+            --group-3: #ffe66d;
+            --group-4: #95e1d3;
+            --group-5: #f38181;
+            --group-6: #aa96da;
+            --group-7: #fcbad3;
+            --group-8: #a8d8ea;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN LAYOUT ═══════════════ */
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: var(--space-xl);
+        }
+        
+        @media (max-width: 1000px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ FORM ELEMENTS ═══════════════ */
+        
+        label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+            margin-bottom: var(--space-md);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        input::placeholder, textarea::placeholder { color: var(--forge-iron); }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.8;
+        }
+        
+        select {
+            cursor: pointer;
+            font-family: var(--font-body);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8b99' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--space-md) center;
+            padding-right: var(--space-xl);
+        }
+        
+        /* ═══════════════ REGEX INPUT ROW ═══════════════ */
+        
+        .regex-input-row {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: flex-start;
+        }
+        
+        .regex-input-row input {
+            flex: 1;
+        }
+        
+        .regex-input-row select {
+            width: 130px;
+            flex-shrink: 0;
+        }
+        
+        .flags-input {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .flag-toggle {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .flag-toggle:hover {
+            border-color: var(--forge-iron);
+        }
+        
+        .flag-toggle.active {
+            background: var(--forge-glow);
+            border-color: var(--forge-ember);
+        }
+        
+        .flag-toggle input {
+            display: none;
+        }
+        
+        .flag-toggle span {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+        }
+        
+        .flag-toggle.active span {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ MATCH DISPLAY ═══════════════ */
+        
+        .test-output {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            min-height: 150px;
+            margin-bottom: var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .test-output .match {
+            background: rgba(255, 107, 53, 0.3);
+            border-radius: 2px;
+            padding: 1px 0;
+        }
+        
+        .test-output .group-1 { background: rgba(255, 107, 107, 0.4); }
+        .test-output .group-2 { background: rgba(78, 205, 196, 0.4); }
+        .test-output .group-3 { background: rgba(255, 230, 109, 0.4); }
+        .test-output .group-4 { background: rgba(149, 225, 211, 0.4); }
+        .test-output .group-5 { background: rgba(243, 129, 129, 0.4); }
+        .test-output .group-6 { background: rgba(170, 150, 218, 0.4); }
+        .test-output .group-7 { background: rgba(252, 186, 211, 0.4); }
+        .test-output .group-8 { background: rgba(168, 216, 234, 0.4); }
+        
+        .match-stats {
+            display: flex;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--forge-silver);
+        }
+        
+        .stat strong {
+            color: var(--forge-ember);
+            font-size: 1.1rem;
+            margin-right: var(--space-xs);
+        }
+        
+        /* ═══════════════ EXPLANATION BOX ═══════════════ */
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .explanation-box {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        
+        .explanation-item {
+            padding: var(--space-sm) 0;
+            border-bottom: 1px solid var(--forge-steel);
+            display: flex;
+            gap: var(--space-md);
+            align-items: flex-start;
+        }
+        
+        .explanation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .explanation-item code {
+            font-family: var(--font-mono);
+            background: var(--forge-charcoal);
+            color: var(--forge-ember);
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .explanation-item span {
+            color: var(--forge-chrome);
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            border-color: var(--forge-iron);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+        
+        /* ═══════════════ SIDEBAR ═══════════════ */
+        
+        .sidebar .forge-card {
+            padding: var(--space-lg);
+        }
+        
+        .pattern-library {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .pattern-item {
+            padding: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .pattern-item:hover {
+            border-color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .pattern-item h4 {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .pattern-item code {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-ember);
+            word-break: break-all;
+        }
+        
+        /* ═══════════════ CHEATSHEET ═══════════════ */
+        
+        .cheatsheet {
+            font-size: 0.85rem;
+        }
+        
+        .cheat-section {
+            margin-bottom: var(--space-md);
+        }
+        
+        .cheat-section h4 {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .cheat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-xs) 0;
+            border-bottom: 1px solid var(--forge-steel);
+        }
+        
+        .cheat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .cheat-item code {
+            font-family: var(--font-mono);
+            color: var(--forge-ember);
+            font-size: 0.8rem;
+        }
+        
+        .cheat-item span {
+            color: var(--forge-silver);
+            font-size: 0.8rem;
+        }
+        
+        /* ═══════════════ TABS ═══════════════ */
+        
+        .sidebar-tabs {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+        }
+        
+        .sidebar-tabs button {
+            flex: 1;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-silver);
+        }
+        
+        .sidebar-tabs button:hover {
+            border-color: var(--forge-iron);
+            color: var(--forge-white);
+        }
+        
+        .sidebar-tabs button.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* ═══════════════ MATCH LIST ═══════════════ */
+        
+        .match-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .match-entry {
+            padding: var(--space-sm);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        
+        .match-entry .match-index {
+            font-family: var(--font-display);
+            color: var(--forge-ember);
+            font-size: 0.7rem;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .match-entry .match-value {
+            color: var(--forge-white);
+            word-break: break-all;
+        }
+        
+        .match-entry .match-groups {
+            margin-top: var(--space-xs);
+            padding-top: var(--space-xs);
+            border-top: 1px solid var(--forge-steel);
+            font-size: 0.8rem;
+        }
+        
+        .match-entry .group {
+            color: var(--forge-silver);
+        }
+        
+        .match-entry .group strong {
+            color: var(--forge-chrome);
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: var(--space-xs);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pro-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* ═══════════════ PRO MODAL ═══════════════ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 11, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--forge-white);
+            margin: 0 0 var(--space-md);
+        }
+        
+        .pro-price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+            margin: var(--space-md) 0;
+        }
+        
+        .pro-price span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .pro-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-md) 0;
+        }
+        
+        .pro-features li {
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .pro-features li::before {
+            content: '✓';
+            color: var(--forge-success);
+            font-weight: bold;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        /* ═══════════════ WATERMARK ═══════════════ */
+        
+        .watermark {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .watermark p {
+            margin: var(--space-xs) 0;
+            font-size: 0.9rem;
+        }
+        
+        .watermark a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .watermark a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover { color: var(--forge-ember); }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover { text-decoration: underline; }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a {
+                font-size: 0.7rem;
+                padding: var(--space-xs);
+            }
+            
+            .regex-input-row {
+                flex-direction: column;
+            }
+            
+            .regex-input-row select {
+                width: 100%;
+            }
+        }
+        
+        /* ═══════════════ ERROR STATE ═══════════════ */
+        
+        .error {
+            color: var(--forge-heat);
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--forge-heat);
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            margin-bottom: var(--space-md);
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/" class="active">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Regex<span class="accent">Forge</span></h1>
+        <p>Visual regex tester with plain English explanations</p>
+    </header>
+    
+    <main class="container">
+        <div class="main-grid">
+            <div class="main-content">
+                <div class="forge-card">
+                    <label for="regex-input">Regular Expression</label>
+                    <div class="regex-input-row">
+                        <input type="text" id="regex-input" placeholder="Enter regex pattern..." value="(\w+)@(\w+)\.(\w+)">
+                        <select id="flavor-select">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="go">Go</option>
+                        </select>
+                    </div>
+                    
+                    <label>Flags</label>
+                    <div class="flags-input">
+                        <label class="flag-toggle active">
+                            <input type="checkbox" id="flag-g" checked>
+                            <span>g</span> global
+                        </label>
+                        <label class="flag-toggle">
+                            <input type="checkbox" id="flag-i">
+                            <span>i</span> ignore case
+                        </label>
+                        <label class="flag-toggle active">
+                            <input type="checkbox" id="flag-m" checked>
+                            <span>m</span> multiline
+                        </label>
+                        <label class="flag-toggle">
+                            <input type="checkbox" id="flag-s">
+                            <span>s</span> dotall
+                        </label>
+                    </div>
+                    
+                    <label for="test-input">Test String</label>
+                    <textarea id="test-input" placeholder="Enter text to test against...">Contact us at:
+hello@example.com
+support@forge.io
+admin@test.org
+
+Invalid: @missing.com, noat.com</textarea>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="copyRegex()">📋 Copy Regex</button>
+                        <button class="btn btn-secondary" onclick="clearAll()">🗑️ Clear</button>
+                    </div>
+                </div>
+                
+                <div class="forge-card">
+                    <div class="section-title">🎯 Match Results</div>
+                    
+                    <div id="error-display" class="error" style="display: none;"></div>
+                    
+                    <div class="match-stats">
+                        <div class="stat"><strong id="match-count">0</strong> matches</div>
+                        <div class="stat"><strong id="group-count">0</strong> groups</div>
+                    </div>
+                    
+                    <div class="test-output" id="test-output">Enter a regex and test string above...</div>
+                    
+                    <div class="section-title" style="margin-top: var(--space-lg);">📋 Match Details</div>
+                    <div class="match-list" id="match-list"></div>
+                </div>
+                
+                <div class="forge-card">
+                    <div class="section-title">💡 Plain English Explanation</div>
+                    <div class="explanation-box" id="explanation-box">
+                        Enter a regex to see its explanation...
+                    </div>
+                </div>
+                
+                <div class="watermark">
+                    <p>⭐ <strong>Free tier:</strong> Full regex testing & explanations</p>
+                    <p><a href="#" onclick="showProModal(); return false;">Upgrade to Pro</a> for save/share, regex history & advanced patterns</p>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="forge-card">
+                    <div class="sidebar-tabs">
+                        <button class="active" data-tab="patterns">Patterns</button>
+                        <button data-tab="cheatsheet">Cheatsheet</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="tab-patterns">
+                        <div class="pattern-library">
+                            <div class="pattern-item" data-pattern="[\w.+-]+@[\w-]+\.[\w.-]+" data-desc="Matches email addresses">
+                                <h4>📧 Email</h4>
+                                <code>[\w.+-]+@[\w-]+\.[\w.-]+</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="https?://[^\s]+" data-desc="Matches URLs">
+                                <h4>🔗 URL</h4>
+                                <code>https?://[^\s]+</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\+?[\d\s\-\(\)]{10,}" data-desc="Matches phone numbers">
+                                <h4>📱 Phone</h4>
+                                <code>\+?[\d\s\-\(\)]{10,}</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\d{4}-\d{2}-\d{2}" data-desc="Matches ISO dates (YYYY-MM-DD)">
+                                <h4>📅 Date (ISO)</h4>
+                                <code>\d{4}-\d{2}-\d{2}</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\d{1,2}/\d{1,2}/\d{2,4}" data-desc="Matches dates (MM/DD/YYYY)">
+                                <h4>📅 Date (US)</h4>
+                                <code>\d{1,2}/\d{1,2}/\d{2,4}</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" data-desc="Matches IPv4 addresses">
+                                <h4>🌐 IPv4</h4>
+                                <code>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="#([0-9A-Fa-f]{3}){1,2}\b" data-desc="Matches hex color codes">
+                                <h4>🎨 Hex Color</h4>
+                                <code>#([0-9A-Fa-f]{3}){1,2}\b</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" data-desc="At least 8 chars, upper, lower, digit">
+                                <h4>🔐 Strong Password</h4>
+                                <code>^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\b[A-Z][a-z]+\s[A-Z][a-z]+\b" data-desc="Matches names (First Last)">
+                                <h4>👤 Name</h4>
+                                <code>\b[A-Z][a-z]+\s[A-Z][a-z]+\b</code>
+                            </div>
+                            <div class="pattern-item" data-pattern="\d{5}(-\d{4})?" data-desc="Matches US ZIP codes">
+                                <h4>📮 ZIP Code</h4>
+                                <code>\d{5}(-\d{4})?</code>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="tab-cheatsheet">
+                        <div class="cheatsheet">
+                            <div class="cheat-section">
+                                <h4>Character Classes</h4>
+                                <div class="cheat-item"><code>.</code><span>Any character</span></div>
+                                <div class="cheat-item"><code>\d</code><span>Digit [0-9]</span></div>
+                                <div class="cheat-item"><code>\D</code><span>Not a digit</span></div>
+                                <div class="cheat-item"><code>\w</code><span>Word [a-zA-Z0-9_]</span></div>
+                                <div class="cheat-item"><code>\W</code><span>Not a word</span></div>
+                                <div class="cheat-item"><code>\s</code><span>Whitespace</span></div>
+                                <div class="cheat-item"><code>\S</code><span>Not whitespace</span></div>
+                            </div>
+                            <div class="cheat-section">
+                                <h4>Anchors</h4>
+                                <div class="cheat-item"><code>^</code><span>Start of string</span></div>
+                                <div class="cheat-item"><code>$</code><span>End of string</span></div>
+                                <div class="cheat-item"><code>\b</code><span>Word boundary</span></div>
+                            </div>
+                            <div class="cheat-section">
+                                <h4>Quantifiers</h4>
+                                <div class="cheat-item"><code>*</code><span>0 or more</span></div>
+                                <div class="cheat-item"><code>+</code><span>1 or more</span></div>
+                                <div class="cheat-item"><code>?</code><span>0 or 1</span></div>
+                                <div class="cheat-item"><code>{n}</code><span>Exactly n</span></div>
+                                <div class="cheat-item"><code>{n,}</code><span>n or more</span></div>
+                                <div class="cheat-item"><code>{n,m}</code><span>Between n and m</span></div>
+                            </div>
+                            <div class="cheat-section">
+                                <h4>Groups</h4>
+                                <div class="cheat-item"><code>(abc)</code><span>Capture group</span></div>
+                                <div class="cheat-item"><code>(?:abc)</code><span>Non-capture</span></div>
+                                <div class="cheat-item"><code>a|b</code><span>Or</span></div>
+                            </div>
+                            <div class="cheat-section">
+                                <h4>Lookaround</h4>
+                                <div class="cheat-item"><code>(?=abc)</code><span>Lookahead</span></div>
+                                <div class="cheat-item"><code>(?!abc)</code><span>Neg lookahead</span></div>
+                                <div class="cheat-item"><code>(?<=abc)</code><span>Lookbehind</span></div>
+                                <div class="cheat-item"><code>(?<!abc)</code><span>Neg lookbehind</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Pro Modal -->
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <h3>✨ RegexForge Pro</h3>
+            <div class="pro-price">$2.99 <span>one-time</span></div>
+            <ul class="pro-features">
+                <li>Save & share regex patterns</li>
+                <li>Regex history & favorites</li>
+                <li>Advanced pattern library (100+)</li>
+                <li>Export to multiple languages</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
+                <a href="#" class="btn btn-primary" style="text-decoration:none;text-align:center;">Upgrade — $2.99</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Regex explanation rules
+        const explanationRules = [
+            { pattern: /\^/g, explanation: 'Start of string' },
+            { pattern: /\$/g, explanation: 'End of string' },
+            { pattern: /\\d/g, explanation: 'Any digit (0-9)' },
+            { pattern: /\\D/g, explanation: 'Any non-digit' },
+            { pattern: /\\w/g, explanation: 'Any word character (a-z, A-Z, 0-9, _)' },
+            { pattern: /\\W/g, explanation: 'Any non-word character' },
+            { pattern: /\\s/g, explanation: 'Any whitespace' },
+            { pattern: /\\S/g, explanation: 'Any non-whitespace' },
+            { pattern: /\\b/g, explanation: 'Word boundary' },
+            { pattern: /\\B/g, explanation: 'Non-word boundary' },
+            { pattern: /\\\./g, explanation: 'Literal dot character' },
+            { pattern: /(?<!\\)\./g, explanation: 'Any single character (except newline)' },
+            { pattern: /\*/g, explanation: 'Zero or more of the preceding' },
+            { pattern: /\+/g, explanation: 'One or more of the preceding' },
+            { pattern: /(?<!\?)\?(?!\=|\!|\<|\:)/g, explanation: 'Zero or one of the preceding (optional)' },
+            { pattern: /\{(\d+)\}/g, explanation: 'Exactly $1 of the preceding' },
+            { pattern: /\{(\d+),\}/g, explanation: '$1 or more of the preceding' },
+            { pattern: /\{(\d+),(\d+)\}/g, explanation: 'Between $1 and $2 of the preceding' },
+            { pattern: /\(\?=/g, explanation: 'Positive lookahead - matches if followed by' },
+            { pattern: /\(\?!/g, explanation: 'Negative lookahead - matches if NOT followed by' },
+            { pattern: /\(\?<=/g, explanation: 'Positive lookbehind - matches if preceded by' },
+            { pattern: /\(\?<!/g, explanation: 'Negative lookbehind - matches if NOT preceded by' },
+            { pattern: /\(\?:/g, explanation: 'Non-capturing group' },
+            { pattern: /\|/g, explanation: 'OR - matches either side' },
+            { pattern: /\[([^\]]+)\]/g, explanation: 'Character class - any of: $1' },
+            { pattern: /\[\^([^\]]+)\]/g, explanation: 'Negated class - none of: $1' },
+        ];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupEventListeners();
+            testRegex();
+        });
+        
+        function setupEventListeners() {
+            // Input changes
+            document.getElementById('regex-input').addEventListener('input', debounce(testRegex, 150));
+            document.getElementById('test-input').addEventListener('input', debounce(testRegex, 150));
+            document.getElementById('flavor-select').addEventListener('change', testRegex);
+            
+            // Flag toggles
+            document.querySelectorAll('.flag-toggle').forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    toggle.classList.toggle('active');
+                    const checkbox = toggle.querySelector('input');
+                    checkbox.checked = toggle.classList.contains('active');
+                    testRegex();
+                });
+            });
+            
+            // Sidebar tabs
+            document.querySelectorAll('.sidebar-tabs button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.sidebar-tabs button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+                });
+            });
+            
+            // Pattern library items
+            document.querySelectorAll('.pattern-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.getElementById('regex-input').value = item.dataset.pattern;
+                    testRegex();
+                });
+            });
+        }
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+        
+        function getFlags() {
+            let flags = '';
+            if (document.getElementById('flag-g').checked) flags += 'g';
+            if (document.getElementById('flag-i').checked) flags += 'i';
+            if (document.getElementById('flag-m').checked) flags += 'm';
+            if (document.getElementById('flag-s').checked) flags += 's';
+            return flags;
+        }
+        
+        function testRegex() {
+            const pattern = document.getElementById('regex-input').value;
+            const testString = document.getElementById('test-input').value;
+            const errorDisplay = document.getElementById('error-display');
+            const outputDiv = document.getElementById('test-output');
+            const matchListDiv = document.getElementById('match-list');
+            
+            errorDisplay.style.display = 'none';
+            
+            if (!pattern) {
+                outputDiv.innerHTML = 'Enter a regex pattern to test...';
+                matchListDiv.innerHTML = '';
+                document.getElementById('match-count').textContent = '0';
+                document.getElementById('group-count').textContent = '0';
+                generateExplanation('');
+                return;
+            }
+            
+            try {
+                const flags = getFlags();
+                const regex = new RegExp(pattern, flags);
+                
+                // Find all matches with groups
+                const matches = [];
+                let match;
+                const tempRegex = new RegExp(pattern, flags.replace('g', '') + 'g');
+                
+                while ((match = tempRegex.exec(testString)) !== null) {
+                    matches.push({
+                        fullMatch: match[0],
+                        groups: match.slice(1),
+                        index: match.index
+                    });
+                    if (!flags.includes('g')) break;
+                }
+                
+                // Update stats
+                document.getElementById('match-count').textContent = matches.length;
+                const groupCount = matches.length > 0 ? matches[0].groups.length : 0;
+                document.getElementById('group-count').textContent = groupCount;
+                
+                // Highlight matches in output
+                if (matches.length > 0) {
+                    let highlighted = escapeHtml(testString);
+                    let offset = 0;
+                    
+                    matches.forEach((m, idx) => {
+                        const start = m.index + offset;
+                        const original = escapeHtml(m.fullMatch);
+                        const replacement = `<span class="match">${original}</span>`;
+                        
+                        // Find position in escaped string
+                        const escapedBefore = escapeHtml(testString.slice(0, m.index));
+                        const actualStart = escapedBefore.length;
+                        const actualEnd = actualStart + original.length;
+                        
+                        highlighted = highlighted.slice(0, actualStart + offset) + replacement + highlighted.slice(actualEnd + offset);
+                        offset += replacement.length - original.length;
+                    });
+                    
+                    outputDiv.innerHTML = highlighted;
+                } else {
+                    outputDiv.innerHTML = escapeHtml(testString);
+                }
+                
+                // Show match list
+                if (matches.length > 0) {
+                    matchListDiv.innerHTML = matches.map((m, idx) => {
+                        let groupsHtml = '';
+                        if (m.groups.length > 0) {
+                            groupsHtml = '<div class="match-groups">' +
+                                m.groups.map((g, i) => 
+                                    `<div class="group">Group ${i + 1}: <strong>${escapeHtml(g || '(empty)')}</strong></div>`
+                                ).join('') +
+                            '</div>';
+                        }
+                        return `
+                            <div class="match-entry">
+                                <div class="match-index">Match ${idx + 1} at index ${m.index}</div>
+                                <div class="match-value">${escapeHtml(m.fullMatch)}</div>
+                                ${groupsHtml}
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    matchListDiv.innerHTML = '<div style="color: var(--forge-iron); padding: var(--space-md);">No matches found</div>';
+                }
+                
+                // Generate explanation
+                generateExplanation(pattern);
+                
+            } catch (e) {
+                errorDisplay.textContent = 'Invalid regex: ' + e.message;
+                errorDisplay.style.display = 'block';
+                outputDiv.innerHTML = escapeHtml(testString);
+                matchListDiv.innerHTML = '';
+                document.getElementById('match-count').textContent = '0';
+                document.getElementById('group-count').textContent = '0';
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function generateExplanation(pattern) {
+            const explanationBox = document.getElementById('explanation-box');
+            
+            if (!pattern) {
+                explanationBox.innerHTML = 'Enter a regex to see its explanation...';
+                return;
+            }
+            
+            const explanations = [];
+            
+            // Tokenize the regex for better explanation
+            const tokens = tokenizeRegex(pattern);
+            
+            tokens.forEach(token => {
+                if (token.explanation) {
+                    explanations.push({
+                        code: token.value,
+                        text: token.explanation
+                    });
+                }
+            });
+            
+            if (explanations.length === 0) {
+                explanations.push({
+                    code: pattern,
+                    text: 'Matches the literal text "' + pattern + '"'
+                });
+            }
+            
+            explanationBox.innerHTML = explanations.map(e => `
+                <div class="explanation-item">
+                    <code>${escapeHtml(e.code)}</code>
+                    <span>${e.text}</span>
+                </div>
+            `).join('');
+        }
+        
+        function tokenizeRegex(pattern) {
+            const tokens = [];
+            let i = 0;
+            
+            while (i < pattern.length) {
+                const char = pattern[i];
+                const rest = pattern.slice(i);
+                
+                // Check for special sequences
+                if (char === '\\' && i + 1 < pattern.length) {
+                    const next = pattern[i + 1];
+                    const escapeMap = {
+                        'd': { value: '\\d', explanation: 'Any digit (0-9)' },
+                        'D': { value: '\\D', explanation: 'Any non-digit' },
+                        'w': { value: '\\w', explanation: 'Any word character (a-z, A-Z, 0-9, _)' },
+                        'W': { value: '\\W', explanation: 'Any non-word character' },
+                        's': { value: '\\s', explanation: 'Any whitespace' },
+                        'S': { value: '\\S', explanation: 'Any non-whitespace' },
+                        'b': { value: '\\b', explanation: 'Word boundary' },
+                        'B': { value: '\\B', explanation: 'Non-word boundary' },
+                        'n': { value: '\\n', explanation: 'Newline' },
+                        't': { value: '\\t', explanation: 'Tab' },
+                        'r': { value: '\\r', explanation: 'Carriage return' },
+                    };
+                    
+                    if (escapeMap[next]) {
+                        tokens.push(escapeMap[next]);
+                        i += 2;
+                        continue;
+                    } else {
+                        tokens.push({ value: '\\' + next, explanation: 'Literal "' + next + '"' });
+                        i += 2;
+                        continue;
+                    }
+                }
+                
+                // Character class
+                if (char === '[') {
+                    const end = pattern.indexOf(']', i);
+                    if (end !== -1) {
+                        const charClass = pattern.slice(i, end + 1);
+                        const negated = pattern[i + 1] === '^';
+                        tokens.push({
+                            value: charClass,
+                            explanation: negated 
+                                ? 'Any character NOT in: ' + charClass.slice(2, -1)
+                                : 'Any character in: ' + charClass.slice(1, -1)
+                        });
+                        i = end + 1;
+                        continue;
+                    }
+                }
+                
+                // Quantifiers
+                if (char === '{') {
+                    const match = rest.match(/^\{(\d+)(,)?(\d*)?\}/);
+                    if (match) {
+                        const [full, min, comma, max] = match;
+                        let explanation;
+                        if (!comma) {
+                            explanation = `Exactly ${min} times`;
+                        } else if (!max) {
+                            explanation = `${min} or more times`;
+                        } else {
+                            explanation = `Between ${min} and ${max} times`;
+                        }
+                        tokens.push({ value: full, explanation });
+                        i += full.length;
+                        continue;
+                    }
+                }
+                
+                // Lookahead/lookbehind
+                if (rest.startsWith('(?=')) {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Positive lookahead - must be followed by this' });
+                    i = end + 1;
+                    continue;
+                }
+                if (rest.startsWith('(?!')) {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Negative lookahead - must NOT be followed by this' });
+                    i = end + 1;
+                    continue;
+                }
+                if (rest.startsWith('(?<=')) {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Positive lookbehind - must be preceded by this' });
+                    i = end + 1;
+                    continue;
+                }
+                if (rest.startsWith('(?<!')) {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Negative lookbehind - must NOT be preceded by this' });
+                    i = end + 1;
+                    continue;
+                }
+                if (rest.startsWith('(?:')) {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Non-capturing group' });
+                    i = end + 1;
+                    continue;
+                }
+                
+                // Capturing group
+                if (char === '(') {
+                    const end = findGroupEnd(pattern, i);
+                    tokens.push({ value: pattern.slice(i, end + 1), explanation: 'Capturing group - captures: ' + pattern.slice(i + 1, end) });
+                    i = end + 1;
+                    continue;
+                }
+                
+                // Simple tokens
+                const simpleMap = {
+                    '^': 'Start of string/line',
+                    '$': 'End of string/line',
+                    '.': 'Any single character (except newline)',
+                    '*': 'Zero or more of the preceding',
+                    '+': 'One or more of the preceding',
+                    '?': 'Zero or one of the preceding (optional)',
+                    '|': 'OR - either the pattern before or after',
+                };
+                
+                if (simpleMap[char]) {
+                    tokens.push({ value: char, explanation: simpleMap[char] });
+                    i++;
+                    continue;
+                }
+                
+                // Literal character - collect consecutive literals
+                let literal = '';
+                while (i < pattern.length && !/[\^\$\.\*\+\?\[\]\(\)\{\}\|\\]/.test(pattern[i])) {
+                    literal += pattern[i];
+                    i++;
+                }
+                if (literal) {
+                    tokens.push({ value: literal, explanation: 'Matches literal text "' + literal + '"' });
+                    continue;
+                }
+                
+                i++;
+            }
+            
+            return tokens;
+        }
+        
+        function findGroupEnd(pattern, start) {
+            let depth = 0;
+            for (let i = start; i < pattern.length; i++) {
+                if (pattern[i] === '\\') {
+                    i++; // Skip escaped char
+                    continue;
+                }
+                if (pattern[i] === '(') depth++;
+                if (pattern[i] === ')') {
+                    depth--;
+                    if (depth === 0) return i;
+                }
+            }
+            return pattern.length - 1;
+        }
+        
+        function copyRegex() {
+            const pattern = document.getElementById('regex-input').value;
+            const flags = getFlags();
+            const flavor = document.getElementById('flavor-select').value;
+            
+            let output = '';
+            switch (flavor) {
+                case 'javascript':
+                    output = `/${pattern}/${flags}`;
+                    break;
+                case 'python':
+                    output = `r"${pattern}"`;
+                    if (flags) output += `  # flags: ${flags}`;
+                    break;
+                case 'go':
+                    const goFlags = flags.replace('g', ''); // Go doesn't use global flag
+                    output = goFlags ? `(?${goFlags})${pattern}` : pattern;
+                    break;
+            }
+            
+            navigator.clipboard.writeText(output).then(() => {
+                const btn = document.querySelector('.btn-primary');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✓ Copied!';
+                setTimeout(() => btn.innerHTML = originalText, 1500);
+            });
+        }
+        
+        function clearAll() {
+            document.getElementById('regex-input').value = '';
+            document.getElementById('test-input').value = '';
+            testRegex();
+        }
+        
+        function showProModal() {
+            document.getElementById('proModal').classList.add('active');
+        }
+        
+        function closeProModal() {
+            document.getElementById('proModal').classList.remove('active');
+        }
+        
+        document.getElementById('proModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('proModal')) {
+                closeProModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Font Pairing Tool - Google Fonts Preview & Pairing | FontForge</title>
+    <meta name="description" content="Browse Google Fonts, preview text, find perfect font pairings. Free font pairing tool with live preview and CSS export. Design better typography!">
+    <meta name="keywords" content="font pairing tool, google fonts preview, typography tool, font combination generator, best font pairs, css font export">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/font-forge/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/font-forge/">
+    <meta property="og:title" content="Free Font Pairing Tool - Google Fonts Preview & Pairing | FontForge">
+    <meta property="og:description" content="Browse Google Fonts, preview text, find perfect font pairings. Free font pairing tool with live preview and CSS export. Design better typography!">
+    <meta property="og:site_name" content="Forge Tools">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/font-forge/">
+    <meta name="twitter:title" content="Free Font Pairing Tool - Google Fonts Preview & Pairing | FontForge">
+    <meta name="twitter:description" content="Browse Google Fonts, preview text, find perfect font pairings. Free font pairing tool with live preview and CSS export. Design better typography!">
+    
+    <!-- Schema.org SoftwareApplication -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "FontForge",
+    "description": "Free Google Fonts pairing tool. Browse fonts, preview text, and discover perfect typography combinations with CSS export.",
+    "url": "https://simplereally.github.io/font-forge/",
+    "applicationCategory": "DesignApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+    }
+}
+    </script>
+    
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "How do I find good font pairings?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "FontForge suggests body fonts that pair well with your selected heading font based on design principles."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Can I preview my own text?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Type any text to see how it looks in your selected font with adjustable size, weight, and spacing."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What font categories are available?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Serif, Sans-Serif, Display, Handwriting, and Monospace fonts from Google Fonts."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "How do I use the fonts in my project?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "FontForge generates copy-paste CSS import code and font-family declarations."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Are these fonts free to use?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, all fonts in FontForge are from Google Fonts which are free for commercial use."
+            }
+        }
+    ]
+}
+    </script>
+    
+    
+    
+    <!-- Google Fonts - Base -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-warning: #eab308;
+            --forge-error: #ef4444;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Grain Texture Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover {
+            color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .forge-nav-links a.active {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .forge-header h1 .accent {
+            color: var(--forge-ember);
+        }
+        
+        .forge-header p {
+            color: var(--forge-silver);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* ═══════════════ MAIN CONTAINER ═══════════════ */
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        /* ═══════════════ CARDS ═══════════════ */
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            position: relative;
+            animation: fadeIn 0.6s ease;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: var(--space-lg);
+            right: var(--space-lg);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            border-radius: 2px;
+        }
+        
+        .forge-card h2 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-lg);
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .forge-btn {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-md) var(--space-xl);
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            box-shadow: 0 4px 15px var(--forge-glow);
+        }
+        
+        .forge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--forge-glow);
+        }
+        
+        .forge-btn:active {
+            transform: translateY(0);
+        }
+        
+        .forge-btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            box-shadow: none;
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .forge-btn-secondary:hover {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+            box-shadow: none;
+        }
+        
+        .forge-btn-small {
+            font-size: 0.75rem;
+            padding: var(--space-sm) var(--space-md);
+        }
+        
+        /* ═══════════════ LAYOUT ═══════════════ */
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--space-xl);
+        }
+        
+        @media (max-width: 1000px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ═══════════════ FONT SELECTOR ═══════════════ */
+        
+        .font-search {
+            position: relative;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .font-search input {
+            width: 100%;
+            padding: var(--space-md);
+            padding-left: 40px;
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-chrome);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+        }
+        
+        .font-search input:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        .font-search::before {
+            content: '🔍';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+        
+        .font-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+        }
+        
+        .font-item {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--forge-steel);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .font-item:last-child {
+            border-bottom: none;
+        }
+        
+        .font-item:hover {
+            background: var(--forge-gunmetal);
+        }
+        
+        .font-item.selected {
+            background: var(--forge-glow);
+            border-left: 3px solid var(--forge-ember);
+        }
+        
+        .font-item .font-name {
+            font-weight: 500;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .font-item .font-preview {
+            font-size: 1.1rem;
+            color: var(--forge-chrome);
+        }
+        
+        .font-item .font-category {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--forge-iron);
+            text-transform: uppercase;
+        }
+        
+        /* ═══════════════ CATEGORY FILTER ═══════════════ */
+        
+        .category-filter {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-md);
+            flex-wrap: wrap;
+        }
+        
+        .category-btn {
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-silver);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        /* ═══════════════ PREVIEW SECTION ═══════════════ */
+        
+        .preview-section {
+            background: var(--forge-void);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-lg);
+        }
+        
+        .preview-controls {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .control-group label {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+        }
+        
+        .control-group input[type="range"] {
+            width: 80px;
+            cursor: pointer;
+        }
+        
+        .control-group input[type="number"] {
+            width: 60px;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            color: var(--forge-chrome);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        
+        .preview-text {
+            min-height: 150px;
+        }
+        
+        .preview-text h3 {
+            margin-bottom: var(--space-md);
+        }
+        
+        .preview-text p {
+            margin-bottom: var(--space-sm);
+        }
+        
+        .preview-text-input {
+            width: 100%;
+            padding: var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            color: var(--forge-chrome);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            margin-bottom: var(--space-lg);
+            resize: vertical;
+            min-height: 60px;
+        }
+        
+        .preview-text-input:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ PAIRING SECTION ═══════════════ */
+        
+        .pairing-section h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .pairing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .pairing-card {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .pairing-card:hover {
+            border-color: var(--forge-ember);
+            background: var(--forge-glow);
+        }
+        
+        .pairing-card .pair-heading {
+            font-size: 1.2rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .pairing-card .pair-body {
+            font-size: 0.9rem;
+            color: var(--forge-silver);
+        }
+        
+        .pairing-card .pair-name {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--forge-iron);
+            margin-top: var(--space-sm);
+        }
+        
+        /* ═══════════════ CODE OUTPUT ═══════════════ */
+        
+        .code-section {
+            margin-top: var(--space-lg);
+        }
+        
+        .code-section h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-md);
+        }
+        
+        .code-block {
+            background: var(--forge-void);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            position: relative;
+            margin-bottom: var(--space-md);
+        }
+        
+        .code-block pre {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--forge-chrome);
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin: 0;
+        }
+        
+        .code-block .copy-btn {
+            position: absolute;
+            top: var(--space-sm);
+            right: var(--space-sm);
+        }
+        
+        /* ═══════════════ TOP PAIRINGS ═══════════════ */
+        
+        .top-pairings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-md);
+        }
+        
+        .top-pairing-card {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .top-pairing-card:hover {
+            border-color: var(--forge-ember);
+            transform: translateY(-2px);
+        }
+        
+        .top-pairing-card .heading-sample {
+            font-size: 1.5rem;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+        }
+        
+        .top-pairing-card .body-sample {
+            font-size: 0.95rem;
+            color: var(--forge-chrome);
+            line-height: 1.5;
+            margin-bottom: var(--space-md);
+        }
+        
+        .top-pairing-card .pairing-names {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            margin-top: var(--space-2xl);
+            padding: var(--space-xl) var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            transition: var(--transition-fast);
+        }
+        
+        .forge-footer-tools a:hover {
+            color: var(--forge-ember);
+        }
+        
+        .forge-footer-meta {
+            color: var(--forge-iron);
+            font-size: 0.85rem;
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 768px) {
+            .forge-nav-links {
+                display: none;
+            }
+            
+            .forge-card {
+                padding: var(--space-lg);
+            }
+            
+            .preview-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-ember);
+            color: var(--forge-white);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--forge-silver);
+        }
+        
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--forge-steel);
+            border-top-color: var(--forge-ember);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: var(--space-sm);
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/font-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/" class="active">Font</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Font<span class="accent">Forge</span></h1>
+        <p>Browse fonts, preview text, find the perfect pairing</p>
+    </header>
+    
+    <main class="container">
+        <div class="two-column">
+            <!-- Font Selector -->
+            <div class="forge-card">
+                <h2>🔤 Select Font</h2>
+                
+                <div class="font-search">
+                    <input type="text" id="fontSearch" placeholder="Search fonts..." oninput="filterFonts()">
+                </div>
+                
+                <div class="category-filter">
+                    <button class="category-btn active" onclick="filterCategory('all')">All</button>
+                    <button class="category-btn" onclick="filterCategory('serif')">Serif</button>
+                    <button class="category-btn" onclick="filterCategory('sans-serif')">Sans-Serif</button>
+                    <button class="category-btn" onclick="filterCategory('display')">Display</button>
+                    <button class="category-btn" onclick="filterCategory('handwriting')">Handwriting</button>
+                    <button class="category-btn" onclick="filterCategory('monospace')">Monospace</button>
+                </div>
+                
+                <div class="font-list" id="fontList">
+                    <div class="loading">Loading fonts</div>
+                </div>
+            </div>
+            
+            <!-- Preview & Pairing -->
+            <div>
+                <!-- Live Preview -->
+                <div class="forge-card">
+                    <h2>👁️ Live Preview</h2>
+                    
+                    <textarea class="preview-text-input" id="previewInput" placeholder="Type your text here..." oninput="updatePreview()">The quick brown fox jumps over the lazy dog.</textarea>
+                    
+                    <div class="preview-controls">
+                        <div class="control-group">
+                            <label>Size</label>
+                            <input type="range" id="fontSize" min="12" max="72" value="24" oninput="updatePreview()">
+                            <input type="number" id="fontSizeNum" value="24" min="12" max="72" oninput="syncSize()">px
+                        </div>
+                        <div class="control-group">
+                            <label>Weight</label>
+                            <select id="fontWeight" onchange="updatePreview()">
+                                <option value="300">Light (300)</option>
+                                <option value="400" selected>Regular (400)</option>
+                                <option value="500">Medium (500)</option>
+                                <option value="600">SemiBold (600)</option>
+                                <option value="700">Bold (700)</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Line Height</label>
+                            <input type="range" id="lineHeight" min="1" max="2.5" step="0.1" value="1.5" oninput="updatePreview()">
+                            <span id="lineHeightVal">1.5</span>
+                        </div>
+                        <div class="control-group">
+                            <label>Letter Spacing</label>
+                            <input type="range" id="letterSpacing" min="-5" max="10" value="0" oninput="updatePreview()">
+                            <span id="letterSpacingVal">0px</span>
+                        </div>
+                    </div>
+                    
+                    <div class="preview-section">
+                        <div class="preview-text" id="previewText">
+                            <h3 style="font-size: 2em; margin-bottom: 16px;">Heading Sample</h3>
+                            <p>The quick brown fox jumps over the lazy dog.</p>
+                            <p style="font-size: 0.9em; opacity: 0.7;">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Code Output -->
+                    <div class="code-section">
+                        <h3>📋 CSS Code</h3>
+                        <div class="code-block">
+                            <button class="forge-btn forge-btn-secondary forge-btn-small copy-btn" onclick="copyImport()">Copy</button>
+                            <pre id="importCode">@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');</pre>
+                        </div>
+                        <div class="code-block">
+                            <button class="forge-btn forge-btn-secondary forge-btn-small copy-btn" onclick="copyFamily()">Copy</button>
+                            <pre id="familyCode">font-family: 'Roboto', sans-serif;</pre>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Suggested Pairings -->
+                <div class="forge-card">
+                    <h2>🎨 Suggested Body Fonts</h2>
+                    <p style="color: var(--forge-silver); margin-bottom: var(--space-lg);">Fonts that pair well with <strong id="selectedFontName">Roboto</strong></p>
+                    
+                    <div class="pairing-grid" id="pairingGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top 20 Pairings -->
+        <div class="forge-card">
+            <h2>🏆 Top 20 Font Pairings</h2>
+            <p style="color: var(--forge-silver); margin-bottom: var(--space-lg);">Curated combinations that work beautifully together</p>
+            
+            <div class="top-pairings-grid" id="topPairings">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </main>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+                <p>Free to use • No signup required</p>
+            <p style="margin-top: var(--space-sm);"><a href="https://simplereally.github.io/aitoolsmith/articles/google-fonts-pairing-guide.html" style="color: var(--forge-ember); text-decoration: none;">📖 Read: Google Fonts Pairing Guide 2026</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // ═══════════════════════════════════════════════════════════════
+        // FONT FORGE — Google Fonts Pairing Tool
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Popular Google Fonts (static list to avoid API key requirement)
+        const POPULAR_FONTS = [
+            { family: 'Roboto', category: 'sans-serif' },
+            { family: 'Open Sans', category: 'sans-serif' },
+            { family: 'Lato', category: 'sans-serif' },
+            { family: 'Montserrat', category: 'sans-serif' },
+            { family: 'Poppins', category: 'sans-serif' },
+            { family: 'Inter', category: 'sans-serif' },
+            { family: 'Nunito', category: 'sans-serif' },
+            { family: 'Raleway', category: 'sans-serif' },
+            { family: 'Work Sans', category: 'sans-serif' },
+            { family: 'Outfit', category: 'sans-serif' },
+            { family: 'DM Sans', category: 'sans-serif' },
+            { family: 'Plus Jakarta Sans', category: 'sans-serif' },
+            { family: 'Source Sans 3', category: 'sans-serif' },
+            { family: 'Manrope', category: 'sans-serif' },
+            { family: 'Space Grotesk', category: 'sans-serif' },
+            { family: 'Playfair Display', category: 'serif' },
+            { family: 'Merriweather', category: 'serif' },
+            { family: 'Lora', category: 'serif' },
+            { family: 'PT Serif', category: 'serif' },
+            { family: 'Crimson Pro', category: 'serif' },
+            { family: 'Libre Baskerville', category: 'serif' },
+            { family: 'Source Serif 4', category: 'serif' },
+            { family: 'EB Garamond', category: 'serif' },
+            { family: 'Cormorant Garamond', category: 'serif' },
+            { family: 'Bitter', category: 'serif' },
+            { family: 'Oswald', category: 'sans-serif' },
+            { family: 'Bebas Neue', category: 'display' },
+            { family: 'Anton', category: 'sans-serif' },
+            { family: 'Archivo Black', category: 'sans-serif' },
+            { family: 'Righteous', category: 'display' },
+            { family: 'Abril Fatface', category: 'display' },
+            { family: 'Lobster', category: 'display' },
+            { family: 'Pacifico', category: 'handwriting' },
+            { family: 'Dancing Script', category: 'handwriting' },
+            { family: 'Caveat', category: 'handwriting' },
+            { family: 'Great Vibes', category: 'handwriting' },
+            { family: 'Sacramento', category: 'handwriting' },
+            { family: 'Fira Code', category: 'monospace' },
+            { family: 'JetBrains Mono', category: 'monospace' },
+            { family: 'Source Code Pro', category: 'monospace' },
+            { family: 'IBM Plex Mono', category: 'monospace' },
+            { family: 'Roboto Mono', category: 'monospace' },
+            { family: 'Chakra Petch', category: 'sans-serif' },
+            { family: 'Titillium Web', category: 'sans-serif' },
+            { family: 'Barlow', category: 'sans-serif' },
+            { family: 'Rubik', category: 'sans-serif' },
+            { family: 'Quicksand', category: 'sans-serif' },
+            { family: 'Josefin Sans', category: 'sans-serif' },
+            { family: 'Kanit', category: 'sans-serif' },
+            { family: 'Mulish', category: 'sans-serif' }
+        ];
+        
+        // Font pairing suggestions
+        const PAIRINGS = {
+            // Display fonts → body fonts
+            'Playfair Display': ['Source Sans 3', 'Lato', 'Raleway', 'Open Sans'],
+            'Montserrat': ['Merriweather', 'Lora', 'Open Sans', 'Roboto'],
+            'Oswald': ['Quattrocento', 'Lato', 'Merriweather', 'Open Sans'],
+            'Bebas Neue': ['Montserrat', 'Open Sans', 'Roboto', 'Lato'],
+            'Abril Fatface': ['Lato', 'Poppins', 'Raleway', 'Open Sans'],
+            'Poppins': ['Lora', 'Merriweather', 'Open Sans', 'Source Serif 4'],
+            'Roboto': ['Roboto Slab', 'Lora', 'Merriweather', 'Open Sans'],
+            'Inter': ['Merriweather', 'Lora', 'Source Serif 4', 'Crimson Pro'],
+            'DM Sans': ['DM Serif Display', 'Lora', 'Source Serif 4', 'Merriweather'],
+            'Space Grotesk': ['Lora', 'Crimson Pro', 'Source Serif 4', 'Libre Baskerville'],
+            'Lora': ['Lato', 'Open Sans', 'Raleway', 'Nunito'],
+            'Merriweather': ['Open Sans', 'Lato', 'Source Sans 3', 'Nunito'],
+            'Work Sans': ['Bitter', 'Lora', 'Source Serif 4', 'Merriweather'],
+            'Raleway': ['Merriweather', 'Lora', 'Roboto', 'Open Sans'],
+            'Outfit': ['Lora', 'Source Serif 4', 'Merriweather', 'Crimson Pro'],
+            'Chakra Petch': ['Outfit', 'Open Sans', 'Roboto', 'Inter'],
+            // Default
+            '_default': ['Open Sans', 'Lato', 'Roboto', 'Source Sans 3']
+        };
+        
+        // Top 20 curated pairings
+        const TOP_PAIRINGS = [
+            { heading: 'Playfair Display', body: 'Source Sans 3', desc: 'Elegant serif with clean sans' },
+            { heading: 'Montserrat', body: 'Merriweather', desc: 'Modern geometric with classic serif' },
+            { heading: 'Oswald', body: 'Lato', desc: 'Bold condensed with friendly sans' },
+            { heading: 'Roboto', body: 'Roboto Slab', desc: 'Same family, different mood' },
+            { heading: 'Poppins', body: 'Lora', desc: 'Geometric meets literary' },
+            { heading: 'Abril Fatface', body: 'Raleway', desc: 'Display drama with minimal body' },
+            { heading: 'DM Sans', body: 'DM Serif Display', desc: 'Perfectly matched siblings' },
+            { heading: 'Space Grotesk', body: 'Crimson Pro', desc: 'Tech meets tradition' },
+            { heading: 'Inter', body: 'Source Serif 4', desc: 'UI-ready with readable body' },
+            { heading: 'Bebas Neue', body: 'Open Sans', desc: 'Impact headlines, friendly text' },
+            { heading: 'Work Sans', body: 'Bitter', desc: 'Clean editorial style' },
+            { heading: 'Raleway', body: 'Merriweather', desc: 'Thin elegance, warm readability' },
+            { heading: 'Outfit', body: 'Lora', desc: 'Modern versatility' },
+            { heading: 'Chakra Petch', body: 'Outfit', desc: 'Industrial futurism' },
+            { heading: 'Cormorant Garamond', body: 'Nunito', desc: 'Classical beauty, soft body' },
+            { heading: 'EB Garamond', body: 'Source Sans 3', desc: 'Timeless serif, modern sans' },
+            { heading: 'Libre Baskerville', body: 'Open Sans', desc: 'Traditional headline, universal body' },
+            { heading: 'Josefin Sans', body: 'Lora', desc: 'Vintage modern pairing' },
+            { heading: 'Barlow', body: 'Crimson Pro', desc: 'Geometric precision, editorial grace' },
+            { heading: 'Manrope', body: 'Source Serif 4', desc: 'Clean tech, warm tradition' }
+        ];
+        
+        let allFonts = [...POPULAR_FONTS];
+        let filteredFonts = [...allFonts];
+        let selectedFont = allFonts[0];
+        let currentCategory = 'all';
+        let loadedFonts = new Set();
+        
+        // Load font via Google Fonts
+        function loadFont(fontFamily) {
+            if (loadedFonts.has(fontFamily)) return;
+            
+            const link = document.createElement('link');
+            link.href = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, '+')}&display=swap`;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+            loadedFonts.add(fontFamily);
+        }
+        
+        // Render font list
+        function renderFontList() {
+            const container = document.getElementById('fontList');
+            
+            if (filteredFonts.length === 0) {
+                container.innerHTML = '<div class="loading" style="animation: none;">No fonts found</div>';
+                return;
+            }
+            
+            container.innerHTML = filteredFonts.map((font, index) => {
+                loadFont(font.family);
+                return `
+                    <div class="font-item ${font.family === selectedFont.family ? 'selected' : ''}" 
+                         onclick="selectFont(${index})"
+                         style="font-family: '${font.family}', ${font.category}">
+                        <div class="font-name">${font.family}</div>
+                        <div class="font-preview">The quick brown fox</div>
+                        <div class="font-category">${font.category}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Select a font
+        function selectFont(index) {
+            selectedFont = filteredFonts[index];
+            loadFont(selectedFont.family);
+            renderFontList();
+            updatePreview();
+            updatePairings();
+            document.getElementById('selectedFontName').textContent = selectedFont.family;
+        }
+        
+        // Filter fonts by search
+        function filterFonts() {
+            const search = document.getElementById('fontSearch').value.toLowerCase();
+            filteredFonts = allFonts.filter(f => 
+                f.family.toLowerCase().includes(search) &&
+                (currentCategory === 'all' || f.category === currentCategory)
+            );
+            renderFontList();
+        }
+        
+        // Filter by category
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update button states
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().replace('-', '') === category.replace('-', '') || 
+                    (category === 'all' && btn.textContent === 'All')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            filterFonts();
+        }
+        
+        // Update preview
+        function updatePreview() {
+            const text = document.getElementById('previewInput').value || 'The quick brown fox jumps over the lazy dog.';
+            const size = document.getElementById('fontSize').value;
+            const weight = document.getElementById('fontWeight').value;
+            const lineHeight = document.getElementById('lineHeight').value;
+            const letterSpacing = document.getElementById('letterSpacing').value;
+            
+            // Sync controls
+            document.getElementById('fontSizeNum').value = size;
+            document.getElementById('lineHeightVal').textContent = lineHeight;
+            document.getElementById('letterSpacingVal').textContent = letterSpacing + 'px';
+            
+            // Apply styles
+            const preview = document.getElementById('previewText');
+            preview.style.fontFamily = `'${selectedFont.family}', ${selectedFont.category}`;
+            preview.style.fontSize = size + 'px';
+            preview.style.fontWeight = weight;
+            preview.style.lineHeight = lineHeight;
+            preview.style.letterSpacing = letterSpacing + 'px';
+            
+            preview.innerHTML = `
+                <h3 style="font-size: 1.5em; margin-bottom: 16px;">${selectedFont.family}</h3>
+                <p>${text}</p>
+                <p style="font-size: 0.85em; opacity: 0.7; margin-top: 16px;">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</p>
+            `;
+            
+            // Update code
+            const familyEncoded = selectedFont.family.replace(/ /g, '+');
+            document.getElementById('importCode').textContent = 
+                `@import url('https://fonts.googleapis.com/css2?family=${familyEncoded}:wght@${weight}&display=swap');`;
+            document.getElementById('familyCode').textContent = 
+                `font-family: '${selectedFont.family}', ${selectedFont.category};`;
+        }
+        
+        // Sync size slider with number input
+        function syncSize() {
+            const num = document.getElementById('fontSizeNum').value;
+            document.getElementById('fontSize').value = num;
+            updatePreview();
+        }
+        
+        // Update pairing suggestions
+        function updatePairings() {
+            const pairings = PAIRINGS[selectedFont.family] || PAIRINGS['_default'];
+            const container = document.getElementById('pairingGrid');
+            
+            container.innerHTML = pairings.map(bodyFont => {
+                loadFont(bodyFont);
+                return `
+                    <div class="pairing-card" onclick="applyPairing('${selectedFont.family}', '${bodyFont}')">
+                        <div class="pair-heading" style="font-family: '${selectedFont.family}', sans-serif">${selectedFont.family}</div>
+                        <div class="pair-body" style="font-family: '${bodyFont}', sans-serif">The quick brown fox jumps over the lazy dog.</div>
+                        <div class="pair-name">${bodyFont}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Apply a pairing (copy code)
+        function applyPairing(heading, body) {
+            const code = `/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=${heading.replace(/ /g, '+')}:wght@600;700&family=${body.replace(/ /g, '+')}:wght@400;500&display=swap');
+
+/* Usage */
+h1, h2, h3, h4, h5, h6 {
+    font-family: '${heading}', sans-serif;
+}
+
+body, p {
+    font-family: '${body}', sans-serif;
+}`;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                showToast('✅ Pairing CSS copied!');
+            });
+        }
+        
+        // Render top pairings
+        function renderTopPairings() {
+            const container = document.getElementById('topPairings');
+            
+            container.innerHTML = TOP_PAIRINGS.map(pair => {
+                loadFont(pair.heading);
+                loadFont(pair.body);
+                return `
+                    <div class="top-pairing-card" onclick="applyPairing('${pair.heading}', '${pair.body}')">
+                        <div class="heading-sample" style="font-family: '${pair.heading}', sans-serif">${pair.heading}</div>
+                        <div class="body-sample" style="font-family: '${pair.body}', sans-serif">${pair.desc}</div>
+                        <div class="pairing-names">${pair.heading} + ${pair.body}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Copy functions
+        function copyImport() {
+            const code = document.getElementById('importCode').textContent;
+            navigator.clipboard.writeText(code).then(() => showToast('✅ Import copied!'));
+        }
+        
+        function copyFamily() {
+            const code = document.getElementById('familyCode').textContent;
+            navigator.clipboard.writeText(code).then(() => showToast('✅ font-family copied!'));
+        }
+        
+        // Toast
+        function showToast(message) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Initialize
+        loadFont(selectedFont.family);
+        renderFontList();
+        updatePreview();
+        updatePairings();
+        renderTopPairings();
+    </script>
+</body>
+</html>

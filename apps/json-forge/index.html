@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsonForge — JSON/YAML/CSV/TOML Converter & Formatter</title>
+    <meta name="description" content="Free JSON formatter, validator, and converter. Convert between JSON, YAML, CSV, TOML, and XML. JSON path query, diff, and tree view. No signup required.">
+    <meta name="keywords" content="json formatter, json validator, json to yaml, yaml to json, json beautifier, json minifier, json diff, json path">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="JsonForge — JSON/YAML/CSV/TOML Converter & Formatter">
+    <meta property="og:description" content="Format, validate, and convert JSON. Transform between JSON, YAML, CSV, TOML, and XML. Free, no signup.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/json-forge/">
+    
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "JsonForge",
+        "description": "Free online JSON formatter, validator, and converter",
+        "url": "https://simplereally.github.io/json-forge/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- js-yaml for YAML support -->
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    
+    <style>
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-info: #3b82f6;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN LAYOUT ═══════════════ */
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ MODE TABS ═══════════════ */
+        
+        .mode-tabs {
+            display: flex;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .mode-tabs button {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: 1px solid var(--forge-steel);
+            background: var(--forge-gunmetal);
+            color: var(--forge-silver);
+        }
+        
+        .mode-tabs button:hover {
+            border-color: var(--forge-iron);
+            color: var(--forge-white);
+        }
+        
+        .mode-tabs button.active {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            border-color: var(--forge-ember);
+            color: var(--forge-void);
+        }
+        
+        /* ═══════════════ FORM ELEMENTS ═══════════════ */
+        
+        label {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-xs);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--forge-white);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition-fast);
+            margin-bottom: var(--space-md);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        input::placeholder, textarea::placeholder { color: var(--forge-iron); }
+        
+        textarea {
+            min-height: 300px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        select {
+            cursor: pointer;
+            font-family: var(--font-body);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8b99' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right var(--space-md) center;
+            padding-right: var(--space-xl);
+        }
+        
+        /* ═══════════════ EDITOR GRID ═══════════════ */
+        
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+        
+        @media (max-width: 900px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .editor-header label {
+            margin-bottom: 0;
+        }
+        
+        .editor-header select {
+            width: auto;
+            margin-bottom: 0;
+            padding: var(--space-xs) var(--space-md);
+            font-size: 0.8rem;
+        }
+        
+        .line-numbers {
+            display: flex;
+            gap: 0;
+        }
+        
+        .line-nums {
+            background: var(--forge-charcoal);
+            color: var(--forge-iron);
+            padding: var(--space-sm);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: right;
+            user-select: none;
+            min-width: 40px;
+            border: 1px solid var(--forge-steel);
+            border-right: none;
+            border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+        }
+        
+        .line-numbers textarea {
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            margin-bottom: 0;
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .btn {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-steel);
+            border-color: var(--forge-iron);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            margin-top: var(--space-md);
+        }
+        
+        /* ═══════════════ STATUS BAR ═══════════════ */
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            margin-bottom: var(--space-md);
+            font-size: 0.85rem;
+        }
+        
+        .status-bar .status {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .status-bar .status.valid {
+            color: var(--forge-success);
+        }
+        
+        .status-bar .status.invalid {
+            color: var(--forge-heat);
+        }
+        
+        .status-bar .stats {
+            color: var(--forge-silver);
+        }
+        
+        /* ═══════════════ ERROR BOX ═══════════════ */
+        
+        .error-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--forge-heat);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            display: none;
+        }
+        
+        .error-box.active {
+            display: block;
+        }
+        
+        .error-box .error-title {
+            font-family: var(--font-display);
+            color: var(--forge-heat);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+        
+        .error-box .error-message {
+            font-family: var(--font-mono);
+            color: var(--forge-chrome);
+            font-size: 0.85rem;
+        }
+        
+        .error-box .error-line {
+            color: var(--forge-ember);
+            font-size: 0.8rem;
+            margin-top: var(--space-xs);
+        }
+        
+        /* ═══════════════ JSON PATH QUERY ═══════════════ */
+        
+        .query-section {
+            display: none;
+            margin-top: var(--space-lg);
+            padding-top: var(--space-lg);
+            border-top: 1px solid var(--forge-steel);
+        }
+        
+        .query-section.active {
+            display: block;
+        }
+        
+        .query-row {
+            display: flex;
+            gap: var(--space-sm);
+        }
+        
+        .query-row input {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .query-row button {
+            flex-shrink: 0;
+        }
+        
+        .query-result {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            margin-top: var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+        
+        /* ═══════════════ DIFF VIEW ═══════════════ */
+        
+        .diff-container {
+            display: none;
+        }
+        
+        .diff-container.active {
+            display: block;
+        }
+        
+        .diff-result {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            max-height: 400px;
+            overflow: auto;
+            line-height: 1.6;
+        }
+        
+        .diff-line {
+            padding: 2px var(--space-sm);
+            margin: 0 calc(-1 * var(--space-md));
+            padding-left: var(--space-md);
+            padding-right: var(--space-md);
+        }
+        
+        .diff-line.added {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--forge-success);
+        }
+        
+        .diff-line.removed {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--forge-heat);
+        }
+        
+        .diff-line.changed {
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--forge-flame);
+        }
+        
+        /* ═══════════════ TREE VIEW ═══════════════ */
+        
+        .tree-container {
+            display: none;
+        }
+        
+        .tree-container.active {
+            display: block;
+        }
+        
+        .tree-view {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            padding: var(--space-md);
+            max-height: 500px;
+            overflow: auto;
+        }
+        
+        .tree-node {
+            padding-left: var(--space-lg);
+        }
+        
+        .tree-node.root {
+            padding-left: 0;
+        }
+        
+        .tree-key {
+            color: var(--forge-ember);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .tree-key:hover {
+            text-decoration: underline;
+        }
+        
+        .tree-value {
+            color: var(--forge-chrome);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+        
+        .tree-value.string { color: var(--forge-success); }
+        .tree-value.number { color: var(--forge-info); }
+        .tree-value.boolean { color: var(--forge-flame); }
+        .tree-value.null { color: var(--forge-silver); }
+        
+        .tree-toggle {
+            color: var(--forge-silver);
+            cursor: pointer;
+            user-select: none;
+            display: inline-block;
+            width: 1em;
+            text-align: center;
+        }
+        
+        .tree-toggle:hover {
+            color: var(--forge-ember);
+        }
+        
+        .tree-children {
+            display: block;
+        }
+        
+        .tree-children.collapsed {
+            display: none;
+        }
+        
+        .tree-bracket {
+            color: var(--forge-iron);
+        }
+        
+        .tree-count {
+            color: var(--forge-iron);
+            font-size: 0.8rem;
+            margin-left: var(--space-xs);
+        }
+        
+        /* ═══════════════ SECTION TITLE ═══════════════ */
+        
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--forge-ember);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: var(--space-md);
+        }
+        
+        /* ═══════════════ PRO BADGE ═══════════════ */
+        
+        .pro-badge {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: var(--space-xs);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pro-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        /* ═══════════════ PRO MODAL ═══════════════ */
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 11, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--forge-ember), var(--forge-flame));
+        }
+        
+        .modal-content h3 {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            color: var(--forge-white);
+            margin: 0 0 var(--space-md);
+        }
+        
+        .pro-price {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--forge-ember);
+            margin: var(--space-md) 0;
+        }
+        
+        .pro-price span {
+            font-size: 1rem;
+            color: var(--forge-silver);
+            font-weight: 400;
+        }
+        
+        .pro-features {
+            list-style: none;
+            padding: 0;
+            margin: var(--space-md) 0;
+        }
+        
+        .pro-features li {
+            padding: var(--space-sm) 0;
+            color: var(--forge-chrome);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .pro-features li::before {
+            content: '✓';
+            color: var(--forge-success);
+            font-weight: bold;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+        
+        .modal-actions .btn {
+            flex: 1;
+        }
+        
+        /* ═══════════════ WATERMARK ═══════════════ */
+        
+        .watermark {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+        
+        .watermark p {
+            margin: var(--space-xs) 0;
+            font-size: 0.9rem;
+        }
+        
+        .watermark a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .watermark a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover { color: var(--forge-ember); }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover { text-decoration: underline; }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 700px) {
+            .forge-nav-links a {
+                font-size: 0.7rem;
+                padding: var(--space-xs);
+            }
+        }
+        
+        /* ═══════════════ OPTIONS ROW ═══════════════ */
+        
+        .options-row {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+        
+        .options-row label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: 0;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        
+        .options-row select {
+            width: auto;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/" class="active">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>Json<span class="accent">Forge</span></h1>
+        <p>Format, validate, and convert JSON — no signup required</p>
+    </header>
+    
+    <main class="container">
+        <div class="forge-card">
+            <div class="mode-tabs">
+                <button class="active" data-mode="format">Format</button>
+                <button data-mode="convert">Convert</button>
+                <button data-mode="diff">Diff</button>
+                <button data-mode="query">Query</button>
+                <button data-mode="tree">Tree View</button>
+            </div>
+            
+            <div id="error-box" class="error-box">
+                <div class="error-title">⚠️ JSON Error</div>
+                <div class="error-message" id="error-message"></div>
+                <div class="error-line" id="error-line"></div>
+            </div>
+            
+            <div class="status-bar">
+                <div class="status" id="status">
+                    <span>📝</span>
+                    <span id="status-text">Enter JSON to validate</span>
+                </div>
+                <div class="stats" id="stats"></div>
+            </div>
+            
+            <!-- Format Mode -->
+            <div id="format-mode" class="mode-content">
+                <div class="options-row">
+                    <label>
+                        Indent:
+                        <select id="indent-size">
+                            <option value="2">2 spaces</option>
+                            <option value="4">4 spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-secondary" onclick="formatJSON()">✨ Beautify</button>
+                    <button class="btn btn-secondary" onclick="minifyJSON()">📦 Minify</button>
+                    <button class="btn btn-secondary" onclick="copyOutput()">📋 Copy</button>
+                </div>
+                
+                <div class="editor-grid">
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label>Input</label>
+                        </div>
+                        <textarea id="json-input" placeholder='{"name": "John", "age": 30}'></textarea>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label>Output</label>
+                        </div>
+                        <textarea id="json-output" readonly placeholder="Formatted output will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Convert Mode -->
+            <div id="convert-mode" class="mode-content" style="display: none;">
+                <div class="options-row">
+                    <label>
+                        From:
+                        <select id="from-format">
+                            <option value="json">JSON</option>
+                            <option value="yaml">YAML</option>
+                            <option value="csv">CSV</option>
+                            <option value="toml">TOML</option>
+                        </select>
+                    </label>
+                    <label>
+                        To:
+                        <select id="to-format">
+                            <option value="yaml">YAML</option>
+                            <option value="json">JSON</option>
+                            <option value="csv">CSV</option>
+                            <option value="toml">TOML</option>
+                            <option value="xml">XML</option>
+                        </select>
+                    </label>
+                    <button class="btn btn-primary" onclick="convertFormat()">🔄 Convert</button>
+                    <button class="btn btn-secondary" onclick="copyConverted()">📋 Copy</button>
+                </div>
+                
+                <div class="editor-grid">
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label id="convert-input-label">JSON Input</label>
+                        </div>
+                        <textarea id="convert-input" placeholder="Paste your data here..."></textarea>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label id="convert-output-label">YAML Output</label>
+                        </div>
+                        <textarea id="convert-output" readonly placeholder="Converted output will appear here..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diff Mode -->
+            <div id="diff-mode" class="mode-content" style="display: none;">
+                <div class="options-row">
+                    <button class="btn btn-primary" onclick="diffJSON()">🔍 Compare</button>
+                    <button class="btn btn-secondary" onclick="swapDiff()">🔄 Swap</button>
+                </div>
+                
+                <div class="editor-grid">
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label>JSON A (Original)</label>
+                        </div>
+                        <textarea id="diff-a" placeholder='{"name": "John", "age": 30}'></textarea>
+                    </div>
+                    <div class="editor-panel">
+                        <div class="editor-header">
+                            <label>JSON B (Modified)</label>
+                        </div>
+                        <textarea id="diff-b" placeholder='{"name": "Jane", "age": 31}'></textarea>
+                    </div>
+                </div>
+                
+                <div class="section-title" style="margin-top: var(--space-lg);">📊 Differences</div>
+                <div class="diff-result" id="diff-result">
+                    Click "Compare" to see differences...
+                </div>
+            </div>
+            
+            <!-- Query Mode -->
+            <div id="query-mode" class="mode-content" style="display: none;">
+                <div class="editor-panel" style="margin-bottom: var(--space-md);">
+                    <label>JSON Data</label>
+                    <textarea id="query-json" placeholder='{"users": [{"name": "John"}, {"name": "Jane"}]}'></textarea>
+                </div>
+                
+                <div class="query-row">
+                    <input type="text" id="json-path" placeholder="Enter JSON path (e.g., users[0].name or $.users[*].name)" style="margin-bottom: 0;">
+                    <button class="btn btn-primary" onclick="queryPath()">🔍 Query</button>
+                </div>
+                
+                <div class="section-title" style="margin-top: var(--space-lg);">📋 Result</div>
+                <div class="query-result" id="query-result">
+                    Enter a JSON path to extract values...
+                </div>
+                
+                <div style="margin-top: var(--space-md); color: var(--forge-silver); font-size: 0.85rem;">
+                    <strong>Path Examples:</strong><br>
+                    <code style="color: var(--forge-ember);">users</code> — Get the users array<br>
+                    <code style="color: var(--forge-ember);">users[0]</code> — Get the first user<br>
+                    <code style="color: var(--forge-ember);">users[0].name</code> — Get the first user's name<br>
+                    <code style="color: var(--forge-ember);">users[*].name</code> — Get all user names
+                </div>
+            </div>
+            
+            <!-- Tree Mode -->
+            <div id="tree-mode" class="mode-content" style="display: none;">
+                <div class="editor-panel" style="margin-bottom: var(--space-md);">
+                    <label>JSON Data</label>
+                    <textarea id="tree-json" placeholder='{"name": "John", "address": {"city": "NYC"}}'></textarea>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="renderTree()">🌳 Generate Tree</button>
+                    <button class="btn btn-secondary" onclick="expandAll()">➕ Expand All</button>
+                    <button class="btn btn-secondary" onclick="collapseAll()">➖ Collapse All</button>
+                </div>
+                
+                <div class="section-title" style="margin-top: var(--space-lg);">🌲 Tree Structure</div>
+                <div class="tree-view" id="tree-view">
+                    Click "Generate Tree" to visualize JSON structure...
+                </div>
+            </div>
+        </div>
+        
+        <div class="watermark">
+            <p>⭐ <strong>Free tier:</strong> Full JSON formatting, conversion & validation</p>
+            <p><a href="#" onclick="showProModal(); return false;">Upgrade to Pro</a> for large file support, schema validation & API access</p>
+        </div>
+    </main>
+    
+    <!-- Pro Modal -->
+    <div class="modal" id="proModal">
+        <div class="modal-content">
+            <h3>✨ JsonForge Pro</h3>
+            <div class="pro-price">$2.99 <span>one-time</span></div>
+            <ul class="pro-features">
+                <li>Large file support (up to 50MB)</li>
+                <li>JSON Schema validation</li>
+                <li>API endpoint for automation</li>
+                <li>Save & share conversions</li>
+                <li>Priority support</li>
+            </ul>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
+                <a href="#" class="btn btn-primary" style="text-decoration:none;text-align:center;">Upgrade — $2.99</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Mode switching
+        document.querySelectorAll('.mode-tabs button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-tabs button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.mode-content').forEach(c => c.style.display = 'none');
+                document.getElementById(btn.dataset.mode + '-mode').style.display = 'block';
+            });
+        });
+        
+        // Format labels on convert format change
+        document.getElementById('from-format').addEventListener('change', updateConvertLabels);
+        document.getElementById('to-format').addEventListener('change', updateConvertLabels);
+        
+        function updateConvertLabels() {
+            const from = document.getElementById('from-format').value.toUpperCase();
+            const to = document.getElementById('to-format').value.toUpperCase();
+            document.getElementById('convert-input-label').textContent = from + ' Input';
+            document.getElementById('convert-output-label').textContent = to + ' Output';
+        }
+        
+        // Real-time validation
+        document.getElementById('json-input').addEventListener('input', debounce(validateAndFormat, 300));
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+        
+        function validateAndFormat() {
+            const input = document.getElementById('json-input').value;
+            const errorBox = document.getElementById('error-box');
+            const status = document.getElementById('status');
+            const statusText = document.getElementById('status-text');
+            const stats = document.getElementById('stats');
+            
+            if (!input.trim()) {
+                errorBox.classList.remove('active');
+                status.className = 'status';
+                statusText.textContent = 'Enter JSON to validate';
+                stats.textContent = '';
+                return;
+            }
+            
+            try {
+                const parsed = JSON.parse(input);
+                errorBox.classList.remove('active');
+                status.className = 'status valid';
+                statusText.textContent = '✓ Valid JSON';
+                
+                // Calculate stats
+                const jsonStats = getJSONStats(parsed);
+                stats.textContent = `${jsonStats.keys} keys • ${jsonStats.depth} depth • ${input.length} chars`;
+                
+                // Auto-format
+                const indent = document.getElementById('indent-size').value;
+                const indentStr = indent === 'tab' ? '\t' : ' '.repeat(parseInt(indent));
+                document.getElementById('json-output').value = JSON.stringify(parsed, null, indentStr);
+                
+            } catch (e) {
+                errorBox.classList.add('active');
+                status.className = 'status invalid';
+                statusText.textContent = '✗ Invalid JSON';
+                stats.textContent = '';
+                
+                const errorMsg = e.message;
+                document.getElementById('error-message').textContent = errorMsg;
+                
+                // Try to extract line number
+                const lineMatch = errorMsg.match(/position (\d+)/);
+                if (lineMatch) {
+                    const pos = parseInt(lineMatch[1]);
+                    const lines = input.slice(0, pos).split('\n');
+                    document.getElementById('error-line').textContent = `Line ${lines.length}, Column ${lines[lines.length - 1].length + 1}`;
+                } else {
+                    document.getElementById('error-line').textContent = '';
+                }
+            }
+        }
+        
+        function getJSONStats(obj, depth = 0) {
+            let keys = 0;
+            let maxDepth = depth;
+            
+            if (typeof obj === 'object' && obj !== null) {
+                if (Array.isArray(obj)) {
+                    for (const item of obj) {
+                        const childStats = getJSONStats(item, depth + 1);
+                        keys += childStats.keys;
+                        maxDepth = Math.max(maxDepth, childStats.depth);
+                    }
+                } else {
+                    keys = Object.keys(obj).length;
+                    for (const key in obj) {
+                        const childStats = getJSONStats(obj[key], depth + 1);
+                        keys += childStats.keys;
+                        maxDepth = Math.max(maxDepth, childStats.depth);
+                    }
+                }
+            }
+            
+            return { keys, depth: maxDepth };
+        }
+        
+        function formatJSON() {
+            const input = document.getElementById('json-input').value;
+            try {
+                const parsed = JSON.parse(input);
+                const indent = document.getElementById('indent-size').value;
+                const indentStr = indent === 'tab' ? '\t' : ' '.repeat(parseInt(indent));
+                document.getElementById('json-output').value = JSON.stringify(parsed, null, indentStr);
+            } catch (e) {
+                // Error already shown by validation
+            }
+        }
+        
+        function minifyJSON() {
+            const input = document.getElementById('json-input').value;
+            try {
+                const parsed = JSON.parse(input);
+                document.getElementById('json-output').value = JSON.stringify(parsed);
+            } catch (e) {
+                // Error already shown by validation
+            }
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('json-output').value;
+            if (output) {
+                navigator.clipboard.writeText(output).then(() => {
+                    showToast('Copied to clipboard!');
+                });
+            }
+        }
+        
+        function copyConverted() {
+            const output = document.getElementById('convert-output').value;
+            if (output) {
+                navigator.clipboard.writeText(output).then(() => {
+                    showToast('Copied to clipboard!');
+                });
+            }
+        }
+        
+        function showToast(msg) {
+            // Simple toast implementation
+            const toast = document.createElement('div');
+            toast.textContent = msg;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--forge-success);
+                color: var(--forge-void);
+                padding: 10px 20px;
+                border-radius: 6px;
+                font-family: var(--font-display);
+                font-size: 0.85rem;
+                z-index: 2000;
+                animation: fadeIn 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+        
+        // ═══════════════ CONVERSION ═══════════════
+        
+        function convertFormat() {
+            const from = document.getElementById('from-format').value;
+            const to = document.getElementById('to-format').value;
+            const input = document.getElementById('convert-input').value;
+            const outputEl = document.getElementById('convert-output');
+            
+            if (!input.trim()) {
+                outputEl.value = '';
+                return;
+            }
+            
+            try {
+                // Parse input to JS object
+                let data;
+                switch (from) {
+                    case 'json':
+                        data = JSON.parse(input);
+                        break;
+                    case 'yaml':
+                        data = jsyaml.load(input);
+                        break;
+                    case 'csv':
+                        data = parseCSV(input);
+                        break;
+                    case 'toml':
+                        data = parseTOML(input);
+                        break;
+                }
+                
+                // Convert to output format
+                let output;
+                switch (to) {
+                    case 'json':
+                        output = JSON.stringify(data, null, 2);
+                        break;
+                    case 'yaml':
+                        output = jsyaml.dump(data);
+                        break;
+                    case 'csv':
+                        output = toCSV(data);
+                        break;
+                    case 'toml':
+                        output = toTOML(data);
+                        break;
+                    case 'xml':
+                        output = toXML(data);
+                        break;
+                }
+                
+                outputEl.value = output;
+            } catch (e) {
+                outputEl.value = 'Error: ' + e.message;
+            }
+        }
+        
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                const obj = {};
+                headers.forEach((h, idx) => {
+                    obj[h] = values[idx] || '';
+                });
+                data.push(obj);
+            }
+            
+            return data;
+        }
+        
+        function toCSV(data) {
+            if (!Array.isArray(data)) {
+                data = [data];
+            }
+            
+            if (data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csv = [headers.join(',')];
+            
+            for (const row of data) {
+                const values = headers.map(h => {
+                    const val = row[h];
+                    if (typeof val === 'string' && (val.includes(',') || val.includes('"'))) {
+                        return '"' + val.replace(/"/g, '""') + '"';
+                    }
+                    return val;
+                });
+                csv.push(values.join(','));
+            }
+            
+            return csv.join('\n');
+        }
+        
+        function parseTOML(toml) {
+            // Simple TOML parser (basic support)
+            const result = {};
+            let currentSection = result;
+            
+            for (const line of toml.split('\n')) {
+                const trimmed = line.trim();
+                if (!trimmed || trimmed.startsWith('#')) continue;
+                
+                // Section header
+                const sectionMatch = trimmed.match(/^\[([^\]]+)\]$/);
+                if (sectionMatch) {
+                    const keys = sectionMatch[1].split('.');
+                    currentSection = result;
+                    for (const key of keys) {
+                        if (!currentSection[key]) currentSection[key] = {};
+                        currentSection = currentSection[key];
+                    }
+                    continue;
+                }
+                
+                // Key-value
+                const kvMatch = trimmed.match(/^([^=]+)=(.+)$/);
+                if (kvMatch) {
+                    const key = kvMatch[1].trim();
+                    let value = kvMatch[2].trim();
+                    
+                    // Parse value
+                    if (value.startsWith('"') && value.endsWith('"')) {
+                        value = value.slice(1, -1);
+                    } else if (value === 'true') {
+                        value = true;
+                    } else if (value === 'false') {
+                        value = false;
+                    } else if (!isNaN(value)) {
+                        value = Number(value);
+                    } else if (value.startsWith('[')) {
+                        value = JSON.parse(value.replace(/'/g, '"'));
+                    }
+                    
+                    currentSection[key] = value;
+                }
+            }
+            
+            return result;
+        }
+        
+        function toTOML(data, prefix = '') {
+            let output = '';
+            const nested = [];
+            
+            for (const key in data) {
+                const value = data[key];
+                
+                if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                    nested.push({ key, value });
+                } else {
+                    let tomlValue;
+                    if (typeof value === 'string') {
+                        tomlValue = '"' + value.replace(/"/g, '\\"') + '"';
+                    } else if (Array.isArray(value)) {
+                        tomlValue = JSON.stringify(value);
+                    } else {
+                        tomlValue = String(value);
+                    }
+                    output += `${key} = ${tomlValue}\n`;
+                }
+            }
+            
+            for (const { key, value } of nested) {
+                const section = prefix ? `${prefix}.${key}` : key;
+                output += `\n[${section}]\n`;
+                output += toTOML(value, section);
+            }
+            
+            return output;
+        }
+        
+        function toXML(data, rootName = 'root', indent = 0) {
+            const spaces = '  '.repeat(indent);
+            let xml = '';
+            
+            if (indent === 0) {
+                xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            }
+            
+            if (Array.isArray(data)) {
+                xml += `${spaces}<${rootName}>\n`;
+                for (let i = 0; i < data.length; i++) {
+                    xml += toXML(data[i], 'item', indent + 1);
+                }
+                xml += `${spaces}</${rootName}>\n`;
+            } else if (typeof data === 'object' && data !== null) {
+                xml += `${spaces}<${rootName}>\n`;
+                for (const key in data) {
+                    xml += toXML(data[key], key, indent + 1);
+                }
+                xml += `${spaces}</${rootName}>\n`;
+            } else {
+                xml += `${spaces}<${rootName}>${escapeXML(String(data))}</${rootName}>\n`;
+            }
+            
+            return xml;
+        }
+        
+        function escapeXML(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+        }
+        
+        // ═══════════════ DIFF ═══════════════
+        
+        function diffJSON() {
+            const a = document.getElementById('diff-a').value;
+            const b = document.getElementById('diff-b').value;
+            const resultEl = document.getElementById('diff-result');
+            
+            try {
+                const objA = JSON.parse(a);
+                const objB = JSON.parse(b);
+                
+                const diffs = deepDiff(objA, objB);
+                
+                if (diffs.length === 0) {
+                    resultEl.innerHTML = '<div style="color: var(--forge-success);">✓ Objects are identical</div>';
+                    return;
+                }
+                
+                let html = '';
+                for (const diff of diffs) {
+                    switch (diff.type) {
+                        case 'added':
+                            html += `<div class="diff-line added">+ ${diff.path}: ${JSON.stringify(diff.value)}</div>`;
+                            break;
+                        case 'removed':
+                            html += `<div class="diff-line removed">- ${diff.path}: ${JSON.stringify(diff.value)}</div>`;
+                            break;
+                        case 'changed':
+                            html += `<div class="diff-line removed">- ${diff.path}: ${JSON.stringify(diff.oldValue)}</div>`;
+                            html += `<div class="diff-line added">+ ${diff.path}: ${JSON.stringify(diff.newValue)}</div>`;
+                            break;
+                    }
+                }
+                
+                resultEl.innerHTML = html;
+            } catch (e) {
+                resultEl.innerHTML = '<div style="color: var(--forge-heat);">Error: ' + e.message + '</div>';
+            }
+        }
+        
+        function deepDiff(a, b, path = '') {
+            const diffs = [];
+            
+            const keysA = typeof a === 'object' && a ? Object.keys(a) : [];
+            const keysB = typeof b === 'object' && b ? Object.keys(b) : [];
+            const allKeys = [...new Set([...keysA, ...keysB])];
+            
+            for (const key of allKeys) {
+                const currentPath = path ? `${path}.${key}` : key;
+                const hasA = keysA.includes(key);
+                const hasB = keysB.includes(key);
+                
+                if (!hasA && hasB) {
+                    diffs.push({ type: 'added', path: currentPath, value: b[key] });
+                } else if (hasA && !hasB) {
+                    diffs.push({ type: 'removed', path: currentPath, value: a[key] });
+                } else if (typeof a[key] === 'object' && typeof b[key] === 'object' && a[key] && b[key]) {
+                    diffs.push(...deepDiff(a[key], b[key], currentPath));
+                } else if (a[key] !== b[key]) {
+                    diffs.push({ type: 'changed', path: currentPath, oldValue: a[key], newValue: b[key] });
+                }
+            }
+            
+            return diffs;
+        }
+        
+        function swapDiff() {
+            const a = document.getElementById('diff-a').value;
+            const b = document.getElementById('diff-b').value;
+            document.getElementById('diff-a').value = b;
+            document.getElementById('diff-b').value = a;
+        }
+        
+        // ═══════════════ QUERY ═══════════════
+        
+        function queryPath() {
+            const json = document.getElementById('query-json').value;
+            const path = document.getElementById('json-path').value;
+            const resultEl = document.getElementById('query-result');
+            
+            try {
+                const data = JSON.parse(json);
+                const result = getByPath(data, path);
+                resultEl.textContent = JSON.stringify(result, null, 2);
+            } catch (e) {
+                resultEl.textContent = 'Error: ' + e.message;
+            }
+        }
+        
+        function getByPath(data, path) {
+            // Remove leading $ or . if present
+            path = path.replace(/^\$?\.?/, '');
+            
+            if (!path) return data;
+            
+            // Handle wildcards
+            if (path.includes('[*]')) {
+                const parts = path.split('[*]');
+                const before = parts[0].replace(/\.$/, '');
+                const after = parts.slice(1).join('[*]').replace(/^\./, '');
+                
+                const arr = before ? getByPath(data, before) : data;
+                if (!Array.isArray(arr)) throw new Error('Wildcard applied to non-array');
+                
+                if (!after) return arr;
+                return arr.map(item => getByPath(item, after));
+            }
+            
+            // Parse path
+            const tokens = path.match(/[^.\[\]]+|\[\d+\]/g) || [];
+            let current = data;
+            
+            for (const token of tokens) {
+                if (current === undefined || current === null) {
+                    throw new Error(`Path not found at: ${token}`);
+                }
+                
+                if (token.startsWith('[')) {
+                    const index = parseInt(token.slice(1, -1));
+                    current = current[index];
+                } else {
+                    current = current[token];
+                }
+            }
+            
+            return current;
+        }
+        
+        // ═══════════════ TREE VIEW ═══════════════
+        
+        function renderTree() {
+            const json = document.getElementById('tree-json').value;
+            const treeEl = document.getElementById('tree-view');
+            
+            try {
+                const data = JSON.parse(json);
+                treeEl.innerHTML = renderNode(data, 'root', true);
+            } catch (e) {
+                treeEl.innerHTML = '<div style="color: var(--forge-heat);">Error: ' + e.message + '</div>';
+            }
+        }
+        
+        function renderNode(data, key, isRoot = false) {
+            const type = Array.isArray(data) ? 'array' : typeof data;
+            
+            if (type === 'object' || type === 'array') {
+                const isArray = type === 'array';
+                const entries = Object.entries(data);
+                const bracket = isArray ? ['[', ']'] : ['{', '}'];
+                const count = entries.length;
+                
+                let html = `<div class="tree-node ${isRoot ? 'root' : ''}">`;
+                html += `<span class="tree-toggle" onclick="toggleNode(this)">▼</span>`;
+                html += `<span class="tree-key">${key}</span>`;
+                html += `<span class="tree-bracket">${bracket[0]}</span>`;
+                html += `<span class="tree-count">${count} ${isArray ? 'items' : 'keys'}</span>`;
+                html += `<div class="tree-children">`;
+                
+                for (const [k, v] of entries) {
+                    html += renderNode(v, k);
+                }
+                
+                html += `</div>`;
+                html += `<span class="tree-bracket">${bracket[1]}</span>`;
+                html += `</div>`;
+                
+                return html;
+            }
+            
+            // Primitive value
+            let valueClass = 'tree-value';
+            let displayValue = JSON.stringify(data);
+            
+            if (typeof data === 'string') valueClass += ' string';
+            else if (typeof data === 'number') valueClass += ' number';
+            else if (typeof data === 'boolean') valueClass += ' boolean';
+            else if (data === null) valueClass += ' null';
+            
+            return `<div class="tree-node"><span class="tree-key">${key}</span>: <span class="${valueClass}">${displayValue}</span></div>`;
+        }
+        
+        function toggleNode(el) {
+            const children = el.parentElement.querySelector('.tree-children');
+            if (children) {
+                children.classList.toggle('collapsed');
+                el.textContent = children.classList.contains('collapsed') ? '▶' : '▼';
+            }
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.tree-children').forEach(el => el.classList.remove('collapsed'));
+            document.querySelectorAll('.tree-toggle').forEach(el => el.textContent = '▼');
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.tree-children').forEach(el => el.classList.add('collapsed'));
+            document.querySelectorAll('.tree-toggle').forEach(el => el.textContent = '▶');
+        }
+        
+        // ═══════════════ MODAL ═══════════════
+        
+        function showProModal() {
+            document.getElementById('proModal').classList.add('active');
+        }
+        
+        function closeProModal() {
+            document.getElementById('proModal').classList.remove('active');
+        }
+        
+        document.getElementById('proModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('proModal')) {
+                closeProModal();
+            }
+        });
+        
+        // Initial validation
+        validateAndFormat();
+    </script>
+</body>
+</html>

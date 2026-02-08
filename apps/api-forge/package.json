@@ -1,0 +1,18 @@
+{
+  "name": "@forge/api-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API Request Builder & Tester - Like Postman, but free and in your browser",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3001 -c-1 -o"
+  },
+  "keywords": [
+    "api-tester",
+    "http-client",
+    "rest-client",
+    "postman-alternative"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@forge/pass-forge",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure Password Generator",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3011 -c-1 -o"
+  },
+  "keywords": [
+    "password",
+    "password-generator",
+    "security"
+  ],
+  "author": "Simplereally",
+  "license": "MIT"
+}

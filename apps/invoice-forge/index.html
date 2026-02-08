@@ -1189,7 +1189,7 @@
     <!-- Navigation -->
     <nav class="forge-nav">
         <div class="forge-nav-inner">
-            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+            <a href="https://simplereally.github.io/" class="forge-logo">
                 <span class="icon">🔥</span>
                 <span>FORGE</span>
             </a>
@@ -1198,6 +1198,7 @@
                 <a href="https://simplereally.github.io/qr-forge/">QR</a>
                 <a href="https://simplereally.github.io/pass-forge/">Pass</a>
                 <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/md-forge/">MD</a>
                 <a href="https://simplereally.github.io/readme-forge/">Readme</a>
                 <a href="https://simplereally.github.io/meta-forge/">Meta</a>
                 <a href="https://simplereally.github.io/cron-forge/">Cron</a>
@@ -1205,6 +1206,9 @@
                 <a href="https://simplereally.github.io/regex-forge/">Regex</a>
                 <a href="https://simplereally.github.io/json-forge/">JSON</a>
                 <a href="https://simplereally.github.io/api-forge/">API</a>
+                <a href="https://simplereally.github.io/diff-forge/">Diff</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/screenshot-forge/">Screenshot</a>
                 <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark/light mode">🌙</button>
                 <button class="nav-pro-btn" onclick="showProModal()">⚡ Go Pro</button>
             </div>
@@ -1879,7 +1883,7 @@
                 try {
                     doc.addImage(uploadedLogo, 'PNG', 15, 8, 30, 30);
                 } catch (e) {
-                    console.log('Logo could not be added');
+                    // Logo could not be added - silently continue without logo
                 }
             }
             

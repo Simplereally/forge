@@ -47,6 +47,33 @@ export function debounce(func, wait) {
   };
 }
 
+/**
+ * Generate a cryptographically secure random ID.
+ * Uses crypto.getRandomValues() for security-grade randomness.
+ * 
+ * @param {number} length - Length of the ID (default: 8, max: 36)
+ * @returns {string} - Random alphanumeric ID
+ */
 export function generateId(length = 8) {
-  return Math.random().toString(36).substring(2, 2 + length);
+  // Ensure we generate enough random bytes (each byte gives ~1.5 base36 chars)
+  const byteLength = Math.ceil(length * 0.75) + 1;
+  const array = new Uint8Array(byteLength);
+  crypto.getRandomValues(array);
+  
+  // Convert to base36 string and truncate to desired length
+  let result = '';
+  for (const byte of array) {
+    result += byte.toString(36);
+  }
+  return result.substring(0, length);
+}
+
+/**
+ * Generate a cryptographically secure UUID v4.
+ * Preferred for unique identifiers where format doesn't matter.
+ * 
+ * @returns {string} - UUID v4 string (e.g., "550e8400-e29b-41d4-a716-446655440000")
+ */
+export function generateUUID() {
+  return crypto.randomUUID();
 }

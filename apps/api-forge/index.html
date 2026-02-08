@@ -965,7 +965,7 @@
 <body>
     <nav class="forge-nav">
         <div class="forge-nav-inner">
-            <a href="https://simplereally.github.io/invoice-forge/" class="forge-logo">
+            <a href="https://simplereally.github.io/" class="forge-logo">
                 <span class="icon">🔥</span>
                 <span>FORGE</span>
             </a>
@@ -974,6 +974,7 @@
                 <a href="https://simplereally.github.io/qr-forge/">QR</a>
                 <a href="https://simplereally.github.io/pass-forge/">Pass</a>
                 <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/md-forge/">MD</a>
                 <a href="https://simplereally.github.io/readme-forge/">Readme</a>
                 <a href="https://simplereally.github.io/meta-forge/">Meta</a>
                 <a href="https://simplereally.github.io/cron-forge/">Cron</a>
@@ -981,6 +982,9 @@
                 <a href="https://simplereally.github.io/regex-forge/">Regex</a>
                 <a href="https://simplereally.github.io/json-forge/">JSON</a>
                 <a href="https://simplereally.github.io/api-forge/" class="active">API</a>
+                <a href="https://simplereally.github.io/diff-forge/">Diff</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/screenshot-forge/">Screenshot</a>
             </div>
         </div>
     </nav>
@@ -1193,7 +1197,8 @@
             </ul>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeProModal()">Maybe Later</button>
-                <a href="#" class="btn btn-primary" style="text-decoration:none;text-align:center;">Upgrade — $4.99</a>
+                <!-- TODO: Create Stripe Payment Link for $4.99 (ApiForge Pro) -->
+                <a href="https://buy.stripe.com/PLACEHOLDER_APIFORGE_499" target="_blank" data-price="$4.99" class="btn btn-primary" style="text-decoration:none;text-align:center;">Upgrade — $4.99</a>
             </div>
         </div>
     </div>
@@ -1220,8 +1225,30 @@
     </footer>
     
     <script>
-        // CORS Proxy
-        const CORS_PROXY = 'https://corsproxy.io/?';
+        // CORS Proxy configuration - can be overridden via window.CORS_PROXY_URL
+        const DEFAULT_CORS_PROXY = 'https://corsproxy.io/?';
+        const CORS_PROXY = window.CORS_PROXY_URL || DEFAULT_CORS_PROXY;
+        
+        // Fetch with timeout utility
+        const fetchWithTimeout = async (url, options = {}, timeout = 30000) => {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+                return response;
+            } catch (error) {
+                clearTimeout(timeoutId);
+                if (error.name === 'AbortError') {
+                    throw new Error('Request timeout after ' + (timeout / 1000) + ' seconds');
+                }
+                throw error;
+            }
+        };
         
         // History
         let requestHistory = JSON.parse(localStorage.getItem('api_forge_history') || '[]');
@@ -1318,8 +1345,15 @@
             let body = null;
             const bodyType = document.getElementById('body-type').value;
             if (['POST', 'PUT', 'PATCH'].includes(method)) {
-                if (bodyType === 'json' || bodyType === 'raw') {
+                if (bodyType === 'json') {
                     body = document.getElementById('body-content').value;
+                    // Ensure Content-Type is set for JSON
+                    if (!headers['Content-Type']) {
+                        headers['Content-Type'] = 'application/json';
+                    }
+                } else if (bodyType === 'raw') {
+                    body = document.getElementById('body-content').value;
+                    // Keep existing Content-Type if set, otherwise don't override
                 } else if (bodyType === 'form') {
                     const formData = new URLSearchParams();
                     document.querySelectorAll('#form-editor .kv-row').forEach(row => {
@@ -1339,7 +1373,7 @@
                 // Use CORS proxy
                 const proxyUrl = CORS_PROXY + encodeURIComponent(url);
                 
-                const response = await fetch(proxyUrl, {
+                const response = await fetchWithTimeout(proxyUrl, {
                     method,
                     headers,
                     body: body || undefined
@@ -1367,8 +1401,13 @@
                 });
                 
             } catch (error) {
-                document.getElementById('response-body').classList.remove('loading');
-                document.getElementById('response-body').innerHTML = `<div style="color: var(--forge-heat);">Error: ${error.message}</div>`;
+                const responseBody = document.getElementById('response-body');
+                responseBody.classList.remove('loading');
+                responseBody.textContent = '';
+                const errorDiv = document.createElement('div');
+                errorDiv.style.color = 'var(--forge-heat)';
+                errorDiv.textContent = `Error: ${error.message}`;
+                responseBody.appendChild(errorDiv);
                 document.getElementById('response-status').textContent = 'Error';
                 document.getElementById('response-status').className = 'status-badge error';
                 
@@ -1418,11 +1457,28 @@
             
             // Headers
             const headersEl = document.getElementById('response-headers-list');
-            let headersHtml = '';
+            headersEl.textContent = '';
+            let hasHeaders = false;
             response.headers.forEach((value, key) => {
-                headersHtml += `<div class="response-header-item"><span class="key">${key}</span><span class="value">${value}</span></div>`;
+                hasHeaders = true;
+                const item = document.createElement('div');
+                item.className = 'response-header-item';
+                const keySpan = document.createElement('span');
+                keySpan.className = 'key';
+                keySpan.textContent = key;
+                const valueSpan = document.createElement('span');
+                valueSpan.className = 'value';
+                valueSpan.textContent = value;
+                item.appendChild(keySpan);
+                item.appendChild(valueSpan);
+                headersEl.appendChild(item);
             });
-            headersEl.innerHTML = headersHtml || '<div style="color: var(--forge-iron);">No headers available (CORS restriction)</div>';
+            if (!hasHeaders) {
+                const noHeaders = document.createElement('div');
+                noHeaders.style.color = 'var(--forge-iron)';
+                noHeaders.textContent = 'No headers available (CORS restriction)';
+                headersEl.appendChild(noHeaders);
+            }
         }
         
         function formatSize(bytes) {
@@ -1662,20 +1718,43 @@ func main() {
         
         function renderHistory() {
             const listEl = document.getElementById('history-list');
+            listEl.textContent = '';
             
             if (requestHistory.length === 0) {
-                listEl.innerHTML = '<div style="color: var(--forge-iron); font-size: 0.85rem; text-align: center; padding: var(--space-md);">No requests yet</div>';
+                const emptyDiv = document.createElement('div');
+                emptyDiv.style.cssText = 'color: var(--forge-iron); font-size: 0.85rem; text-align: center; padding: var(--space-md);';
+                emptyDiv.textContent = 'No requests yet';
+                listEl.appendChild(emptyDiv);
                 return;
             }
             
-            listEl.innerHTML = requestHistory.map((req, idx) => `
-                <div class="history-item" onclick="loadFromHistory(${idx})">
-                    <span class="method ${req.method.toLowerCase()}">${req.method}</span>
-                    <span class="status ${req.status >= 200 && req.status < 300 ? 'success' : 'error'}">${req.status || '-'}</span>
-                    <span class="url">${truncateUrl(req.url)}</span>
-                    <span class="time">${formatTime(req.timestamp)}</span>
-                </div>
-            `).join('');
+            requestHistory.forEach((req, idx) => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.onclick = () => loadFromHistory(idx);
+                
+                const methodSpan = document.createElement('span');
+                methodSpan.className = `method ${req.method.toLowerCase()}`;
+                methodSpan.textContent = req.method;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.className = `status ${req.status >= 200 && req.status < 300 ? 'success' : 'error'}`;
+                statusSpan.textContent = req.status || '-';
+                
+                const urlSpan = document.createElement('span');
+                urlSpan.className = 'url';
+                urlSpan.textContent = truncateUrl(req.url);
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'time';
+                timeSpan.textContent = formatTime(req.timestamp);
+                
+                item.appendChild(methodSpan);
+                item.appendChild(statusSpan);
+                item.appendChild(urlSpan);
+                item.appendChild(timeSpan);
+                listEl.appendChild(item);
+            });
         }
         
         function truncateUrl(url) {
@@ -1699,15 +1778,29 @@ func main() {
             
             if (req.headers) {
                 const editor = document.getElementById('headers-editor');
-                editor.innerHTML = '';
+                editor.textContent = '';
                 for (const [key, value] of Object.entries(req.headers)) {
                     const row = document.createElement('div');
                     row.className = 'kv-row';
-                    row.innerHTML = `
-                        <input type="text" placeholder="Header name" value="${key}">
-                        <input type="text" placeholder="Value" value="${value}">
-                        <button class="btn-remove" onclick="removeRow(this)">×</button>
-                    `;
+                    
+                    const keyInput = document.createElement('input');
+                    keyInput.type = 'text';
+                    keyInput.placeholder = 'Header name';
+                    keyInput.value = key;
+                    
+                    const valueInput = document.createElement('input');
+                    valueInput.type = 'text';
+                    valueInput.placeholder = 'Value';
+                    valueInput.value = value;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'btn-remove';
+                    removeBtn.textContent = '×';
+                    removeBtn.onclick = function() { removeRow(this); };
+                    
+                    row.appendChild(keyInput);
+                    row.appendChild(valueInput);
+                    row.appendChild(removeBtn);
                     editor.appendChild(row);
                 }
             }

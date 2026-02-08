@@ -2,6 +2,7 @@
   "name": "@forge/shared",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Shared utilities and components for Forge tools",
   "main": "index.js",
   "scripts": {},
@@ -10,5 +11,17 @@
     "utilities"
   ],
   "author": "Simplereally",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simplereally/forge-monorepo.git",
+    "directory": "packages/shared"
+  },
+  "bugs": {
+    "url": "https://github.com/Simplereally/forge-monorepo/issues"
+  },
+  "homepage": "https://github.com/Simplereally/forge-monorepo/tree/main/packages/shared#readme"
 }

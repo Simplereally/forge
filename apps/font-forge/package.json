@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Font Preview & Testing Tool",
-  "main": "index.html",
   "scripts": {
     "dev": "npx http-server . -p 3006 -c-1 -o"
   },
@@ -13,5 +12,17 @@
     "font-preview"
   ],
   "author": "Simplereally",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simplereally/forge-monorepo.git",
+    "directory": "apps/font-forge"
+  },
+  "bugs": {
+    "url": "https://github.com/Simplereally/forge-monorepo/issues"
+  },
+  "homepage": "https://github.com/Simplereally/forge-monorepo/tree/main/apps/font-forge#readme"
 }

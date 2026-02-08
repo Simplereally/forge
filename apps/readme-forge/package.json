@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "AI-powered README generator that analyzes your codebase and creates beautiful documentation",
-  "main": "src/index.js",
+  "main": "bin/readme-forge.js",
   "bin": {
     "readme-forge": "./bin/readme-forge.js"
   },
@@ -25,12 +25,21 @@
   "author": "Simplereally",
   "license": "MIT",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "bin/",
     "src/",
     "LICENSE",
     "README.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simplereally/forge-monorepo.git",
+    "directory": "apps/readme-forge"
+  },
+  "bugs": {
+    "url": "https://github.com/Simplereally/forge-monorepo/issues"
+  },
+  "homepage": "https://github.com/Simplereally/forge-monorepo/tree/main/apps/readme-forge#readme"
 }

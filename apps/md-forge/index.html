@@ -5,78 +5,869 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Markdown to PDF Converter — Convert Markdown Online | MDForge</title>
     <meta name="description" content="Convert Markdown to beautiful PDF documents instantly. Support for code highlighting, tables, and custom styling. Free, no signup required.">
-    <meta name="keywords" content="markdown to pdf, convert markdown, markdown converter, md to pdf, markdown pdf generator">
+    <meta name="keywords" content="markdown to pdf, convert markdown, markdown converter, md to pdf, markdown pdf generator, markdown editor">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://simplereally.github.io/md-forge/">
     
-    <meta property="og:title" content="Free Markdown to PDF Converter | MDForge">
-    <meta property="og:description" content="Convert Markdown to beautiful PDFs instantly. Free, no signup.">
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://simplereally.github.io/md-forge/">
+    <meta property="og:title" content="Free Markdown to PDF Converter — Convert Markdown Online | MDForge">
+    <meta property="og:description" content="Convert Markdown to beautiful PDF documents instantly. Support for code highlighting, tables, and custom styling. Free, no signup required.">
+    <meta property="og:site_name" content="Forge Tools">
     
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://simplereally.github.io/md-forge/">
+    <meta name="twitter:title" content="Free Markdown to PDF Converter — Convert Markdown Online | MDForge">
+    <meta name="twitter:description" content="Convert Markdown to beautiful PDF documents instantly. Support for code highlighting, tables, and custom styling. Free, no signup required.">
+    
+    <!-- Schema.org SoftwareApplication -->
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "MDForge",
-        "description": "Free Markdown to PDF converter with styling options",
-        "applicationCategory": "UtilityApplication",
-        "operatingSystem": "Web Browser",
-        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+{
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MDForge",
+    "description": "Free Markdown to PDF converter with styling options. Convert markdown to beautiful PDF documents with code highlighting, tables, and custom styling.",
+    "url": "https://simplereally.github.io/md-forge/",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
     }
+}
     </script>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- Schema.org FAQ -->
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        {
+            "@type": "Question",
+            "name": "Can I convert Markdown to PDF for free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! MDForge allows 3 free PDF conversions per day. Upgrade to Pro for unlimited conversions."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "Does MDForge support code syntax highlighting?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes, MDForge supports syntax highlighting for JavaScript, Python, and many other languages."
+            }
+        },
+        {
+            "@type": "Question",
+            "name": "What paper sizes are supported?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "MDForge supports A4, Letter, and Legal paper sizes for PDF export."
+            }
+        }
+    ]
+}
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Markdown Parser -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+    <!-- Syntax Highlighting -->
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     
     <style>
-        :root { --pico-font-size: 16px; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
-        .hero { text-align: center; margin-bottom: 2rem; }
-        .editor-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        @media (max-width: 900px) { .editor-container { grid-template-columns: 1fr; } }
-        .panel { background: var(--pico-card-background-color); border-radius: 8px; padding: 1rem; }
-        .panel h3 { margin-top: 0; font-size: 1rem; color: var(--pico-muted-color); }
-        #markdown-input { width: 100%; height: 400px; font-family: monospace; resize: vertical; }
-        #preview { min-height: 400px; overflow-y: auto; background: white; color: #333; padding: 2rem; border-radius: 8px; }
-        #preview h1, #preview h2, #preview h3 { color: #111; margin-top: 1.5rem; }
-        #preview h1 { border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
-        #preview code { background: #f4f4f4; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
-        #preview pre { background: #f4f4f4; padding: 1rem; border-radius: 6px; overflow-x: auto; }
-        #preview pre code { background: none; padding: 0; }
-        #preview table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-        #preview th, #preview td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
-        #preview th { background: #f4f4f4; }
-        #preview blockquote { border-left: 4px solid #ddd; margin: 1rem 0; padding-left: 1rem; color: #666; }
-        .controls { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin: 1.5rem 0; }
-        .style-options { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0; }
-        .style-options label { display: flex; align-items: center; gap: 0.5rem; }
-        footer { text-align: center; margin-top: 3rem; color: var(--pico-muted-color); }
-        .sample-docs { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin: 1rem 0; }
-        .sample-docs button { font-size: 0.85rem; padding: 0.4rem 0.8rem; }
-        #usage-counter { text-align: center; color: var(--pico-muted-color); margin-top: 1rem; }
+        /* ═══════════════════════════════════════════════════════════════
+           FORGE DESIGN SYSTEM — Industrial Dark with Molten Accents
+           ═══════════════════════════════════════════════════════════════ */
+        
+        :root {
+            --forge-void: #0a0a0b;
+            --forge-charcoal: #141417;
+            --forge-gunmetal: #1c1c21;
+            --forge-steel: #2a2a32;
+            --forge-iron: #4a4a55;
+            --forge-silver: #8b8b99;
+            --forge-chrome: #c4c4d4;
+            --forge-white: #f0f0f5;
+            
+            --forge-ember: #ff6b35;
+            --forge-flame: #ff8c42;
+            --forge-spark: #ffb366;
+            --forge-heat: #ef4444;
+            --forge-glow: rgba(255, 107, 53, 0.12);
+            --forge-success: #22c55e;
+            --forge-info: #3b82f6;
+            
+            --font-display: 'Chakra Petch', sans-serif;
+            --font-body: 'Outfit', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--forge-void);
+            color: var(--forge-chrome);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        /* ═══════════════ NAVIGATION ═══════════════ */
+        
+        .forge-nav {
+            background: linear-gradient(180deg, var(--forge-charcoal) 0%, transparent 100%);
+            padding: var(--space-md) var(--space-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(12px);
+        }
+        
+        .forge-nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .forge-logo {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--forge-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-logo .icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 8px var(--forge-ember));
+        }
+        
+        .forge-nav-links {
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+        
+        .forge-nav-links a {
+            font-family: var(--font-display);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .forge-nav-links a:hover { color: var(--forge-ember); background: var(--forge-glow); }
+        .forge-nav-links a.active { color: var(--forge-ember); }
+        
+        /* ═══════════════ HEADER ═══════════════ */
+        
+        .forge-header {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg) var(--space-xl);
+            position: relative;
+        }
+        
+        .forge-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse at center, var(--forge-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .forge-header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            color: var(--forge-white);
+            margin-bottom: var(--space-sm);
+            letter-spacing: 1px;
+            position: relative;
+        }
+        
+        .forge-header h1 .accent { color: var(--forge-ember); }
+        
+        .forge-header p {
+            font-size: 1.1rem;
+            color: var(--forge-silver);
+            position: relative;
+        }
+        
+        /* ═══════════════ MAIN ═══════════════ */
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-2xl);
+        }
+        
+        .forge-card {
+            background: var(--forge-charcoal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xl);
+            margin-bottom: var(--space-xl);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .forge-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--forge-ember), transparent);
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ═══════════════ SAMPLE BUTTONS ═══════════════ */
+        
+        .sample-buttons {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: var(--space-lg);
+        }
+        
+        .sample-buttons span {
+            color: var(--forge-silver);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sample-btn {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-xs) var(--space-md);
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .sample-btn:hover {
+            background: var(--forge-steel);
+            border-color: var(--forge-ember);
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ EDITOR LAYOUT ═══════════════ */
+        
+        .editor-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+        
+        @media (max-width: 900px) {
+            .editor-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .editor-panel {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--forge-silver);
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .panel-header .icon {
+            color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ TEXTAREA ═══════════════ */
+        
+        #markdown-input {
+            width: 100%;
+            height: 450px;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            resize: vertical;
+            transition: var(--transition-fast);
+        }
+        
+        #markdown-input:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+            box-shadow: 0 0 0 3px var(--forge-glow);
+        }
+        
+        #markdown-input::placeholder {
+            color: var(--forge-iron);
+        }
+        
+        /* ═══════════════ PREVIEW ═══════════════ */
+        
+        #preview {
+            min-height: 450px;
+            max-height: 600px;
+            overflow-y: auto;
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: var(--space-xl);
+            border-radius: var(--radius-md);
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        #preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+            color: #111;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            font-family: var(--font-body);
+            line-height: 1.3;
+        }
+        
+        #preview h1 {
+            font-size: 2em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.3em;
+        }
+        
+        #preview h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.2em;
+        }
+        
+        #preview h3 { font-size: 1.25em; }
+        
+        #preview p {
+            margin: 1em 0;
+        }
+        
+        #preview code {
+            background: #f4f4f4;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            color: #d63384;
+        }
+        
+        #preview pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1em 0;
+        }
+        
+        #preview pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        #preview table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+        
+        #preview th, #preview td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        #preview th {
+            background: #f8f8f8;
+            font-weight: 600;
+        }
+        
+        #preview blockquote {
+            border-left: 4px solid var(--forge-ember);
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            color: #555;
+            background: #f9f9f9;
+        }
+        
+        #preview ul, #preview ol {
+            margin: 1em 0;
+            padding-left: 2em;
+        }
+        
+        #preview li {
+            margin: 0.5em 0;
+        }
+        
+        #preview a {
+            color: var(--forge-ember);
+        }
+        
+        #preview hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 2em 0;
+        }
+        
+        #preview img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* ═══════════════ OPTIONS ═══════════════ */
+        
+        .options-section {
+            margin-top: var(--space-lg);
+        }
+        
+        .options-toggle {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--forge-silver);
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) 0;
+            transition: var(--transition-fast);
+        }
+        
+        .options-toggle:hover {
+            color: var(--forge-ember);
+        }
+        
+        .options-toggle .arrow {
+            transition: transform 0.2s ease;
+        }
+        
+        .options-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .options-content {
+            display: none;
+            padding: var(--space-md) 0;
+        }
+        
+        .options-content.open {
+            display: block;
+        }
+        
+        .options-grid {
+            display: flex;
+            gap: var(--space-lg);
+            flex-wrap: wrap;
+        }
+        
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+        
+        .option-group label {
+            font-size: 0.9rem;
+            color: var(--forge-silver);
+        }
+        
+        .option-group select {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: var(--space-xs) var(--space-sm);
+            background: var(--forge-gunmetal);
+            color: var(--forge-chrome);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+        
+        .option-group select:focus {
+            outline: none;
+            border-color: var(--forge-ember);
+        }
+        
+        .option-group input[type="checkbox"] {
+            accent-color: var(--forge-ember);
+        }
+        
+        /* ═══════════════ BUTTONS ═══════════════ */
+        
+        .button-row {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            margin-top: var(--space-xl);
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            font-family: var(--font-display);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--forge-ember) 0%, var(--forge-flame) 100%);
+            color: var(--forge-void);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--forge-steel);
+            color: var(--forge-chrome);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--forge-iron);
+        }
+        
+        /* ═══════════════ USAGE COUNTER ═══════════════ */
+        
+        .usage-counter {
+            text-align: center;
+            margin-top: var(--space-lg);
+            font-size: 0.9rem;
+            color: var(--forge-silver);
+        }
+        
+        .usage-counter a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .usage-counter a:hover {
+            text-decoration: underline;
+        }
+        
+        /* ═══════════════ FEATURES ═══════════════ */
+        
+        .features-section {
+            margin-top: var(--space-2xl);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+        }
+        
+        .feature-card {
+            background: var(--forge-gunmetal);
+            border: 1px solid var(--forge-steel);
+            border-radius: var(--radius-md);
+            padding: var(--space-lg);
+            transition: var(--transition-fast);
+        }
+        
+        .feature-card:hover {
+            border-color: var(--forge-ember);
+            transform: translateY(-2px);
+        }
+        
+        .feature-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-sm);
+        }
+        
+        .feature-card h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--forge-white);
+            margin-bottom: var(--space-xs);
+        }
+        
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--forge-silver);
+        }
+        
+        /* ═══════════════ FOOTER ═══════════════ */
+        
+        .forge-footer {
+            background: var(--forge-charcoal);
+            border-top: 1px solid var(--forge-steel);
+            padding: var(--space-xl) var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+        
+        .forge-footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+        
+        .forge-footer-tools {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .forge-footer-tools a {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            color: var(--forge-silver);
+            text-decoration: none;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            transition: var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .forge-footer-tools a:hover { color: var(--forge-ember); }
+        
+        .forge-footer-meta {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--forge-iron);
+        }
+        
+        .forge-footer-meta a {
+            color: var(--forge-ember);
+            text-decoration: none;
+        }
+        
+        .forge-footer-meta a:hover { text-decoration: underline; }
+        
+        /* ═══════════════ RESPONSIVE ═══════════════ */
+        
+        @media (max-width: 768px) {
+            .forge-nav-links a {
+                font-size: 0.65rem;
+                padding: var(--space-xs);
+            }
+            
+            #markdown-input,
+            #preview {
+                height: 350px;
+                min-height: 350px;
+            }
+            
+            .button-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+        
+        /* ═══════════════ PRISM DARK THEME OVERRIDES ═══════════════ */
+        
+        #preview code[class*="language-"],
+        #preview pre[class*="language-"] {
+            color: #d4d4d4;
+            background: #1e1e1e;
+        }
+        
+        #preview .token.comment,
+        #preview .token.prolog,
+        #preview .token.doctype,
+        #preview .token.cdata {
+            color: #6a9955;
+        }
+        
+        #preview .token.punctuation {
+            color: #d4d4d4;
+        }
+        
+        #preview .token.property,
+        #preview .token.tag,
+        #preview .token.boolean,
+        #preview .token.number,
+        #preview .token.constant,
+        #preview .token.symbol {
+            color: #b5cea8;
+        }
+        
+        #preview .token.selector,
+        #preview .token.attr-name,
+        #preview .token.string,
+        #preview .token.char,
+        #preview .token.builtin {
+            color: #ce9178;
+        }
+        
+        #preview .token.operator,
+        #preview .token.entity,
+        #preview .token.url {
+            color: #d4d4d4;
+        }
+        
+        #preview .token.atrule,
+        #preview .token.attr-value,
+        #preview .token.keyword {
+            color: #569cd6;
+        }
+        
+        #preview .token.function {
+            color: #dcdcaa;
+        }
+        
+        #preview .token.regex,
+        #preview .token.important,
+        #preview .token.variable {
+            color: #d16969;
+        }
     </style>
 </head>
 <body>
+    <nav class="forge-nav">
+        <div class="forge-nav-inner">
+            <a href="https://simplereally.github.io/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
+            </a>
+            <div class="forge-nav-links">
+                <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
+                <a href="https://simplereally.github.io/qr-forge/">QR</a>
+                <a href="https://simplereally.github.io/pass-forge/">Pass</a>
+                <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/md-forge/" class="active">MD</a>
+                <a href="https://simplereally.github.io/readme-forge/">Readme</a>
+                <a href="https://simplereally.github.io/meta-forge/">Meta</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
+                <a href="https://simplereally.github.io/font-forge/">Font</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
+                <a href="https://simplereally.github.io/diff-forge/">Diff</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/screenshot-forge/">Screenshot</a>
+            </div>
+        </div>
+    </nav>
+    
+    <header class="forge-header">
+        <h1>MD<span class="accent">Forge</span></h1>
+        <p>Convert Markdown to Beautiful PDFs — No Signup Required</p>
+    </header>
+    
     <main class="container">
-        <div class="hero">
-            <h1>📝 MDForge</h1>
-            <p>Convert Markdown to Beautiful PDFs — No Signup Required</p>
-        </div>
-        
-        <div class="sample-docs">
-            <span style="color: var(--pico-muted-color);">Try a sample:</span>
-            <button class="secondary" onclick="loadSample('readme')">README</button>
-            <button class="secondary" onclick="loadSample('resume')">Resume</button>
-            <button class="secondary" onclick="loadSample('report')">Report</button>
-        </div>
-        
-        <div class="editor-container">
-            <div class="panel">
-                <h3>Markdown Input</h3>
-                <textarea id="markdown-input" placeholder="# Hello World
+        <div class="forge-card">
+            <div class="sample-buttons">
+                <span>Try a sample:</span>
+                <button class="sample-btn" onclick="loadSample('readme')">README</button>
+                <button class="sample-btn" onclick="loadSample('resume')">Resume</button>
+                <button class="sample-btn" onclick="loadSample('report')">Report</button>
+            </div>
+            
+            <div class="editor-layout">
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <span class="icon">✏️</span>
+                        <span>Markdown Input</span>
+                    </div>
+                    <textarea id="markdown-input" placeholder="# Hello World
 
 Write your markdown here...
 
@@ -95,55 +886,117 @@ console.log(hello);
 |----------|----------|
 | Data 1   | Data 2   |
 "></textarea>
+                </div>
+                <div class="editor-panel">
+                    <div class="panel-header">
+                        <span class="icon">👁️</span>
+                        <span>Preview</span>
+                    </div>
+                    <div id="preview"></div>
+                </div>
             </div>
-            <div class="panel">
-                <h3>Preview</h3>
-                <div id="preview"></div>
+            
+            <div class="options-section">
+                <button class="options-toggle" onclick="toggleOptions()">
+                    <span class="arrow">▼</span>
+                    <span>PDF Options</span>
+                </button>
+                <div class="options-content" id="options-content">
+                    <div class="options-grid">
+                        <div class="option-group">
+                            <label for="font-size">Font Size:</label>
+                            <select id="font-size">
+                                <option value="10">Small (10pt)</option>
+                                <option value="12" selected>Normal (12pt)</option>
+                                <option value="14">Large (14pt)</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label for="paper-size">Paper Size:</label>
+                            <select id="paper-size">
+                                <option value="a4" selected>A4</option>
+                                <option value="letter">Letter</option>
+                                <option value="legal">Legal</option>
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <input type="checkbox" id="include-toc">
+                            <label for="include-toc">Include Table of Contents</label>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            <div class="button-row">
+                <button class="btn btn-primary" onclick="convertToPDF()">
+                    <span>📄</span>
+                    <span>Download PDF</span>
+                </button>
+                <button class="btn btn-secondary" onclick="copyHTML()">
+                    <span>📋</span>
+                    <span>Copy HTML</span>
+                </button>
+            </div>
+            
+            <div class="usage-counter" id="usage-counter"></div>
         </div>
         
-        <details>
-            <summary>PDF Options</summary>
-            <div class="style-options">
-                <label>
-                    Font Size:
-                    <select id="font-size">
-                        <option value="10">Small (10pt)</option>
-                        <option value="12" selected>Normal (12pt)</option>
-                        <option value="14">Large (14pt)</option>
-                    </select>
-                </label>
-                <label>
-                    Paper Size:
-                    <select id="paper-size">
-                        <option value="a4" selected>A4</option>
-                        <option value="letter">Letter</option>
-                        <option value="legal">Legal</option>
-                    </select>
-                </label>
-                <label>
-                    <input type="checkbox" id="include-toc"> Include Table of Contents
-                </label>
+        <div class="features-section">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Instant Conversion</h3>
+                    <p>Convert your Markdown to PDF in seconds with our blazing-fast engine.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🎨</div>
+                    <h3>Syntax Highlighting</h3>
+                    <p>Beautiful code blocks with syntax highlighting for 100+ languages.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h3>Tables & More</h3>
+                    <p>Full GFM support including tables, task lists, and footnotes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📱</div>
+                    <h3>Multiple Sizes</h3>
+                    <p>Export to A4, Letter, or Legal paper sizes for any use case.</p>
+                </div>
             </div>
-        </details>
-        
-        <div class="controls">
-            <button onclick="convertToPDF()">📄 Download PDF</button>
-            <button onclick="copyHTML()" class="secondary">📋 Copy HTML</button>
         </div>
-        
-        <div id="usage-counter"></div>
-        
-        <footer>
-            <p>Built with ❤️ by <a href="https://github.com/Simplereally">Simplereally</a></p>
-            <p>Part of the <a href="https://simplereally.github.io/invoice-forge/">Forge</a> tool collection</p>
-        </footer>
     </main>
+    
+    <footer class="forge-footer">
+        <div class="forge-footer-inner">
+            <div class="forge-footer-tools">
+                <a href="https://simplereally.github.io/invoice-forge/">InvoiceForge</a>
+                <a href="https://simplereally.github.io/qr-forge/">QRForge</a>
+                <a href="https://simplereally.github.io/pass-forge/">PassForge</a>
+                <a href="https://simplereally.github.io/color-forge/">ColorForge</a>
+                <a href="https://simplereally.github.io/md-forge/">MDForge</a>
+                <a href="https://simplereally.github.io/readme-forge/">ReadmeForge</a>
+                <a href="https://simplereally.github.io/meta-forge/">MetaForge</a>
+                <a href="https://simplereally.github.io/cron-forge/">CronForge</a>
+                <a href="https://simplereally.github.io/font-forge/">FontForge</a>
+                <a href="https://simplereally.github.io/regex-forge/">RegexForge</a>
+                <a href="https://simplereally.github.io/json-forge/">JsonForge</a>
+                <a href="https://simplereally.github.io/api-forge/">ApiForge</a>
+                <a href="https://simplereally.github.io/diff-forge/">DiffForge</a>
+                <a href="https://simplereally.github.io/email-forge/">EmailForge</a>
+                <a href="https://simplereally.github.io/screenshot-forge/">ScreenshotForge</a>
+            </div>
+            <div class="forge-footer-meta">
+                <p>Made with 🔥 by <a href="https://github.com/Simplereally">Simplereally</a></p>
+            </div>
+        </div>
+    </footer>
     
     <script>
         const input = document.getElementById('markdown-input');
         const preview = document.getElementById('preview');
         
+        // Usage tracking
         let dailyCount = parseInt(localStorage.getItem('mdforge_daily_count') || '0');
         let lastDate = localStorage.getItem('mdforge_last_date');
         const today = new Date().toDateString();
@@ -155,6 +1008,7 @@ console.log(hello);
         }
         updateUsageCounter();
         
+        // Configure marked
         marked.setOptions({
             highlight: function(code, lang) {
                 if (Prism.languages[lang]) {
@@ -172,6 +1026,13 @@ console.log(hello);
             const md = input.value;
             preview.innerHTML = marked.parse(md);
             Prism.highlightAllUnder(preview);
+        }
+        
+        function toggleOptions() {
+            const toggle = document.querySelector('.options-toggle');
+            const content = document.getElementById('options-content');
+            toggle.classList.toggle('open');
+            content.classList.toggle('open');
         }
         
         async function convertToPDF() {
@@ -248,6 +1109,9 @@ console.log(hello);
                 localStorage.setItem('mdforge_daily_count', dailyCount.toString());
                 updateUsageCounter();
                 
+            } catch (error) {
+                console.error('PDF generation failed:', error);
+                alert('Failed to generate PDF: ' + error.message);
             } finally {
                 document.body.removeChild(pdfContainer);
             }
@@ -255,13 +1119,18 @@ console.log(hello);
         
         function copyHTML() {
             navigator.clipboard.writeText(preview.innerHTML);
-            alert('HTML copied to clipboard!');
+            const btn = event.target.closest('.btn');
+            const originalText = btn.querySelector('span:last-child').textContent;
+            btn.querySelector('span:last-child').textContent = 'Copied!';
+            setTimeout(() => {
+                btn.querySelector('span:last-child').textContent = originalText;
+            }, 2000);
         }
         
         function updateUsageCounter() {
             const remaining = Math.max(0, 3 - dailyCount);
-            document.getElementById('usage-counter').textContent = 
-                `${remaining} free PDF conversions remaining today — Upgrade to Pro for unlimited`;
+            document.getElementById('usage-counter').innerHTML = 
+                `${remaining} free PDF conversions remaining today — <a href="#">Upgrade to Pro for unlimited</a>`;
         }
         
         function loadSample(type) {

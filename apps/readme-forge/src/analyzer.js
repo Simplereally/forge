@@ -117,7 +117,7 @@ function analyzeStructure(dir) {
       }
     }
   } catch (e) {
-    // Ignore errors
+    console.warn('Failed to analyze directory structure:', e.message);
   }
 
   return structure;
@@ -156,7 +156,9 @@ function extractFeatures(dir, projectType) {
       if (pkg.types || pkg.typings) features.push('TypeScript definitions');
       if (pkg.scripts?.test) features.push('Test scripts configured');
       if (pkg.scripts?.build) features.push('Build system configured');
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to extract Node.js features from package.json:', e.message);
+    }
   }
 
   return features;
@@ -174,7 +176,9 @@ function detectScripts(dir, projectType) {
       if (pkg.scripts) {
         Object.assign(scripts, pkg.scripts);
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to detect Node.js scripts from package.json:', e.message);
+    }
   }
 
   // Check for Makefile
@@ -186,12 +190,14 @@ function detectScripts(dir, projectType) {
       if (targets) {
         for (const target of targets) {
           const name = target.replace(':', '');
-          if (!name.startsWith('.')) {
+        if (!name.startsWith('.')) {
             scripts[`make ${name}`] = 'Makefile target';
           }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to parse Makefile:', e.message);
+    }
   }
 
   return scripts;
@@ -254,7 +260,7 @@ async function analyzeProject(dir) {
       if (pkg.scripts?.build) analysis.buildCommand = 'npm run build';
       if (pkg.scripts?.test) analysis.testCommand = 'npm test';
     } catch (e) {
-      // Invalid JSON
+      console.warn('Failed to parse package.json:', e.message);
     }
   }
 
@@ -285,7 +291,9 @@ async function analyzeProject(dir) {
       analysis.installCommand = 'pip install .';
       analysis.runCommand = `python -m ${analysis.name.replace(/-/g, '_')}`;
       if (toml.tool?.pytest) analysis.testCommand = 'pytest';
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to parse pyproject.toml:', e.message);
+    }
   } else if (fs.existsSync(setupPyPath) || fs.existsSync(requirementsPath)) {
     analysis.detected = true;
     analysis.type = 'python';
@@ -312,7 +320,9 @@ async function analyzeProject(dir) {
       analysis.runCommand = `go run .`;
       analysis.buildCommand = 'go build';
       analysis.testCommand = 'go test ./...';
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to parse go.mod:', e.message);
+    }
   }
 
   // Check for Rust project
@@ -342,7 +352,9 @@ async function analyzeProject(dir) {
       analysis.runCommand = 'cargo run';
       analysis.buildCommand = 'cargo build --release';
       analysis.testCommand = 'cargo test';
-    } catch (e) {}
+    } catch (e) {
+      console.warn('Failed to parse Cargo.toml:', e.message);
+    }
   }
 
   // Analyze structure and features

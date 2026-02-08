@@ -831,25 +831,26 @@
     <!-- Navigation -->
     <nav class="forge-nav">
         <div class="forge-nav-inner">
-            <a href="https://simplereally.github.io/screenshot-forge/" class="forge-logo">
-                <span class="icon">📸</span>
-                <span>SCREENSHOT<span style="color: var(--forge-ember)">FORGE</span></span>
+            <a href="https://simplereally.github.io/" class="forge-logo">
+                <span class="icon">🔥</span>
+                <span>FORGE</span>
             </a>
             <div class="forge-nav-links">
                 <a href="https://simplereally.github.io/invoice-forge/">Invoice</a>
                 <a href="https://simplereally.github.io/qr-forge/">QR</a>
                 <a href="https://simplereally.github.io/pass-forge/">Pass</a>
                 <a href="https://simplereally.github.io/color-forge/">Color</a>
+                <a href="https://simplereally.github.io/md-forge/">MD</a>
                 <a href="https://simplereally.github.io/readme-forge/">Readme</a>
-                <a href="https://simplereally.github.io/json-forge/">JSON</a>
-                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
-                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
                 <a href="https://simplereally.github.io/meta-forge/">Meta</a>
-                <a href="https://simplereally.github.io/api-forge/">API</a>
+                <a href="https://simplereally.github.io/cron-forge/">Cron</a>
                 <a href="https://simplereally.github.io/font-forge/">Font</a>
-                <a href="https://simplereally.github.io/screenshot-forge/" class="active">Screenshot</a>
-                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/regex-forge/">Regex</a>
+                <a href="https://simplereally.github.io/json-forge/">JSON</a>
+                <a href="https://simplereally.github.io/api-forge/">API</a>
                 <a href="https://simplereally.github.io/diff-forge/">Diff</a>
+                <a href="https://simplereally.github.io/email-forge/">Email</a>
+                <a href="https://simplereally.github.io/screenshot-forge/" class="active">Screenshot</a>
             </div>
         </div>
     </nav>
@@ -1035,7 +1036,8 @@
                 <li>Priority support</li>
             </ul>
             <div class="price-tag">$9 <span>/ month</span></div>
-            <button class="btn-primary" style="width: 100%;" onclick="alert('Stripe integration coming soon!')">⚡ Upgrade Now</button>
+            <!-- TODO: Create Stripe Payment Link for $9/month (ScreenshotForge Pro subscription) -->
+            <a href="https://buy.stripe.com/PLACEHOLDER_SCREENSHOTFORGE_9MO" target="_blank" data-price="$9/month" class="btn-primary" style="width: 100%; text-decoration:none; display:block; text-align:center;">⚡ Upgrade Now</a>
         </div>
     </div>
     
@@ -1263,19 +1265,39 @@
             const resultsDiv = document.getElementById('bulk-results');
             resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><div class="loading-text">Processing...</div></div>';
             
-            const results = [];
-            for (const url of urls) {
-                await new Promise(r => setTimeout(r, 500));
-                const imageData = await generateDemoScreenshot(url);
-                results.push({ url, imageData });
+            try {
+                const results = [];
+                for (const url of urls) {
+                    await new Promise(r => setTimeout(r, 500));
+                    const imageData = await generateDemoScreenshot(url);
+                    results.push({ url, imageData });
+                }
+                
+                resultsDiv.textContent = '';
+                results.forEach(r => {
+                    const item = document.createElement('div');
+                    item.className = 'bulk-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = r.imageData;
+                    img.alt = 'Screenshot';
+                    
+                    const urlDiv = document.createElement('div');
+                    urlDiv.className = 'url';
+                    urlDiv.textContent = r.url;
+                    
+                    item.appendChild(img);
+                    item.appendChild(urlDiv);
+                    resultsDiv.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Bulk capture failed:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = 'color: #ef4444; padding: 20px;';
+                errorDiv.textContent = `Failed to capture screenshots: ${error.message}`;
+                resultsDiv.textContent = '';
+                resultsDiv.appendChild(errorDiv);
             }
-            
-            resultsDiv.innerHTML = results.map(r => `
-                <div class="bulk-item">
-                    <img src="${r.imageData}" alt="Screenshot">
-                    <div class="url">${r.url}</div>
-                </div>
-            `).join('');
         }
         
         // Pro modal

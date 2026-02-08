@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "API Request Builder & Tester - Like Postman, but free and in your browser",
-  "main": "index.html",
   "scripts": {
     "dev": "npx http-server . -p 3001 -c-1 -o"
   },
@@ -14,5 +13,17 @@
     "postman-alternative"
   ],
   "author": "Simplereally",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Simplereally/forge-monorepo.git",
+    "directory": "apps/api-forge"
+  },
+  "bugs": {
+    "url": "https://github.com/Simplereally/forge-monorepo/issues"
+  },
+  "homepage": "https://github.com/Simplereally/forge-monorepo/tree/main/apps/api-forge#readme"
 }

@@ -25,17 +25,17 @@ const FORGE_CONFIG = {
     // CORS proxy configuration
     corsProxy: window.CORS_PROXY_URL || 'https://corsproxy.io/?',
     
-    // Stripe payment links
+    // Stripe payment links are intentionally disabled while the Stripe account is under review.
     stripe: {
-        proUpgrade: 'https://buy.stripe.com/your-payment-link',
-        lifetime: 'https://buy.stripe.com/your-lifetime-link'
+        proUpgrade: '',
+        lifetime: ''
     },
     
     // Feature flags
     features: {
         enableAnalytics: typeof window !== 'undefined' && window.location.hostname !== 'localhost',
         enableDebug: typeof window !== 'undefined' && window.location.hostname === 'localhost',
-        enablePro: true
+        enablePro: false
     },
     
     // Storage keys
